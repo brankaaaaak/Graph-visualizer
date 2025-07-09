@@ -66,3 +66,28 @@ class Graph:
         self._nodes = []
         self._visited_nodes = []
         self._path = []
+
+    def node_degree(self, node):
+        return node.degree()
+
+    def get_edges(self):
+        edges = set()
+        for node in self._nodes:
+            edges.update(node.edges)  
+        return edges
+    
+    def get_number_of_nodes(self):
+        return len(self._nodes)
+    
+    def get_number_of_edges(self):
+        directed = sum(1 for edge in self.get_edges() if edge.is_directed())
+        undirected = len(self.get_edges()) - directed
+        return directed + undirected // 2
+    
+    def is_directed(self):
+        edges = self.get_edges()
+        if edges:
+            first_edge = list(edges)[0]
+            return first_edge.is_directed
+        return False
+    
