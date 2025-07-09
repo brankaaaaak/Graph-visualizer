@@ -36,3 +36,9 @@ class Edge:
         self._relation = relation
         self._weight = weight
         self._is_directed = is_directed
+
+class Graph:
+    def __init__(self):
+        self._nodes = []
+        self._visited_nodes = []
+        self._path = []
