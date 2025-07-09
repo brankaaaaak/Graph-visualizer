@@ -28,3 +28,11 @@ class Node:
 
     def add_attribute(self, key, value):
         self._attributes[key] = value
+
+class Edge:
+    def __init__(self, origin, target, relation, weight, is_directed):
+        self._origin = origin
+        self._target = target
+        self._relation = relation
+        self._weight = weight
+        self._is_directed = is_directed
