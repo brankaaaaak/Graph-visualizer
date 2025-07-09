@@ -36,6 +36,30 @@ class Edge:
         self._relation = relation
         self._weight = weight
         self._is_directed = is_directed
+    
+    @property
+    def is_directed(self):
+        return self.is_directed
+
+    def __hash__(self):
+        return hash((self._origin,self._target))
+    
+    def __str__(self):
+        return f'({self._origin}, {self._target}, {self._relation}, {self._weight}, {self._is_directed})'
+    
+    def __eq__(self, other) -> bool:
+        if self._relation_name != other.relation_name:
+            return False
+        elif self._weight != other.weight:
+            return False
+        elif self._is_directed != other.is_directed:
+            return False
+        elif self._target != other.target:
+            return False
+        return True
+    
+    def get_nodes(self):
+        return self._origin, self._target
 
 class Graph:
     def __init__(self):
