@@ -164,7 +164,22 @@ class Graph:
         origin.add_edge(target)
         if not is_directed:
             target.add_node(origin)
+    def _dfs_cycle_check(self, current_node, parent_node):
+            self._visited_nodes.add(current_node)
+            for node in self._nodes:
+                if current_node.is_related(node):
+                    if node == parent_node:
+                        continue
+                    if node in self._visited_nodes:
+                        return True
+                    if self._dfs_cycle_check(node, current_node):
+                        return True
+            return False
+    def cycle_check(self):
+            self._visited_nodes = set()
+            for node in self._nodes:
+                if node not in self._visited_nodes:
+                    if self._dfs_cycle_check(node, None):
+                        return True
+            return False
         
-
-
-    
