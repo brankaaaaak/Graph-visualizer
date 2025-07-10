@@ -95,7 +95,7 @@ class Edge:
         return f'({self._origin}, {self._target}, {self._relation}, {self._weight}, {self._is_directed})'
     
     def __eq__(self, other) -> bool:
-        if self._relation_name != other.relation_name:
+        if self._relation != other.relation:
             return False
         elif self._weight != other.weight:
             return False
@@ -148,6 +148,10 @@ class Graph:
                 return node
         return None
     
+    def get_node(self, id):
+        return next((node for node in self.nodes if str(node.id) == str(id)), None)
+
+    
     def insert_node(self, node):
         existing_node = self.has_node(node)
         if existing_node:
@@ -155,6 +159,12 @@ class Graph:
         else:
             self._nodes.append(node)
 
+    def insert_edge(self, origin, target, relation, weight, is_directed):
+        edge = Edge(origin = origin, target= target, relation= relation, weight= weight, is_directed= is_directed)
+        origin.add_edge(target)
+        if not is_directed:
+            target.add_node(origin)
+        
 
 
     
