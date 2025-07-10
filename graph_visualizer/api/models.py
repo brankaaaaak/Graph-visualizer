@@ -7,11 +7,32 @@ class Node:
         self._edges = []
         self._attributes = {}
 
+    @property
+    def edges(self):
+        return self._edges
+    
+    @property
+    def id(self):
+        return self._id
+    
+    @property
+    def attributes(self):
+        return self._attributes
+
     def __hash__(self):
         return hash(self._id)
 
     def degree(self):
         return len(self._edges)
+    
+    def __eq__(self, value):
+        if self.id == value.id:
+            return True
+        if len(self.edges) != len(value.edges):
+            return False
+        if self.attributes != value.attributes:
+            return False
+        return True        
     
     def has_edge(self, edge):
         for e in self._edges:
@@ -28,6 +49,20 @@ class Node:
 
     def add_attribute(self, key, value):
         self._attributes[key] = value
+    
+    def is_related(self, node):
+        return any(
+            (edge.origin == self and edge.target == node) or
+            (edge.target == self and edge.origin == node)
+            for edge in self.edges
+        )
+
+    def get_relations(self):
+        return list({edge.relation for edge in self.edges})
+
+    def get_related_nodes(self, relation):
+        return [edge.target for edge in self.edges if edge.relation == relation and edge.origin == self]
+
 
 class Edge:
     def __init__(self, origin, target, relation, weight, is_directed):
@@ -36,6 +71,18 @@ class Edge:
         self._relation = relation
         self._weight = weight
         self._is_directed = is_directed
+
+    @property
+    def relation(self):
+        return self._relation
+
+    @property
+    def target(self):
+        return self._target
+
+    @property
+    def origin(self):
+        return self._origin
     
     @property
     def is_directed(self):
