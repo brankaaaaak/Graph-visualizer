@@ -114,6 +114,10 @@ class Graph:
         self._visited_nodes = []
         self._path = []
 
+    @property
+    def nodes(self):
+        return self._nodes
+
     def node_degree(self, node):
         return node.degree()
 
@@ -137,4 +141,20 @@ class Graph:
             first_edge = list(edges)[0]
             return first_edge.is_directed
         return False
+    
+    def has_node(self, n):
+        for node in self.nodes:
+            if n == node:
+                return node
+        return None
+    
+    def insert_node(self, node):
+        existing_node = self.has_node(node)
+        if existing_node:
+            self._nodes[self._nodes.index(existing_node)] = node
+        else:
+            self._nodes.append(node)
+
+
+
     
