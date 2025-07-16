@@ -105,13 +105,11 @@ class SimpleVisualizer(BaseVisualizer):
 
             function nodeClick(element) {
                 var description="id:"+element.id+"\\n";
-                var id=selected_node.id.replace("id-","");
                 if(selected_node!=null){
-                    nodeView(nodes[id],"#241f4c");
+                    nodeView(nodes[selected_node.id.replace("id-","")],"#241f4c");
                 }
 
-                var element_id=element.id.replace("id-","");
-                var new_node=nodes[element_id];
+                var new_node=nodes[element.id.replace("id-","")];
                 selected_node=new_node;
 
                 nodeView(selected_node,"pink")
