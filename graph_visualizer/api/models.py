@@ -99,7 +99,7 @@ class Edge:
     @target.setter
     def target(self, value):
         self._target = value
-        
+
     @property
     def origin(self):
         return self._origin
@@ -188,7 +188,31 @@ class Graph:
         origin.add_edge(target)
         if not is_directed:
             target.add_node(origin)
+
         
+class NodeIdGenerator:
+
+    def __init__(self):
+        self.__current_id = 0
+
+    def next(self):
+        self.__current_id += 1
+        return self.__current_id - 1
+
+    def reset(self):
+        self.__current_id = 0
+
+nodeId = NodeIdGenerator()
 
 
+class TreeNode(object):
+
+    def __init__(self, object, parent, type):
+        self._opened = False
+        self._object = object
+        self._object_type = type
+        self._id = nodeId.next()
+        self._children = []
+        self._parent = parent
+        
     
