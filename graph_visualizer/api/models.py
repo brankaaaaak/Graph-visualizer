@@ -267,6 +267,30 @@ class TreeNode(object):
                 child_node = TreeNode(child, self, child_type)
                 self._children.append(child_node)
     
+    def open(self):
+        self._opened = True
+        if len(self._children) <= 0:
+            if self._object_type == "vertex":
+                self.add_children(self._object.relations())
+            else:
+                self.add_children(self._parent.object.related_vertices(self._object))
+    
+    def close(self):
+        self._opened = False
+
+    def open_parents(self):
+        self.open()
+        if self._parent:
+            self._parent.open_parents()
+
+    def load_children(self):
+        if len(self._children) <= 0:
+            if self._object_type == "vertex":
+                self.add_children(self._object.relations())
+            else:
+                self.add_children(self._parent.object.related_vertices(self._object))
+    
+
 class Tree(object):
     def __init__(self, roots=None):
         nodeId.reset()
@@ -290,3 +314,24 @@ class Tree(object):
     @last_opened.setter
     def last_opened(self, last_opened):
         self._last_opened = last_opened
+    
+    def find_tree_node(self, id):
+        for root_node in self._roots:
+            found_node = root_node.find_node(id)
+            if found_node:
+                return found_node
+            
+    def iter_nodes(self, nodes=None):
+        if nodes is None:
+            nodes = self._roots
+        for node in nodes:
+            yield node
+            node.load_children()
+            yield from self.iter_nodes(node.children)
+
+    def find_node_by_graph_node_id(self, id):
+        for node in self.iter_nodes():
+            if node.object_type != "edge" and node.object.id == id:
+                return node
+        return None
+
