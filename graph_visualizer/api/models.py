@@ -15,9 +15,21 @@ class Node:
     def id(self):
         return self._id
     
+    @id.setter
+    def id(self, value):
+        self._id = value
+    
     @property
     def attributes(self):
         return self._attributes
+    
+    @edges.setter
+    def edges(self, value):
+        self._edges = value
+
+    @attributes.setter
+    def attributes(self, value):
+        self._attributes = value
 
     def __hash__(self):
         return hash(self._id)
@@ -84,9 +96,17 @@ class Edge:
     def target(self):
         return self._target
 
+    @target.setter
+    def target(self, value):
+        self._target = value
+        
     @property
     def origin(self):
         return self._origin
+    
+    @origin.setter
+    def origin(self, value):
+        self._origin = value
     
     @property
     def is_directed(self):
