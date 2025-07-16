@@ -1,6 +1,7 @@
 
 from api.services.loader import BaseLoader
 import xml.etree.ElementTree as ET
+from api.models import Graph
 
 class XmlLoader(BaseLoader):
 
@@ -20,6 +21,13 @@ class XmlLoader(BaseLoader):
         xml_root = ET.fromstring(xml_string)
         return xml_root
     
+    def make_graph(self, tree):
+        graph = Graph()
+        self.create_node(graph, tree)
+        return graph
+    
+    def create_node(graph,tree):
+        pass
 
     
     
