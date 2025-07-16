@@ -15,7 +15,7 @@ class XmlLoader(BaseLoader):
     def name(self):
         return "XML Loader"
     
-    def load_xml(self,xml_file,key_field):
+    def load_file(self,xml_file,key_field):
         self._key_field = key_field
         xml_string = xml_file.read()
         xml_root = ET.fromstring(xml_string)
