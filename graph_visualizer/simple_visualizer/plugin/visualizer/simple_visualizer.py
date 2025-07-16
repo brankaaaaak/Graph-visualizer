@@ -104,7 +104,24 @@ class SimpleVisualizer(BaseVisualizer):
             }
 
             function nodeClick(element) {
-                // TO-DO
+                var description="id:"+element.id+"\\n";
+                var id=selected_node.id.replace("id-","");
+                if(selected_node!=null){
+                    nodeView(nodes[id],"#241f4c");
+                }
+
+                var element_id=element.id.replace("id-","");
+                var new_node=nodes[element_id];
+                selected_node=new_node;
+
+                nodeView(selected_node,"pink")
+
+                for(var i=0;i<new_node.attributes.length;i++) {
+                   description += new_node.attributes[i] + "\\n";
+                }
+                trimmed_id=element.id.replace("id-","");
+
+                alert(description);
             }
         });
         </script>
@@ -116,3 +133,4 @@ class SimpleVisualizer(BaseVisualizer):
             "connections": json.dumps(connections)
         }, request)
         return view_html
+    
