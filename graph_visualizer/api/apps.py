@@ -7,6 +7,9 @@ class ApiConfig(AppConfig):
     name = 'api'
     loaders = []
     visualizers = []
+    graph=None
+    loader=None
+    visualizer=None
 
     def ready(self):
         self.loaders = load_plugins("loader")

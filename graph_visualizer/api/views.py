@@ -1,10 +1,12 @@
 import json
+import os
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.core.files.storage import FileSystemStorage
 
 
 from api.models import Edge, Graph, Node
+from django.apps.registry import apps
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
 
 def index_view(request):
@@ -13,20 +15,31 @@ def index_view(request):
 from django.shortcuts import render
 from api.models import Edge, Graph, Node
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
-
 def upload_file(request):
-    if request.method == 'POST' and request.FILES.get('graph_file'):
-        graph_file = request.FILES['graph_file']
-        fs = FileSystemStorage()
-        filename = fs.save(graph_file.name, graph_file)
-        uploaded_file_url = fs.url(filename)
+    loaders = apps.get_app_config('api').loaders
 
-        request.session['uploaded_file_path'] = fs.path(filename)
+    chosen_file = request.FILES.get('graph_file')
+    file_missing = False
+    extension_missmatch = False
 
-        return redirect('home')  
+    ext = os.path.splitext(chosen_file.name)[1].lower()
 
-    return redirect('home') 
+    for loader in loaders:
+        if check_extension(loader.identifier(), chosen_file):
+                graph = loader.load_file(chosen_file, key_field="id")
+                apps.get_app_config('api').graph = graph
+                print("Loaded graph:")
+                print(graph)
+                break
+    return render(request, 'index.html')
 
+def check_extension(loader_name, file):
+    match loader_name:
+        case "XmlLoader":
+            return file.name.endswith('.xml')
+        case "JsonLoader":
+            return file.name.endswith('.json')
+    return False
 
 def test_graph_view(request):
     # Kreiraj graf

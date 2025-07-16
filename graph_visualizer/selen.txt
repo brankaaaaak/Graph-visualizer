@@ -1,0 +1,107 @@
+ 1️⃣ Search
+Happy Path Search
+
+Uneseš validan tekst → klikneš Search → proveri da lista prikazuje rezultate koji odgovaraju.
+
+Search with No Results
+
+Uneseš tekst za koji nema rezultata → klikneš Search → proveri da je lista prazna ili se prikazuje poruka "No results found".
+
+Clear Search
+
+Uneseš tekst → Search → obrišeš tekst → Search → proveri da se vrate svi eventi.
+
+🟢 2️⃣ Filter
+Open Filter Dropdown
+
+Klikneš Filter dugme → dropdown se otvara.
+
+Apply Single Filter
+
+Selektuješ samo Type → klikneš Filter By → proveri da lista prikazuje samo evente tog tipa.
+
+Apply Multiple Filters
+
+Kombinacija Type + Location + datumi → proveri da se lista filtrira ispravno.
+
+Filter with No Results
+
+Izaberi nerealnu kombinaciju (npr. Type A + Type B + nemoguć datum) → proveri da nema rezultata.
+
+Use Date Before Filter
+
+Klikneš Use Date Before → izabereš dan/mesec/godinu → proveri da se lista filtrira.
+
+Use Date After Filter
+
+Isto kao gore, ali Date After.
+
+Use Both Dates Together
+
+Aktiviraš Date Before i Date After → proveri da radi kombinacija.
+
+Reset Filters
+
+Primeni filtere → resetuj filter polja → proveri da se vrate svi eventi.
+
+🟢 3️⃣ Sort
+Open Sort Dropdown
+
+Klikneš Sort dugme → dropdown se otvara.
+
+Apply Ascending Sort
+
+Izaberi Ascending + neki kriterijum → proveri da su eventi sortirani rastuće.
+
+Apply Descending Sort
+
+Izaberi Descending + kriterijum → proveri da su eventi sortirani opadajuće.
+
+Combine Multiple Sort Keys
+
+Izaberi više sort ključeva + sort order → proveri da radi kombinacija.
+
+Sort Without Filters
+
+Primeni sort bez filtera → proveri redosled.
+
+Sort After Search
+
+Prvo uradi search → pa sort → proveri da je rezultat i dalje tačan i sortiran.
+
+🟢 4️⃣ Pagination
+Check Pagination Appears
+
+Ako ima više rezultata od pageSize, proveri da mat-paginator postoji.
+
+Go to Next Page
+
+Klikni next u paginatoru → proveri da se lista promeni.
+
+Change Page Size
+
+Promeni page size (npr. sa 5 na 10) → proveri da lista prikazuje više rezultata.
+
+Combine Filter + Sort + Pagination
+
+Primeni filter → sort → pređi na sledeću stranicu → proveri da su svi kriterijumi i dalje na snazi.
+
+✅ 5️⃣ Edge Cases & UX
+Filter Dropdown Close on Outside Click
+
+Otvori filter → klikni van → proveri da se zatvori.
+
+Sort Dropdown Close on Outside Click
+
+Search Input Trims Whitespace
+
+Unesi " Music " → proveri da se tretira kao "Music".
+
+Invalid Date Range
+
+Date Before manji od Date After → proveri da se pravilno ponaša (ili prikaže error).
+
+Empty Input Search
+
+Klikni Search bez teksta → proveri da se lista ne filtrira (ili resetuje).
+
