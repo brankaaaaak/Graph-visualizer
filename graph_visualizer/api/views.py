@@ -30,8 +30,7 @@ def upload_file(request):
 
     for loader in loaders:
         if check_extension(loader.identifier(), chosen_file):
-                graph = loader.load_file(chosen_file, key_field="id")
-                apps.get_app_config('api').graph = graph
+                graph = loader.load_file(chosen_file, key_field="id")   
                 print("Loaded graph:")
                 print(graph)
                 break
