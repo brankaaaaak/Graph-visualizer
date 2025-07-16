@@ -267,3 +267,26 @@ class TreeNode(object):
                 child_node = TreeNode(child, self, child_type)
                 self._children.append(child_node)
     
+class Tree(object):
+    def __init__(self, roots=None):
+        nodeId.reset()
+        self._roots = roots
+        if self._roots is None:
+            self._roots = []
+        self._last_opened = 0
+
+    @property
+    def roots(self):
+        return self._roots
+
+    @roots.setter
+    def roots(self, roots):
+        self._roots = roots
+
+    @property
+    def last_opened(self):
+        return self._last_opened
+
+    @last_opened.setter
+    def last_opened(self, last_opened):
+        self._last_opened = last_opened
