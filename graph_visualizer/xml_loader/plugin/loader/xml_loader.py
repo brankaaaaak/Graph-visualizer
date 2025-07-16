@@ -16,6 +16,7 @@ class XmlLoader(BaseLoader):
         return "XML Loader"
     
     def load_file(self,xml_file,key_field):
+        print("Ušao u load_file")
         self._key_field = key_field
         xml_string = xml_file.read()
         xml_root = ET.fromstring(xml_string)
@@ -29,22 +30,23 @@ class XmlLoader(BaseLoader):
     def create_node(self,graph,root_element):
         self._id_sequence+=1
         node=Node(self._id_sequence)
-        for key, value in root_element.attrib.items():
-            node.add_attribute(key, value)
+        for key in root_element.attrib:
+            node.add_attribute(key,root_element.attrib.get(key))
 
-        text = (root_element.text or "").strip()
-        if text:
-            cleaned_text = " ".join(text.split())
-            node.add_attribute(root_element.tag, cleaned_text)
+        root_element = root_element.text.strip()
+        if root_element.text:
+            root_element.text = " ".join(root_element.text.split())
+            node.add_attribute(node.tag, node.text)
 
         for child in root_element:
             child_node= self.create_node(graph, child)
             edge = Edge(node, child_node, relation=child.tag, weight=0, is_directed=True)
             node.add_edge(edge)
 
-        if node not in graph.nodes:
-            graph.insert_node(node)
-
+        for n in graph.nodes:
+            if node == n:
+                return node
+        graph.insert_node(node)
         return node
 
 

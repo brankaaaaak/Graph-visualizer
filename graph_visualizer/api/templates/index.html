@@ -116,15 +116,15 @@
         <header>
             <div>Graph Visualizer</div>
             <div class="center-dropdown">
-            <form method="get" action="{% url 'choose_visualizer' %}">
-                <select name="visualizer" required>
-                <option value="" selected disabled>Choose visualizer...</option>
-                <option value="simple">Simple Visualizer</option>
-                <option value="complex">Complex Visualizer</option>
-                </select>
-                <button type="submit">Go</button>
-            </form>
-            </div>
+        <form method="get" action="{% url 'choose_visualizer' %}">
+            <select name="visualizer" required>
+            <option value="" selected disabled>Choose visualizer...</option>
+            <option value="simple">Simple Visualizer</option>
+            <option value="complex">Complex Visualizer</option>
+            </select>
+            <button type="submit">Go</button>
+        </form>
+        </div>
 
             <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}

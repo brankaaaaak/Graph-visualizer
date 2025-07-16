@@ -24,6 +24,7 @@ class JsonLoader(BaseLoader):
     
     def make_graph(self, tree):
         self._graph = Graph()
+        self.create_node(tree)
         return self._graph
 
     def create_node(self, data, parent=None, relation=None):

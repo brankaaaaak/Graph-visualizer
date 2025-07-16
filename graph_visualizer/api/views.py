@@ -10,6 +10,7 @@ from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualiz
 from api.models import Edge, Graph, Node
 from django.apps.registry import apps
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
+import xml.etree.ElementTree as ET
 
 def index_view(request):
     api_config = apps.get_app_config('api')
@@ -28,17 +29,14 @@ def check_extension(loader_name, file):
     return False
 def upload_file(request):
     loaders = apps.get_app_config('api').loaders
-
     chosen_file = request.FILES.get('graph_file')
 
     for loader in loaders:
         if check_extension(loader.identifier(), chosen_file):
             root_element= loader.load_file(chosen_file, key_field="id")
             graph = loader.make_graph(root_element)
-            print(graph)
-            apps.get_app_config('core').graph = graph
+            apps.get_app_config('api').graph = graph
             break
-
     return render(request, 'index.html')
 def test_graph_view(request):
     # Kreiraj graf
@@ -56,8 +54,8 @@ def test_graph_view(request):
     graph.insert_node(node2)
     graph.insert_node(node3)
 
-    edge1 = Edge(origin=node1, target=node2, relation="connects", weight=1, is_directed=False)
-    edge2 = Edge(origin=node2, target=node3, relation="connects", weight=1, is_directed=False)
+    edge1 = Edge(origin=node1, target=node2, relation="connects", weight=1, directed=False)
+    edge2 = Edge(origin=node2, target=node3, relation="connects", weight=1, directed=False)
 
     node1.add_edge(edge1)
     node2.add_edge(edge1)
@@ -79,30 +77,26 @@ def choose_visualizer(request):
     else:
         return HttpResponse("Invalid choice.")
 def simple_visualization(request):
-    visualizers = apps.get_app_config('core').visualizers
-    graph = apps.get_app_config('core').graph
+    visualizers = apps.get_app_config('api').visualizers
+    graph = apps.get_app_config('api').graph
     
     for v in visualizers:
         if v.identifier() == "simple-visualizer":
-            apps.get_app_config('core').visualizer = "SimpleVisualizer"
-            path = os.path.abspath(os.path.join(
-                os.path.dirname(__file__), "templates", "index.html"))
-            with open(path, 'w') as file:
-                file.write(v.visualize(graph, request))
+            visualizer = SimpleVisualizer()
+            html_snippet = visualizer.visualize(graph, request)
     time.sleep(2)
 
-    graph = apps.get_app_config('core').graph
+    graph = apps.get_app_config('api').graph
     visualizers = []
-    for v in apps.get_app_config('core').visualizers:
+    for v in apps.get_app_config('api').visualizers:
         visualizers.append(
             {"name": v.name(), "identifier": v.identifier()})
     loaders = []
-    for l in apps.get_app_config('core').loaders:
+    for l in apps.get_app_config('api').loaders:
         loaders.append(
             {"name": l.name(), "identifier": l.identifier()})
     
-    return render(request, "index.html", {"stepper":1, 'graph': graph, 'visualizers': visualizers, 'loaders': loaders})
-
+    return render(request, "index.html", {"view_html":html_snippet})
 
 
 def complex_visualization(request):
