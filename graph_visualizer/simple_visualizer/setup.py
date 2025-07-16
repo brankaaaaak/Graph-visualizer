@@ -6,6 +6,10 @@ setup(
     description='Simple graph visualizer plugin for Django',
     packages=find_packages(),
     namespace_packages=["plugin", "plugin.visualizer"],
+    entry_points={
+        'visualizer':
+        ['simple-visualizer=plugin.visualizer.simple_visualizer:SimpleVisualizer']
+    },
     classifiers=[
         'Programming Language :: Python :: 3',
         'Framework :: Django',

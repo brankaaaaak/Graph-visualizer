@@ -1,0 +1,10 @@
+setup.py
+plugin/__init__.py
+plugin/visualizer/__init__.py
+plugin/visualizer/simple_visualizer.py
+simple_visualizer.egg-info/PKG-INFO
+simple_visualizer.egg-info/SOURCES.txt
+simple_visualizer.egg-info/dependency_links.txt
+simple_visualizer.egg-info/entry_points.txt
+simple_visualizer.egg-info/namespace_packages.txt
+simple_visualizer.egg-info/top_level.txt
