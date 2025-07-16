@@ -1,3 +1,4 @@
+import json
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -10,6 +11,9 @@ def index_view(request):
 from django.shortcuts import render
 from api.models import Edge, Graph, Node
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
+
+
+
 
 def test_graph_view(request):
     # Kreiraj graf

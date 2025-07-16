@@ -16,7 +16,7 @@ class JsonLoader(BaseLoader):
     def name(self):
         return "JSON Loader"
     
-    def load_json(self, json_file, key_field):
+    def load_file(self, json_file, key_field):
         if key_field:
             self._key_field = key_field
         json_object = json.load(json_file)
