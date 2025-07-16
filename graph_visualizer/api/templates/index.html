@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Visualizer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 300px auto 300px;
+            grid-template-rows: 70px auto 150px;
+            grid-template-areas: 
+                "header header header"
+                "tree main bird"
+                "tree main bird";
+            height: 100vh;
+        }
+        header {
+            grid-area: header;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+        #tree-view {
+            grid-area: tree;
+            background-color: #f3f3f3;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        #main-view {
+            grid-area: main;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            position: relative;
+        }
+        #bird-view {
+            grid-area: bird;
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        .form-group {
+            display: flex;
+            gap: 10px;
+        }
+        .form-group input {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>Graph Visualizer</div>
+            <div class="form-group">
+                <input type="text" placeholder="File">
+            </div>
+        </header>
+        <div id="tree-view">
+            <h3>Tree View</h3>
+            </ul>
+        </div>
+        <div id="main-view">
+            <h3>Main View</h3>
+            <!-- Graph visualization will go here -->
+            {{ view_html|safe }}
+        </div>
+        <div id="bird-view">
+            <h3>Bird View</h3>
+            <!--  -->
+        </div>
+    </div>
+</body>
+</html>

@@ -73,6 +73,10 @@ class Edge:
         self._is_directed = is_directed
 
     @property
+    def weight(self):
+        return self._weight
+
+    @property
     def relation(self):
         return self._relation
 
@@ -86,7 +90,7 @@ class Edge:
     
     @property
     def is_directed(self):
-        return self.is_directed
+        return self._is_directed
 
     def __hash__(self):
         return hash((self._origin,self._target))

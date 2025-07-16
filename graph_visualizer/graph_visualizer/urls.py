@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from api.views import index_view, test_graph_view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('test-graph/', test_graph_view, name='test_graph'),
+    path('', index_view, name='index'), 
 ]
