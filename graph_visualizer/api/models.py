@@ -189,7 +189,7 @@ class Graph:
         if not is_directed:
             target.add_node(origin)
 
-        
+
 class NodeIdGenerator:
 
     def __init__(self):
@@ -215,4 +215,35 @@ class TreeNode(object):
         self._children = []
         self._parent = parent
         
+    @property
+    def id(self):
+        return self._id
+    
+    @id.setter
+    def id(self, value):
+        self._id = value
+
+    @property
+    def opened(self):
+        return self._opened
+
+    @opened.setter
+    def opened(self, value):
+        self._opened=value
+    
+    @property
+    def object(self):
+        return self._object
+
+    @property
+    def object_type(self):
+        return self._object_type
+
+    @property
+    def children(self):
+        return self._children
+
+    @property
+    def parent(self):
+        return self._parent
     
