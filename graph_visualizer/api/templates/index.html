@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Graph Visualizer</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
+
         .container {
             display: grid;
             grid-template-columns: 300px auto 300px;
@@ -20,7 +24,9 @@
                 "tree main bird"
                 "tree main bird";
             height: 100vh;
+            overflow: hidden;
         }
+
         header {
             grid-area: header;
             background-color: #333;
@@ -28,35 +34,65 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 10px;
+            padding: 0 20px;
+            flex-wrap: wrap; /* 🔑 za manju širinu ekrana */
         }
+
+        header > div {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        form {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .form-group input[type="file"] {
+            max-width: 200px;
+        }
+
+        .form-group input[type="submit"] {
+            padding: 5px 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-group input[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+
         #tree-view {
             grid-area: tree;
             background-color: #f3f3f3;
             padding: 10px;
             overflow-y: auto;
         }
+
         #main-view {
             grid-area: main;
             background-color: #fff;
             border: 1px solid #ddd;
             padding: 10px;
             position: relative;
+            overflow: auto;
         }
+
         #bird-view {
             grid-area: bird;
             background-color: #fafafa;
             border: 1px solid #ddd;
             padding: 10px;
-        }
-        .form-group {
-            display: flex;
-            gap: 10px;
-        }
-        .form-group input {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
         }
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -66,19 +102,23 @@
     <div class="container">
         <header>
             <div>Graph Visualizer</div>
+            <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="file" name="graph_file" required>
+                    <input type="submit" value="Upload">
+                </div>
+            </form>
         </header>
         <div id="tree-view">
             <h3>Tree View</h3>
-            </ul>
         </div>
         <div id="main-view">
             <h3>Main View</h3>
-            <!-- Graph visualization will go here -->
             {{ view_html|safe }}
         </div>
         <div id="bird-view">
             <h3>Bird View</h3>
-            <!--  -->
         </div>
     </div>
 </body>

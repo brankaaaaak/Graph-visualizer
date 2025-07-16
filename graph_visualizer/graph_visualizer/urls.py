@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from api.views import index_view, test_graph_view
+from api.views import index_view, test_graph_view, upload_file
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('test-graph/', test_graph_view, name='test_graph'),
     path('', index_view, name='index'), 
+    path('upload/', upload_file, name='upload_file'),
 ]

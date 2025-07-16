@@ -1,6 +1,8 @@
 import json
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.core.files.storage import FileSystemStorage
+
 
 from api.models import Edge, Graph, Node
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
@@ -12,7 +14,18 @@ from django.shortcuts import render
 from api.models import Edge, Graph, Node
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
 
+def upload_file(request):
+    if request.method == 'POST' and request.FILES.get('graph_file'):
+        graph_file = request.FILES['graph_file']
+        fs = FileSystemStorage()
+        filename = fs.save(graph_file.name, graph_file)
+        uploaded_file_url = fs.url(filename)
 
+        request.session['uploaded_file_path'] = fs.path(filename)
+
+        return redirect('home')  
+
+    return redirect('home') 
 
 
 def test_graph_view(request):
