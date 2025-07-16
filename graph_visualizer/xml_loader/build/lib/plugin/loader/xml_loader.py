@@ -39,7 +39,7 @@ class XmlLoader(BaseLoader):
 
         for child in root_element:
             child_node= self.create_node(graph, child)
-            edge = Edge(node, child_node, relation=child.tag, weight=0, directed=True)
+            edge = Edge(node, child_node, relation=child.tag, weight=0, is_directed=True)
             node.add_edge(edge)
 
         if node not in graph.nodes:

@@ -16,12 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
-from api.views import index_view, test_graph_view, upload_file
+from api.views import choose_visualizer, complex_visualization, index_view, simple_visualization, test_graph_view, upload_file
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('test-graph/', test_graph_view, name='test_graph'),
     path('', index_view, name='index'), 
     path('upload/', upload_file, name='upload_file'),
+    path('choose_visualizer/', choose_visualizer, name='choose_visualizer'),
+    path('simple_visualization/', simple_visualization, name='simple_visualization'),
+    path('complex_visualization/', complex_visualization)
 ]

@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.core.files.storage import FileSystemStorage
@@ -18,24 +19,6 @@ def index_view(request):
     return render(request, 'index.html', {
         'visualizers': visualizer_names,
     })
-
-def upload_file(request):
-    loaders = apps.get_app_config('api').loaders
-
-    chosen_file = request.FILES.get('graph_file')
-    file_missing = False
-    extension_missmatch = False
-
-    ext = os.path.splitext(chosen_file.name)[1].lower()
-
-    for loader in loaders:
-        if check_extension(loader.identifier(), chosen_file):
-                graph = loader.load_file(chosen_file, key_field="id")   
-                print("Loaded graph:")
-                print(graph)
-                break
-    return render(request, 'index.html')
-
 def check_extension(loader_name, file):
     match loader_name:
         case "XmlLoader":
@@ -43,7 +26,20 @@ def check_extension(loader_name, file):
         case "JsonLoader":
             return file.name.endswith('.json')
     return False
+def upload_file(request):
+    loaders = apps.get_app_config('api').loaders
 
+    chosen_file = request.FILES.get('graph_file')
+
+    for loader in loaders:
+        if check_extension(loader.identifier(), chosen_file):
+            root_element= loader.load_file(chosen_file, key_field="id")
+            graph = loader.make_graph(root_element)
+            print(graph)
+            apps.get_app_config('core').graph = graph
+            break
+
+    return render(request, 'index.html')
 def test_graph_view(request):
     # Kreiraj graf
     graph = Graph()
@@ -72,3 +68,43 @@ def test_graph_view(request):
     html_snippet = visualizer.visualize(graph, request)
 
     return render(request, 'index.html', {"view_html": html_snippet})
+
+def choose_visualizer(request):
+    choice = request.GET.get('visualizer')
+
+    if choice == 'simple':
+        return redirect('simple_visualization')
+    elif choice == 'complex':
+        return redirect('complex_visualization')
+    else:
+        return HttpResponse("Invalid choice.")
+def simple_visualization(request):
+    visualizers = apps.get_app_config('core').visualizers
+    graph = apps.get_app_config('core').graph
+    
+    for v in visualizers:
+        if v.identifier() == "simple-visualizer":
+            apps.get_app_config('core').visualizer = "SimpleVisualizer"
+            path = os.path.abspath(os.path.join(
+                os.path.dirname(__file__), "templates", "index.html"))
+            with open(path, 'w') as file:
+                file.write(v.visualize(graph, request))
+    time.sleep(2)
+
+    graph = apps.get_app_config('core').graph
+    visualizers = []
+    for v in apps.get_app_config('core').visualizers:
+        visualizers.append(
+            {"name": v.name(), "identifier": v.identifier()})
+    loaders = []
+    for l in apps.get_app_config('core').loaders:
+        loaders.append(
+            {"name": l.name(), "identifier": l.identifier()})
+    
+    return render(request, "index.html", {"stepper":1, 'graph': graph, 'visualizers': visualizers, 'loaders': loaders})
+
+
+
+def complex_visualization(request):
+    pass
+       

@@ -7,28 +7,15 @@ class ApiConfig(AppConfig):
     name = 'api'
     loaders = []
     visualizers = []
+    graph= None
+    visualizer=None
+    loader=None
 
     def ready(self):
         self.loaders = load_plugins("loader")
         self.visualizers = load_plugins("visualizer")
         print(len(self.loaders))
         print(len(self.visualizers))
-    
-    def get_loader(self, id):
-        print(id)
-        for loader in self.loaders:
-            print(loader.identifier())
-            if loader.identifier() == id:
-                return loader
-        return None
-
-    def get_visualizer(self, id):
-        print(id)
-        for visualizer in self.visualizers:
-            print(visualizer.identifier())
-            if visualizer.identifier() == id:
-                return visualizer
-        return None
 
 def load_plugins(entry_point):
     plugins = []
