@@ -11,6 +11,7 @@ class ApiConfig(AppConfig):
     def ready(self):
         self.loaders = load_plugins("loader")
         self.visualizers = load_plugins("visualizer")
+        print(len(self.loaders))
         print(len(self.visualizers))
 
 def load_plugins(entry_point):
