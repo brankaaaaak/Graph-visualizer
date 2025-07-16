@@ -247,3 +247,23 @@ class TreeNode(object):
     def parent(self):
         return self._parent
     
+    def find_node(self, id):
+        if id == self._id:
+            return self
+        else:
+            for child in self._children:
+                found_node = child.find_node(id)
+                if found_node:
+                    return found_node
+
+    def add_children(self, children_objects):
+        for child in children_objects:
+            if self._object_type == "vertex":
+                child_type = "edge"
+                child_node = TreeNode(child, self, child_type)
+                self._children.append(child_node)
+            else:
+                child_type = "vertex"
+                child_node = TreeNode(child, self, child_type)
+                self._children.append(child_node)
+    
