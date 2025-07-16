@@ -35,9 +35,22 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 20px;
-            flex-wrap: wrap; /* 🔑 za manju širinu ekrana */
+            flex-wrap: wrap; 
         }
-
+        .center-dropdown {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #visualizer-select {
+            padding: 5px 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            width: 200px; /* ili koliko želiš, npr. 250px */
+            min-width: 200px; /
+        }
         header > div {
             font-size: 1.2rem;
             font-weight: bold;
@@ -102,6 +115,14 @@
     <div class="container">
         <header>
             <div>Graph Visualizer</div>
+            <div class="center-dropdown">
+                <select name="visualizer" id="visualizer-select">
+                    <option value="" selected disabled>Choose visualizer...</option>
+                    {% for vis_name in visualizers %}
+                        <option value="{{ vis_name }}">{{ vis_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">

@@ -3,18 +3,22 @@ import os
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.core.files.storage import FileSystemStorage
-
-
+from django.shortcuts import render
+from api.models import Edge, Graph, Node
+from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
 from api.models import Edge, Graph, Node
 from django.apps.registry import apps
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
 
 def index_view(request):
-    return render(request, 'index.html')
+    api_config = apps.get_app_config('api')
+    visualizers = api_config.visualizers
+    visualizer_names = [v.name() for v in visualizers]
 
-from django.shortcuts import render
-from api.models import Edge, Graph, Node
-from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
+    return render(request, 'index.html', {
+        'visualizers': visualizer_names,
+    })
+
 def upload_file(request):
     loaders = apps.get_app_config('api').loaders
 
