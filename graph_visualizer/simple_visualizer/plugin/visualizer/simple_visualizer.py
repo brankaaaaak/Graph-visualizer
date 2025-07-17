@@ -20,7 +20,8 @@ class SimpleVisualizer(BaseVisualizer):
         for edge in graph.get_edges():
             connection = {"source": edge.origin.id, "target": edge.target.id}
             connections.append(connection)
-
+        print(nodes)
+        print(connections)
         view = """
         <style>
         .node {
@@ -42,7 +43,7 @@ class SimpleVisualizer(BaseVisualizer):
             var nodes = JSON.parse("{{nodes |escapejs}}");
 
             var width = 1000;
-            var height = 450;
+            var height = 600;
 
             connections.forEach(function (connection) {
                 connection.source = nodes[connection.source];

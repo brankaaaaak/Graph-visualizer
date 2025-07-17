@@ -85,16 +85,6 @@ def simple_visualization(request):
             visualizer = SimpleVisualizer()
             html_snippet = visualizer.visualize(graph, request)
     time.sleep(2)
-
-    graph = apps.get_app_config('api').graph
-    visualizers = []
-    for v in apps.get_app_config('api').visualizers:
-        visualizers.append(
-            {"name": v.name(), "identifier": v.identifier()})
-    loaders = []
-    for l in apps.get_app_config('api').loaders:
-        loaders.append(
-            {"name": l.name(), "identifier": l.identifier()})
     
     return render(request, "index.html", {"view_html":html_snippet})
 
