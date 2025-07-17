@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 from api.models import Edge, Graph, Node
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
-
+from complex_visualizer.plugin.visualizer.complex_visualizer import ComplexVisualizer
 def index_view(request):
     return render(request, 'index.html')
 
@@ -35,7 +35,9 @@ def test_graph_view(request):
     node2.add_edge(edge2)
     node3.add_edge(edge2)
 
-    visualizer = SimpleVisualizer()
+    visualizer = ComplexVisualizer()
+    #visualizer = SimpleVisualizer()
     html_snippet = visualizer.visualize(graph, request)
+    print(html_snippet)
 
     return render(request, 'index.html', {"view_html": html_snippet})
