@@ -114,39 +114,52 @@ def generate_tree_html(nodes):
     html += '</ul>'
     return html
     """
-def generate_tree_html(nodes):
+def generate_tree_html(nodes, depth=0):
     html = '<ul class="tree-list">'
     for node in nodes:
         if not hasattr(node, 'id') or not hasattr(node, 'object'):
-            print("⚠️ Upozorenje: Čvor nije validan TreeNode →", node)
             continue
 
-        is_expandable = bool(node.children)  # samo ako čvor ima djecu
-        arrow = "➕" if is_expandable and not node.opened else ("➖" if is_expandable else "•")
+        is_expandable = False
+        label = "Unknown"
+        text = str(node.object)
 
         if isinstance(node.object, Node):
             label = "Node"
+            is_expandable = bool(node.object.edges) and depth == 0
             text = f"<strong>{node.object.id}</strong> - {node.object.attributes}"
+        elif isinstance(node.object, Edge):
+            label = "Edge"
+            is_expandable = depth == 1
+            text = f"<em>{node.object.relation}</em> → {node.object.target.id}"
         elif isinstance(node.object, str):  
             label = "Edge"
             text = f"<em>{node.object}</em>"
-        else:
-            label = "Unknown"
-            text = str(node.object)
+
+        arrow = "➕" if is_expandable and not node.opened else ("➖" if is_expandable else "•")
 
         html += f'''
         <li>
             <a href="#" class="node-toggle" data-node-id="{node.id}">{arrow} {label}: {text}</a>
         '''
 
-        # Samo ako je čvor otvoren i ima djecu
-        if node.opened and node.children:
-            html += generate_tree_html(node.children)
+        # Ako je otvoren i dozvoljen depth
+        if node.opened:
+            # Ako je Node i depth 0 → prikaži njegove edge-ove
+            if isinstance(node.object, Node) and depth == 0:
+                children = node.children
+                if children:
+                    html += generate_tree_html(children, depth + 1)
+
+            # Ako je Edge i depth 1 → prikaži samo ciljni node
+            elif isinstance(node.object, Edge) and depth == 1:
+                children = node.children
+                if children:
+                    html += generate_tree_html(children, depth + 1)
 
         html += '</li>'
     html += '</ul>'
     return html
-
 
 def dict_to_graph(graph_dict):
     graph = Graph()
