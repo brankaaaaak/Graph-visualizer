@@ -20,7 +20,7 @@ def index_view(request):
     visualizer_names = [v.name() for v in visualizers]
 
     return render(request, 'index.html', {
-        'visualizers': visualizer_names,
+        'visualizers': visualizer_names
     })
 
 def upload_file(request):
@@ -40,9 +40,14 @@ def upload_file(request):
     api_config.load_tree()
     tree_html = generate_tree_html(api_config.tree.roots)
 
+
+    graph = apps.get_app_config('api').graph
+    graph_loaded = graph is not None and graph.nodes
+    #print(graph)
     return render(request, 'index.html', {
         "tree_html": tree_html,
-        "visualizers": [v.name() for v in api_config.visualizers]
+        "visualizers": [v.name() for v in api_config.visualizers],
+        "graph_loaded": graph_loaded
     })
 
 
@@ -212,7 +217,7 @@ def visualize(request):
         if v.identifier() == visualizer_id:
             html_snippet = v.visualize(graph, request)
             time.sleep(2)
-            return render(request, "index.html", {"view_html": html_snippet})
+            return render(request, "index.html", {"view_html": html_snippet,"graph_loaded":graph})
     
     return HttpResponse("Invalid visualizer identifier.", status=404)
 

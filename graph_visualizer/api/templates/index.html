@@ -185,14 +185,18 @@
         <header>
             <div>Graph Visualizer</div>
             <div class="center-dropdown">
-        <form method="get" action="{% url 'visualize' %}">
-            <select name="visualizer" required class="styled-select">
-            <option value="" selected disabled>Choose visualizer...</option>
-            <option value="simple-visualizer">Simple Visualizer</option>
-            <option value="complex-visualizer">Complex Visualizer</option>
-            </select>
-            <button type="submit" class="submit-button">Go</button>
-        </form>
+                {% if graph_loaded %}
+            <form method="get" action="{% url 'visualize' %}">
+                <select name="visualizer" required class="styled-select">
+                    <option value="" selected disabled>Choose visualizer...</option>
+                    <option value="simple-visualizer">Simple Visualizer</option>
+                    <option value="complex-visualizer">Complex Visualizer</option>
+                </select>
+                <button type="submit" class="submit-button">Go</button>
+            </form>
+        {% else %}
+            <p style="color: rgb(70, 23, 56); font-style: italic;">Please upload a file first to choose visualizer.</p>
+        {% endif %}
         </div>
 
             <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
