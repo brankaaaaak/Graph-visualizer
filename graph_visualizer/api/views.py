@@ -200,32 +200,21 @@ def expand_node_view(request):
         import traceback
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
+def visualize(request):
+    visualizer_id = request.GET.get('visualizer')
+    if not visualizer_id:
+        return HttpResponse("No visualizer specified.", status=400)
 
-def choose_visualizer(request):
-
-    choice = request.GET.get('visualizer')
-
-    if choice == 'simple':
-        return redirect('simple_visualization')
-    elif choice == 'complex':
-        return redirect('complex_visualization')
-    else:
-        return HttpResponse("Invalid choice.")
-    
-def simple_visualization(request):
-    visualizers = apps.get_app_config('api').visualizers
     graph = apps.get_app_config('api').graph
-    
-    for v in visualizers:
-        if v.identifier() == "simple-visualizer":
-            visualizer = SimpleVisualizer()
-            html_snippet = visualizer.visualize(graph, request)
-    time.sleep(2)
-    
-    return render(request, "index.html", {"view_html":html_snippet})
+    visualizers = apps.get_app_config('api').visualizers
 
-def complex_visualization(request):
-    pass
+    for v in visualizers:
+        if v.identifier() == visualizer_id:
+            html_snippet = v.visualize(graph, request)
+            time.sleep(2)
+            return render(request, "index.html", {"view_html": html_snippet})
+    
+    return HttpResponse("Invalid visualizer identifier.", status=404)
 
 def check_extension(loader_name, file):
     match loader_name:

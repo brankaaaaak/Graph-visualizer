@@ -18,14 +18,12 @@ from django.contrib import admin
 from django.urls import path
 
 from api.views import expand_node_view, index_view, upload_file
-from api.views import choose_visualizer, complex_visualization, index_view, simple_visualization, upload_file
+from api.views import visualize, index_view,upload_file
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index_view, name='index'), 
     path('upload/', upload_file, name='upload_file'),
     path('expand_node', expand_node_view, name='expand_node'),
-    path('choose_visualizer/', choose_visualizer, name='choose_visualizer'),
-    path('simple_visualization/', simple_visualization, name='simple_visualization'),
-    path('complex_visualization/', complex_visualization)
+    path('visualize/', visualize, name='visualize')
 ]
