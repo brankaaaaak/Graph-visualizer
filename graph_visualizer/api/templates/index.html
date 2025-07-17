@@ -29,7 +29,7 @@
 
         header {
             grid-area: header;
-            background-color: #333;
+            background-color:#fb045b;
             color: white;
             display: flex;
             align-items: center;
@@ -49,7 +49,7 @@
             border: none;
             cursor: pointer;
             width: 200px; 
-            min-width: 200px; /
+            min-width: 200px; 
         }
         header > div {
             font-size: 1.2rem;
@@ -74,20 +74,23 @@
 
         .form-group input[type="submit"] {
             padding: 5px 10px;
-            background-color: #5cb85c;
+            background-color: #3c2956;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-weight: bold;
         }
 
+
         .form-group input[type="submit"]:hover {
-            background-color: #4cae4c;
+            background-color: #f3eef3;
+            color: #3c2956;
         }
 
         #tree-view {
             grid-area: tree;
-            background-color: #f3f3f3;
+            background-color: #f3eee9;
             padding: 10px;
             overflow-y: auto;
         }
@@ -99,7 +102,7 @@
 
         #main-view {
             grid-area: main;
-            background-color: #fff;
+            background-color: #eee1d5;
             border: 1px solid #ddd;
             padding: 10px;
             position: relative;
@@ -108,7 +111,7 @@
 
         #bird-view {
             grid-area: bird;
-            background-color: #fafafa;
+            background-color: #f3eee9;
             border: 1px solid #ddd;
             padding: 10px;
         }
@@ -132,6 +135,47 @@
         .node-toggle:hover {
             color: #fb045b
         }
+        .submit-button {
+            padding: 5px 12px;
+            background-color: #3c2956;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 15px;
+        }
+
+        .submit-button:hover {
+            background-color: #f3eee9;
+            color: #3c2956;
+        }
+        .styled-select {
+            padding: 10px 15px;
+            font-size: 1.1rem;
+            border: 2px solid #3c2956;
+            border-radius: 8px;
+            background-color: #fff;
+            color: #3c2956;
+            font-weight: bold;
+            appearance: none;
+            cursor: pointer;
+            min-width: 220px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .styled-select:hover {
+            border-color: #fb045b;
+        }
+
+        .styled-select:focus {
+            outline: none;
+            border-color: #fb045b;
+            box-shadow: 0 0 5px rgba(251, 4, 91, 0.4);
+        }
+
+
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
@@ -142,12 +186,12 @@
             <div>Graph Visualizer</div>
             <div class="center-dropdown">
         <form method="get" action="{% url 'choose_visualizer' %}">
-            <select name="visualizer" required>
+            <select name="visualizer" required class="styled-select">
             <option value="" selected disabled>Choose visualizer...</option>
             <option value="simple">Simple Visualizer</option>
             <option value="complex">Complex Visualizer</option>
             </select>
-            <button type="submit">Go</button>
+            <button type="submit" class="submit-button">Go</button>
         </form>
         </div>
 
