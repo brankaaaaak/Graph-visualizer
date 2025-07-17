@@ -16,7 +16,6 @@ def index_view(request):
         'visualizers': visualizers_data,
     })
 
-
 def upload_file(request):
     api_config = apps.get_app_config('api')
     loaders = apps.get_app_config('api').loaders
@@ -31,12 +30,14 @@ def upload_file(request):
             break
     if not raw_graph:
         return render(request, 'index.html', {"error": "Unsupported file type or loading failed."})
-    
-
+    graph = apps.get_app_config('api').graph
+    graph_loaded = graph is not None and graph.nodes
+   
     visualizers_data = [(v.identifier(), v.name()) for v in api_config.visualizers]
 
     return render(request, 'index.html', {
-        "visualizers": visualizers_data
+        "visualizers": visualizers_data,
+        "graph_loaded": graph_loaded
     })
 
 def generate_tree_html(nodes):
@@ -131,9 +132,7 @@ def visualize(request):
         if v.identifier() == visualizer_id:
             html_snippet = v.visualize(graph, request)
             time.sleep(2)
-            return render(request, "index.html", {"view_html": html_snippet, "tree_html": tree_html})
-    
-    
+            return render(request, "index.html", {"view_html": html_snippet, "tree_html": tree_html,"graph_loaded":graph})
     
     return HttpResponse("Invalid visualizer identifier.", status=404)
 
