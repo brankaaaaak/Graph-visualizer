@@ -38,19 +38,12 @@ def upload_file(request):
     if not raw_graph:
         return render(request, 'index.html', {"error": "Unsupported file type or loading failed."})
     
-
-
     graph = apps.get_app_config('api').graph
     graph_loaded = graph is not None and graph.nodes
     #print(graph)
     return render(request, 'index.html', {
-<<<<<<< HEAD
-        "tree_html": tree_html,
         "visualizers": [v.name() for v in api_config.visualizers],
         "graph_loaded": graph_loaded
-=======
-        "visualizers": [v.name() for v in api_config.visualizers]
->>>>>>> 246579f40a0345d1c295f4fdb0e383d6ad2961e7
     })
 
 def generate_tree_html(nodes):
