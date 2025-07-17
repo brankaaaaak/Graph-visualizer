@@ -1,27 +1,21 @@
-import json
-import os
-import pprint
 from django.http import HttpResponse, JsonResponse
 import time
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
-from django.core.files.storage import FileSystemStorage
+from django.shortcuts import  render
 from django.shortcuts import render
 from api.models import Edge, Graph, Node
-from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
 from api.models import Edge, Graph, Node
 from django.apps.registry import apps
-from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
-import xml.etree.ElementTree as ET
 
 def index_view(request):
     api_config = apps.get_app_config('api')
     visualizers = api_config.visualizers
-    visualizer_names = [v.name() for v in visualizers]
+    visualizers_data = [(v.identifier(), v.name()) for v in visualizers]
 
     return render(request, 'index.html', {
-        'visualizers': visualizer_names,
+        'visualizers': visualizers_data,
     })
+
 
 def upload_file(request):
     api_config = apps.get_app_config('api')
@@ -39,8 +33,10 @@ def upload_file(request):
         return render(request, 'index.html', {"error": "Unsupported file type or loading failed."})
     
 
+    visualizers_data = [(v.identifier(), v.name()) for v in api_config.visualizers]
+
     return render(request, 'index.html', {
-        "visualizers": [v.name() for v in api_config.visualizers]
+        "visualizers": visualizers_data
     })
 
 def generate_tree_html(nodes):

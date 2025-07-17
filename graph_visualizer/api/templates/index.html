@@ -187,14 +187,14 @@
             <div class="center-dropdown">
         <form method="get" action="{% url 'visualize' %}">
             <select name="visualizer" required class="styled-select">
-            <option value="" selected disabled>Choose visualizer...</option>
-            <option value="simple-visualizer">Simple Visualizer</option>
-            <option value="complex-visualizer">Complex Visualizer</option>
+                <option value="" selected disabled>Choose visualizer...</option>
+                {% for id, name in visualizers %}
+                    <option value="{{ id }}">{{ name }}</option>
+                {% endfor %}
             </select>
             <button type="submit" class="submit-button">Go</button>
         </form>
         </div>
-
             <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">
