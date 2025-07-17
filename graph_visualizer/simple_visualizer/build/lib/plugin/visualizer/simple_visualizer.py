@@ -15,12 +15,13 @@ class SimpleVisualizer(BaseVisualizer):
         for node in graph.nodes:
             attributes = [f"{key}: {value}" for key, value in node.attributes.items()]
             nodes[node.id] = {"id": "id-" + str(node.id), "attributes": attributes}
-
+            
         connections = []
         for edge in graph.get_edges():
             connection = {"source": edge.origin.id, "target": edge.target.id}
             connections.append(connection)
-
+        print(nodes)
+        print(connections)
         view = """
         <style>
         .node {
@@ -42,7 +43,7 @@ class SimpleVisualizer(BaseVisualizer):
             var nodes = JSON.parse("{{nodes |escapejs}}");
 
             var width = 1000;
-            var height = 450;
+            var height = 600;
 
             connections.forEach(function (connection) {
                 connection.source = nodes[connection.source];
@@ -57,7 +58,8 @@ class SimpleVisualizer(BaseVisualizer):
                 .linkDistance(300)
                 .charge(-5000)
                 .gravity(0.5);
-
+                
+            d3.select("#main-view svg").remove();
             var svg = d3.select("#main-view")
                 .append("svg")
                 .attr("width", width)

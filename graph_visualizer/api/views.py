@@ -2,6 +2,8 @@ import json
 import os
 import pprint
 from django.http import HttpResponse, JsonResponse
+import time
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render
@@ -10,6 +12,7 @@ from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualiz
 from api.models import Edge, Graph, Node
 from django.apps.registry import apps
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
+import xml.etree.ElementTree as ET
 
 def index_view(request):
     api_config = apps.get_app_config('api')
@@ -19,81 +22,28 @@ def index_view(request):
     return render(request, 'index.html', {
         'visualizers': visualizer_names,
     })
-"""
+
 def upload_file(request):
+    api_config = apps.get_app_config('api')
     loaders = apps.get_app_config('api').loaders
-
-    chosen_file = request.FILES.get('graph_file')
-    file_missing = False
-    extension_missmatch = False
-
-    ext = os.path.splitext(chosen_file.name)[1].lower()
-
-    graph = None
-    for loader in loaders:
-        if check_extension(loader.identifier(), chosen_file):
-                raw_graph = loader.load_file(chosen_file, key_field="id")
-                graph = dict_to_graph(raw_graph)
-                print("Loaded graph:")
-                print(graph)
-                break
-    if not graph:
-        return render(request, 'index.html', {"error": "Unsupported file type or loading failed."})
-    
-    api_config = apps.get_app_config('api')
-    api_config.current_graph = graph
-    api_config.current_graph = graph
-
-    api_config.load_tree()
-
-    tree = api_config.tree
-    tree_html = render_tree_html(tree)
-
-
-    return render(request, 'index.html', {
-        "tree_html": tree_html,
-        "visualizers": [v.name() for v in api_config.visualizers]
-    })
-"""
-def upload_file(request):
-    api_config = apps.get_app_config('api')
-    loaders = api_config.loaders
     chosen_file = request.FILES.get('graph_file')
 
     raw_graph = None
     for loader in loaders:
         if check_extension(loader.identifier(), chosen_file):
-                raw_graph = loader.load_file(chosen_file, key_field="id")
-                api_config.base_graph = loader.make_graph(raw_graph)                 
-                api_config.current_graph = api_config.base_graph
-                break
+            raw_graph= loader.load_file(chosen_file, key_field="id")
+            api_config.base_graph = loader.make_graph(raw_graph)                 
+            api_config.graph = api_config.base_graph
+            break
     if not raw_graph:
         return render(request, 'index.html', {"error": "Unsupported file type or loading failed."})
-
-    """for node in api_config.current_graph.nodes:
-        print(f"ID: {node.id}")
-        print(f"Atributi: {node.attributes}")
-        print(f"Broj veza (edges): {len(node.edges)}")
-        print("====")"""
-    # Inicijalizuj strukturu stabla
     api_config.load_tree()
     tree_html = generate_tree_html(api_config.tree.roots)
 
-
-    # Prikaži stranicu sa grafom i listom vizualizera
     return render(request, 'index.html', {
         "tree_html": tree_html,
         "visualizers": [v.name() for v in api_config.visualizers]
     })
-
-
-def check_extension(loader_name, file):
-    match loader_name:
-        case "XmlLoader":
-            return file.name.endswith('.xml')
-        case "JsonLoader":
-            return file.name.endswith('.json')
-    return False
 
 
 def render_tree_html(forest):
@@ -163,9 +113,6 @@ def generate_tree_html(nodes):
     html += '</ul>'
     return html
 
-
-
-
 def dict_to_graph(graph_dict):
     graph = Graph()
     nodes_map = {}
@@ -206,5 +153,36 @@ def expand_node_view(request):
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
 
+def choose_visualizer(request):
 
+    choice = request.GET.get('visualizer')
 
+    if choice == 'simple':
+        return redirect('simple_visualization')
+    elif choice == 'complex':
+        return redirect('complex_visualization')
+    else:
+        return HttpResponse("Invalid choice.")
+    
+def simple_visualization(request):
+    visualizers = apps.get_app_config('api').visualizers
+    graph = apps.get_app_config('api').graph
+    
+    for v in visualizers:
+        if v.identifier() == "simple-visualizer":
+            visualizer = SimpleVisualizer()
+            html_snippet = visualizer.visualize(graph, request)
+    time.sleep(2)
+    
+    return render(request, "index.html", {"view_html":html_snippet})
+
+def complex_visualization(request):
+    pass
+
+def check_extension(loader_name, file):
+    match loader_name:
+        case "XmlLoader":
+            return file.name.endswith('.xml')
+        case "JsonLoader":
+            return file.name.endswith('.json')
+    return False      

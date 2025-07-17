@@ -78,12 +78,12 @@ class Node:
 
 
 class Edge:
-    def __init__(self, origin, target, relation, weight, is_directed):
+    def __init__(self, origin, target, relation, weight, directed):
         self._origin = origin
         self._target = target
         self._relation = relation
         self._weight = weight
-        self._is_directed = is_directed
+        self._directed = directed
 
     @property
     def weight(self):
@@ -111,20 +111,20 @@ class Edge:
     
     @property
     def is_directed(self):
-        return self._is_directed
+        return self._directed
 
     def __hash__(self):
         return hash((self._origin,self._target))
     
     def __str__(self):
-        return f'({self._origin}, {self._target}, {self._relation}, {self._weight}, {self._is_directed})'
+        return f'({self._origin}, {self._target}, {self._relation}, {self._weight}, {self._directed})'
     
     def __eq__(self, other) -> bool:
         if self._relation != other.relation:
             return False
         elif self._weight != other.weight:
             return False
-        elif self._is_directed != other.is_directed:
+        elif self._directed != other._directed:
             return False
         elif self._target != other.target:
             return False
@@ -175,7 +175,7 @@ class Graph:
         return len(self._nodes)
     
     def get_number_of_edges(self):
-        directed = sum(1 for edge in self.get_edges() if edge.is_directed())
+        directed = sum(1 for edge in self.get_edges() if edge._directed())
         undirected = len(self.get_edges()) - directed
         return directed + undirected // 2
     
@@ -183,7 +183,7 @@ class Graph:
         edges = self.get_edges()
         if edges:
             first_edge = list(edges)[0]
-            return first_edge.is_directed
+            return first_edge._directed
         return False
     
     def has_node(self, n):
@@ -204,7 +204,7 @@ class Graph:
             self._nodes.append(node)
 
     def insert_edge(self, origin, target, relation, weight, is_directed):
-        edge = Edge(origin = origin, target= target, relation= relation, weight= weight, is_directed= is_directed)
+        edge = Edge(origin = origin, target= target, relation= relation, weight= weight, directed= is_directed)
         origin.add_edge(target)
         if not is_directed:
             target.add_node(origin)

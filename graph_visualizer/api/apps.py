@@ -9,16 +9,18 @@ class ApiConfig(AppConfig):
     name = 'api'
     loaders = []
     visualizers = []
-    current_graph = None
     tree = None
     base_graph = None
+    graph= None
+    visualizer=None
+    loader=None
 
     def ready(self):
         self.loaders = load_plugins("loader")
         self.visualizers = load_plugins("visualizer")
         print(len(self.loaders))
         print(len(self.visualizers))
-    
+
     def get_loader(self, id):
         print(id)
         for loader in self.loaders:
@@ -37,9 +39,10 @@ class ApiConfig(AppConfig):
     
     def load_tree(self):
         self.tree = Tree()
-        for node in find_root_nodes(self.current_graph.find_subgraphs()):
+        for node in find_root_nodes(self.graph.find_subgraphs()):
             print(f"🌳 Root node: {node} ({type(node)})")
             self.tree.roots.append(TreeNode(node, None, "node"))
+
 
 def load_plugins(entry_point):
     plugins = []
