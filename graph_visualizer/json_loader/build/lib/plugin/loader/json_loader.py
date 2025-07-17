@@ -30,31 +30,32 @@ class JsonLoader(BaseLoader):
     def create_node(self, data, parent_node=None, relationship=None):
         current_node = Node(None)
         for nested_item in data:
-            if isinstance(nested_item, dict):                                      # nested_item -> object, data -> list of objects
+            if isinstance(nested_item, dict):                                     
                 nested_node = self.create_node(nested_item, parent_node, relationship)
                 nested_node.id = self.set_node_id(nested_item)
                 self.update_graph(nested_node, parent_node, relationship)
-            else:                                                                  # nested_item -> primitive, data -> object
-                if not isinstance(data, list) and is_primitive(data[nested_item]):  # nested_item -> attribute name
-                    if nested_item == self._unique_key:
+            else:                                                                  
+                if not isinstance(data, list) and is_primitive(data[nested_item]):  
+                    if nested_item == self._key_field:
                         current_node.id = data[nested_item]
                         current_node.add_attribute("id", data[nested_item])
                         self.next_id()
                     else:
                         current_node.id = self.next_id()
                     current_node.add_attribute(nested_item, data[nested_item])
-                elif isinstance(data, list):                                       # data -> list of primitive items
+                elif isinstance(data, list):                                       
                     nested_node = Node(nested_item)
                     nested_node.add_attribute("id", nested_item)
                     nested_node.add_attribute("value", nested_item)
                     self.update_graph(nested_node, parent_node, relationship)
-                else:                                                              # nested_item -> object attribute
+                else:                                                              
                     current_node = self.create_node(data[nested_item], current_node, nested_item)
         if not current_node.id:
             return parent_node
         self.alter_existing_node(current_node)
         return current_node
 
+    """
     def create_node(self, data, parent=None, relation=None):
         current_node = Node(None)
 
@@ -91,7 +92,7 @@ class JsonLoader(BaseLoader):
             self.add_new_edge(current_node, parent, relation)
 
         return current_node
-
+    """
 
     def set_node_id(self, data):
         if isinstance(data, dict) and self._key_field in data:

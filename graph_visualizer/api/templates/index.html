@@ -92,6 +92,11 @@
             overflow-y: auto;
         }
 
+        #tree-view {
+            color: #3c2956;
+        }
+
+
         #main-view {
             grid-area: main;
             background-color: #fff;
@@ -107,8 +112,27 @@
             border: 1px solid #ddd;
             padding: 10px;
         }
+        .tree-list {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .tree-list li {
+            margin: 5px 0;
+        }
+
+        .node-toggle {
+            cursor: pointer;
+            user-select: none;
+            text-decoration: none;
+            color: #3c2956;
+            font-weight: normal;
+        }
+
+        .node-toggle:hover {
+            color: #fb045b
+        }
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
 </head>
 <body>
@@ -133,6 +157,7 @@
         </header>
         <div id="tree-view">
             <h3>Tree View</h3>
+            {{ tree_html|safe }}
         </div>
         <div id="main-view">
             <h3>Main View</h3>
@@ -142,5 +167,43 @@
             <h3>Bird View</h3>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.body.addEventListener("click", function (e) {
+            if (e.target.classList.contains("node-toggle")) {
+                e.preventDefault();
+
+                const anchor = e.target;
+                const li = anchor.closest("li");
+                const nodeId = anchor.dataset.nodeId;
+
+                // Ako je već otvoreno, samo sakrij djecu
+                if (anchor.classList.contains("node-expanded")) {
+                    const childUl = li.querySelector("ul");
+                    if (childUl) {
+                        childUl.remove();  // ukloni iz DOM-a
+                    }
+                    anchor.classList.remove("node-expanded");
+                    anchor.innerHTML = anchor.innerHTML.replace("➖", "➕");
+                    return;
+                }
+
+                // Inače – pošalji AJAX zahtjev na server
+                fetch(`/expand_node?node_id=${nodeId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.html) {
+                            const ul = document.createElement("ul");
+                            ul.innerHTML = data.html;
+                            li.appendChild(ul);
+                            anchor.innerHTML = anchor.innerHTML.replace("➕", "➖");
+                            anchor.classList.add("node-expanded");
+                        }
+                    });
+            }
+        });
+    });
+    </script>
 </body>
 </html>
