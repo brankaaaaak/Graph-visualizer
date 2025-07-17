@@ -37,48 +37,12 @@ def upload_file(request):
             break
     if not raw_graph:
         return render(request, 'index.html', {"error": "Unsupported file type or loading failed."})
-    api_config.load_tree()
-    tree_html = generate_tree_html(api_config.tree.roots)
+    
 
     return render(request, 'index.html', {
-        "tree_html": tree_html,
         "visualizers": [v.name() for v in api_config.visualizers]
     })
 
-
-def render_tree_html(forest):
-    def render_node(node):
-        arrow = "➖" if getattr(node, 'opened', False) else "➕"
-        html = f'<li>'
-        html += f'<a href="#" class="node-toggle" data-node-id="{node.id}">{arrow} Node {node.object.id}</a>'
-
-        children = getattr(node, 'children', [])
-        if children and getattr(node, 'opened', False):
-            html += '<ul>'
-            for child in children:
-                label = "Edge" if getattr(child, 'is_edge', False) else "Node"
-                arrow_child = "➖" if getattr(child, 'opened', False) else "➕"
-                html += '<li>'
-                html += f'<a href="#" class="node-toggle" data-node-id="{child.id}">{arrow_child} {label} {getattr(child.object, "id", "")}</a>'
-
-                grandchildren = getattr(child, 'children', [])
-                if grandchildren and getattr(child, 'opened', False):
-                    html += '<ul>'
-                    for grandchild in grandchildren:
-                        html += render_node(grandchild)
-                    html += '</ul>'
-                html += '</li>'
-            html += '</ul>'
-        html += '</li>'
-        return html
-
-    html = '<ul class="tree-list">'
-    for root in forest.roots:
-        html += render_node(root)
-    html += '</ul>'
-    return html
-
-"""
 def generate_tree_html(nodes):
     html = '<ul class="tree-list">'
     for node in nodes:
@@ -93,7 +57,7 @@ def generate_tree_html(nodes):
         if isinstance(node.object, Node):
             label = "Node"
             text = f"<strong>{node.object.id}</strong> - {node.object.attributes}"
-        elif isinstance(node.object, str):  # relacija kao "hobbies"
+        elif isinstance(node.object, str):  
             label = "Edge"
             text = f"<em>{node.object}</em>"
         else:
@@ -113,53 +77,7 @@ def generate_tree_html(nodes):
         html += '</li>'
     html += '</ul>'
     return html
-    """
-def generate_tree_html(nodes, depth=0):
-    html = '<ul class="tree-list">'
-    for node in nodes:
-        if not hasattr(node, 'id') or not hasattr(node, 'object'):
-            continue
 
-        is_expandable = False
-        label = "Unknown"
-        text = str(node.object)
-
-        if isinstance(node.object, Node):
-            label = "Node"
-            is_expandable = bool(node.object.edges) and depth == 0
-            text = f"<strong>{node.object.id}</strong> - {node.object.attributes}"
-        elif isinstance(node.object, Edge):
-            label = "Edge"
-            is_expandable = depth == 1
-            text = f"<em>{node.object.relation}</em> → {node.object.target.id}"
-        elif isinstance(node.object, str):  
-            label = "Edge"
-            text = f"<em>{node.object}</em>"
-
-        arrow = "➕" if is_expandable and not node.opened else ("➖" if is_expandable else "•")
-
-        html += f'''
-        <li>
-            <a href="#" class="node-toggle" data-node-id="{node.id}">{arrow} {label}: {text}</a>
-        '''
-
-        # Ako je otvoren i dozvoljen depth
-        if node.opened:
-            # Ako je Node i depth 0 → prikaži njegove edge-ove
-            if isinstance(node.object, Node) and depth == 0:
-                children = node.children
-                if children:
-                    html += generate_tree_html(children, depth + 1)
-
-            # Ako je Edge i depth 1 → prikaži samo ciljni node
-            elif isinstance(node.object, Edge) and depth == 1:
-                children = node.children
-                if children:
-                    html += generate_tree_html(children, depth + 1)
-
-        html += '</li>'
-    html += '</ul>'
-    return html
 
 def dict_to_graph(graph_dict):
     graph = Graph()
@@ -200,7 +118,9 @@ def expand_node_view(request):
         import traceback
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
+    
 def visualize(request):
+    api_config = apps.get_app_config('api')
     visualizer_id = request.GET.get('visualizer')
     if not visualizer_id:
         return HttpResponse("No visualizer specified.", status=400)
@@ -208,11 +128,16 @@ def visualize(request):
     graph = apps.get_app_config('api').graph
     visualizers = apps.get_app_config('api').visualizers
 
+    api_config.load_tree()
+    tree_html = generate_tree_html(api_config.tree.roots)
+
     for v in visualizers:
         if v.identifier() == visualizer_id:
             html_snippet = v.visualize(graph, request)
             time.sleep(2)
-            return render(request, "index.html", {"view_html": html_snippet})
+            return render(request, "index.html", {"view_html": html_snippet, "tree_html": tree_html})
+    
+    
     
     return HttpResponse("Invalid visualizer identifier.", status=404)
 
