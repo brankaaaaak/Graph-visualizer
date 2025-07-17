@@ -78,6 +78,7 @@ def render_tree_html(forest):
     html += '</ul>'
     return html
 
+"""
 def generate_tree_html(nodes):
     html = '<ul class="tree-list">'
     for node in nodes:
@@ -112,6 +113,40 @@ def generate_tree_html(nodes):
         html += '</li>'
     html += '</ul>'
     return html
+    """
+def generate_tree_html(nodes):
+    html = '<ul class="tree-list">'
+    for node in nodes:
+        if not hasattr(node, 'id') or not hasattr(node, 'object'):
+            print("⚠️ Upozorenje: Čvor nije validan TreeNode →", node)
+            continue
+
+        is_expandable = bool(node.children)  # samo ako čvor ima djecu
+        arrow = "➕" if is_expandable and not node.opened else ("➖" if is_expandable else "•")
+
+        if isinstance(node.object, Node):
+            label = "Node"
+            text = f"<strong>{node.object.id}</strong> - {node.object.attributes}"
+        elif isinstance(node.object, str):  
+            label = "Edge"
+            text = f"<em>{node.object}</em>"
+        else:
+            label = "Unknown"
+            text = str(node.object)
+
+        html += f'''
+        <li>
+            <a href="#" class="node-toggle" data-node-id="{node.id}">{arrow} {label}: {text}</a>
+        '''
+
+        # Samo ako je čvor otvoren i ima djecu
+        if node.opened and node.children:
+            html += generate_tree_html(node.children)
+
+        html += '</li>'
+    html += '</ul>'
+    return html
+
 
 def dict_to_graph(graph_dict):
     graph = Graph()
