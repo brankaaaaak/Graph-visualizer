@@ -55,7 +55,7 @@ class SimpleVisualizer(BaseVisualizer):
                 .nodes(d3.values(nodes))
                 .links(connections)
                 .on("tick", tick)
-                .linkDistance(300)
+                .linkDistance(150)
                 .charge(-5000)
                 .gravity(0.5);
                 
@@ -83,9 +83,48 @@ class SimpleVisualizer(BaseVisualizer):
             d3.selectAll('.node').each(function (d) { nodeView(d, '#241f4c'); });
 
             force.start();
+            function updateBirdView() {
+                let mainGroup = d3.select("#main-view svg g");
+                if (mainGroup.empty()) return;  // ako nema SVG
+                let padding = 20;
+                let birdDiv = d3.select("#bird-view");
+
+                birdDiv.select("svg").remove();
+
+                let clonedGroup = mainGroup.node().cloneNode(true);
+
+                let birdSvg = birdDiv.append("svg")
+                    .attr("width", birdDiv.node().clientWidth)
+                    .attr("height", birdDiv.node().clientHeight);
+
+                birdSvg.node().appendChild(clonedGroup);
+
+                let bbox = clonedGroup.getBBox();
+
+                let birdWidth = birdDiv.node().clientWidth - 2 * padding;
+                let birdHeight = birdDiv.node().clientHeight - 2 * padding;
+
+
+                let scaleWidth = birdWidth / bbox.width;
+                let scaleHeight = birdHeight / bbox.height;
+                let scale = Math.min(scaleWidth, scaleHeight);
+
+                d3.select(clonedGroup)
+                    .attr("transform", `translate(${padding - bbox.x * scale}, ${padding - bbox.y * scale}) scale(${scale})`);
+
+                birdSvg.selectAll("circle").attr("r", 50);
+                birdSvg.selectAll("text").attr("font-size", 15);
+
+                birdSvg.selectAll("line").attr("stroke-width", 1.2);
+            }
+
+            force.on("end", function() {
+                updateBirdView();
+            });
+
 
             function nodeView(d, color) {
-                var width = 35;
+                var width = 40;
                 var textSize = 15;
                 d3.select("g#" + d.id).append('circle')
                     .attr('cx', 0).attr('cy', 0).attr('r', width).attr('fill', color);
