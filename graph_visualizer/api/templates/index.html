@@ -467,14 +467,117 @@ clear
 
 
             else if (action === "edit" && type === "node") {
-               return;
+               const parts = command.split(" ");
+                if (parts.length < 4) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Greška: format treba biti: edit node [id] [key]=[value]</div>`;
+                    return;
+                }
+                const nodeId = parts[2]; 
+                const propertyPart = parts.slice(3).join(" ");
+
+                if (!propertyPart.includes("=")) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Greška: property treba biti u formatu key=value</div>`;
+                    return;
+                }
+
+                const [keyRaw, ...valueParts] = propertyPart.split("=");
+                const key = keyRaw.trim();
+                const value = valueParts.join("=").trim();
+
+                if (!key || !value) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Greška: property treba biti u formatu key=value</div>`;
+                    return;
+                }
+
+                const props = {};
+                props[key] = value;
+
+                fetch("/api/edit_node/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ id: nodeId, properties: props })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Node ${nodeId} updated.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+
+                return;
             }
 
             else if (action === "delete" && type === "node") {
+                const nodeId = args["id"];
+
+                fetch(`/api/delete_node/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ id: nodeId })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Node ${nodeId} deleted.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
                 return;
             }
 
             else if (action === "delete" && type === "edge") {
+                const parts = command.split(" ");
+
+                if (parts.length < 5) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Greška: Unos treba da bude: delete edge [origin] [relation] [target]</div>`;
+                    return;
+                }
+
+                const origin = parts[2];
+                const relation = parts[3];
+                const target = parts[4];
+
+                fetch(`/api/delete_edge/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ origin: origin, relation: relation, target: target })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Edge from ${origin} to ${target} (${relation}) deleted.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+
                 return;
             }
 

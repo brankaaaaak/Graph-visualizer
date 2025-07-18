@@ -55,6 +55,14 @@ class Node:
         else:
             self._edges.append(edge)
 
+    def remove_edge_to(self, target_node, relation):
+        for edge in self._edges:
+            if edge.target == target_node and edge.relation == relation:
+                self._edges.remove(edge)
+                return edge  
+        return None
+
+
     def add_attribute(self, key, value):
         self._attributes[key] = value
     
@@ -216,6 +224,34 @@ class Graph:
 
         if not edge._directed:
             edge.target.add_edge(edge)
+    def remove_edge(self, origin_id, target_id, relation):
+        
+        origin_node = self.get_node(origin_id)
+        target_node = self.get_node(target_id)
+
+        if not origin_node or not target_node:
+            return False
+
+        edge_to_remove = None
+        for edge in origin_node.edges:
+            if edge.target == target_node and edge.relation == relation:
+                edge_to_remove = edge
+                break
+
+        if not edge_to_remove:
+            return False
+
+        origin_node.edges.remove(edge_to_remove)
+
+        if not edge_to_remove.is_directed:
+            for edge in target_node.edges:
+                if edge.target == origin_node and edge.relation == relation:
+                    target_node.edges.remove(edge)
+                    break
+        #self._visited_nodes.clear()
+        #self._path.clear()
+        #self._nodes_to_contour.clear()
+        return True
     def find_subgraphs(self, nodes=None, graphs=None):   
         if not nodes:
             nodes = []
@@ -223,14 +259,14 @@ class Graph:
             graphs = []
         changes = True
         if not nodes:
-            nodes = copy.deepcopy(self._nodes)
+            #nodes = copy.deepcopy(self._nodes)
+            nodes = list(self._nodes)
 
         connected = {}
         for node in nodes:
-            if len(connected) == 0:
-                connected[node] = True
-            else:
-                connected[node] = False
+            connected[node] = False
+        if nodes:
+            connected[nodes[0]] = True
 
         if list(connected.values()) == [True * len(nodes)]:
             subgraph = Graph()
@@ -272,10 +308,30 @@ class Graph:
             except KeyError:
                 pass
         return False
+    
+    def remove_node(self, node_to_remove):
+        if node_to_remove in self.nodes:
+            self._nodes.remove(node_to_remove)
+            """if node_to_remove in self._visited_nodes:
+                self._visited_nodes.remove(node_to_remove)
+            if node_to_remove in self._nodes_to_contour:
+                self._nodes_to_contour.remove(node_to_remove)
+            if node_to_remove in self._path:
+                self._path.remove(node_to_remove)"""
+            return True
+        return False
 
+    def update_node(self, node, key, value):
+        if node in self.nodes:
+            node.add_attribute(key, value)
+            return True
+        return False
+    
     def check_as_true(self, edges, connected):   
         changes = False
         for edge in edges:
+            if edge.origin not in connected or edge.target not in connected:
+                continue
             if connected[edge.origin] is False:
                 changes = True
             elif connected[edge.target] is False:
@@ -293,18 +349,6 @@ class Graph:
                 removed.append(n)
 
         return removed
-    
-    def check_as_true(self, edges, connected):  
-        changes = False
-        for edge in edges:
-            if connected[edge.origin] is False:
-                changes = True
-            elif connected[edge.target] is False:
-                changes = True
-            connected[edge.origin] = True
-            connected[edge.target] = True
-
-        return changes
     
     def is_graph_directed(self):
         if len(self.get_edges()) > 0:
