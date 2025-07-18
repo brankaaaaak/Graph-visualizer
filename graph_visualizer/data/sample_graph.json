@@ -1,24 +1,35 @@
 {
-  "id": 1,
-  "name": "Root",
-  "children": [
+  "people": [
     {
-      "id": 2,
-      "name": "Child A",
-      "children": [
-        {
-          "id": 4,
-          "name": "Grandchild A1"
-        },
-        {
-          "id": 5,
-          "name": "Grandchild A2"
-        }
+      "id": 1,
+      "name": "Node One",
+      "hobbies": ["reading", "chess"],
+      "friends": [
+        {"id": 3},
+        {"id": 4}
       ]
     },
     {
+      "id": 2,
+      "name": "Node Two",
+      "hobbies": ["gaming"],
+      "friends": []
+    },
+    {
       "id": 3,
-      "name": "Child B"
+      "name": "Node Three",
+      "hobbies": ["music"],
+      "friends": [
+        {"id": 1}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Node Four",
+      "hobbies": ["hiking"],
+      "friends": [
+        {"id": 1}
+      ]
     }
   ]
 }

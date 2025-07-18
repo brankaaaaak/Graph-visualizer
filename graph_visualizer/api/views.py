@@ -229,3 +229,88 @@ def create_node(request):
         import traceback
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
+
+def delete_node(request):
+
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        node_id = data.get("id")
+
+        if not node_id:
+            return JsonResponse({"error": "Missing node ID."}, status=400)
+
+        api_config = apps.get_app_config("api")
+        graph = api_config.graph
+        node = graph.get_node(node_id)
+
+        if not node:
+            return JsonResponse({"error": f"Node '{node_id}' not found."}, status=404)
+
+        # Provera da li je viseci
+        if node.edges:
+            return JsonResponse({"error": "Node is not dangling (has edges)."}, status=400)
+
+        # 1. Ukloni iz grafa
+        graph.remove_node(node_id)
+
+        # 2. Ukloni iz stabla (ako postoji)
+        api_config.load_tree()
+        def remove_node_from_tree(tree_nodes):
+            for tn in tree_nodes[:]:
+                if hasattr(tn.object, 'id') and tn.object.id == node_id:
+                    tree_nodes.remove(tn)
+                elif tn.children:
+                    remove_node_from_tree(tn.children)
+
+        remove_node_from_tree(api_config.tree.roots)
+
+        # 3. Vizualizuj
+        visualizer = api_config.visualizers[0]
+        html_snippet = visualizer.visualize(graph, request)
+        api_config.load_tree()
+        tree_html = generate_tree_html(api_config.tree.roots)
+
+        return JsonResponse({
+            "success": True,
+            "view_html": html_snippet,
+            "tree_html": tree_html
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"error": str(e)}, status=500)
+    
+def delete_edge(request):
+    api_config = apps.get_app_config('api')
+    graph = apps.get_app_config('api').graph
+    if request.method == "POST":
+        data = json.loads(request.body)
+        origin = data.get("origin")
+        target = data.get("target")
+        relation = data.get("relation")
+        
+
+        try:
+            
+            success = graph.remove_edge(origin, target, relation)
+            if not success:
+                return JsonResponse({"success": False, "error": "Veza nije pronađena."})
+
+            visualizer = api_config.visualizers[0]
+            html_snippet = visualizer.visualize(graph, request)
+            api_config.load_tree()
+            tree_html = generate_tree_html(api_config.tree.roots)
+
+            return JsonResponse({
+                "success": True,
+                "view_html": html_snippet,
+                "tree_html": tree_html
+            })
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return JsonResponse({"success": False, "error": str(e)})
