@@ -171,7 +171,6 @@ class BlockVisualizer(BaseVisualizer):
                         //alert("Greška pri otvaranju čvora u stablu: " + err.message);
                     });
                 }
-            }
             function updateBirdView() {
                 var mainGroup = d3.select("#main-view svg g");
                 if (mainGroup.empty()) return;

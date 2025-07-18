@@ -145,7 +145,6 @@ class BlockVisualizer(BaseVisualizer):
                     description += new_node.attributes[i] + "\\n";
                 }
                 alert(description);
-<<<<<<< HEAD
                  // Pošalji AJAX zahtjev ka serveru da otvori čvor u stablu preko funkcije expand
                 fetch(`/expand/${encodeURIComponent(nodeId)}/`)
                     .then(res => {
@@ -172,8 +171,6 @@ class BlockVisualizer(BaseVisualizer):
                         //alert("Greška pri otvaranju čvora u stablu: " + err.message);
                     });
                 }
-=======
-            }
             function updateBirdView() {
                 var mainGroup = d3.select("#main-view svg g");
                 if (mainGroup.empty()) return;
@@ -210,7 +207,6 @@ class BlockVisualizer(BaseVisualizer):
             force.on("end", function () {
                 updateBirdView();
             });
->>>>>>> d7f80237b6f9bdf37fa576b1e7dd04aeac5e6579
         });
         </script>
         """
