@@ -410,30 +410,28 @@ clear
 
             else if (action === "create" && type === "edge") {
                 const args = parseArgs(command);
+                const edgeId = args["id"];
 
                 const parts = command.trim().split(/\s+/);
-                let filteredParts = parts.slice(2);
+                const origin = parts[parts.length - 2];
+                const target = parts[parts.length - 1];
 
-                filteredParts = filteredParts.filter(p => !p.startsWith("--") && !p.includes("="));
-
-                if (!args.id) {
-                    terminalOutput.innerHTML += `<div style="color:red;">Error: Missing edge id (--id=...)</div>`;
+                let relation = null;
+                const propRegex = /--property\s+name=([^\s]+)/;
+                const match = propRegex.exec(command);
+                if (match) {
+                    relation = match[1];
+                } else {
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: Missing relation property.</div>`;
                     return;
                 }
-                if (filteredParts.length < 2) {
-                    terminalOutput.innerHTML += `<div style="color:red;">Error: Missing origin and target node IDs</div>`;
-                    return;
-                }
 
-                const origin = filteredParts[filteredParts.length - 2];
-                const target = filteredParts[filteredParts.length - 1];
-
-                const props = {};
-                for (let key in args) {
-                    if (key !== "id") {
-                        props[key] = args[key];
-                    }
-                }
+                const bodyData = {
+                    id: edgeId,
+                    source: origin,
+                    target: target,
+                    relation: relation
+                };
 
                 fetch("/api/create_edge/", {
                     method: "POST",
@@ -441,12 +439,7 @@ clear
                         "Content-Type": "application/json",
                         "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
                     },
-                    body: JSON.stringify({
-                        id: args.id,
-                        origin: origin,
-                        target: target,
-                        properties: props
-                    })
+                   body: JSON.stringify(bodyData)
                 })
                 .then(res => res.json())
                 .then(data => {

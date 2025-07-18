@@ -222,48 +222,40 @@ def create_edge(request):
 
     try:
         data = json.loads(request.body)
-        edge_id = data.get("id")
-        origin_id = data.get("origin")
-        target_id = data.get("target")
-        properties = data.get("properties", {})
-        relation = properties.get("relation", "")
-        weight = properties.get("weight", 0)
-        directed = properties.get("directed", False)
 
-        if not edge_id or not origin_id or not target_id:
-            return JsonResponse({"error": "Missing edge id, source or target."}, status=400)
+        edge_id = data.get("id")
+        source_id = data.get("source")
+        target_id = data.get("target")
+        relation = data.get("relation")
+        weight = data.get("weight", 1)  
+        directed = data.get("directed", False)  
+
+        if not edge_id or not source_id or not target_id or not relation:
+            return JsonResponse({"error": "Missing edge id, source, target or relation."}, status=400)
 
         api_config = apps.get_app_config("api")
-        origin_node = api_config.graph.get_node(origin_id)
-        target_node = api_config.graph.get_node(target_id)
+        graph = api_config.graph
 
-        if not origin_node or not target_node:
-            return JsonResponse({"error": "Source or target node does not exist."}, status=400)
+        source_node = graph.get_node(source_id)
+        target_node = graph.get_node(target_id)
 
-        existing_edge = api_config.graph.get_edge(origin_id, target_id)
-        if existing_edge:
-            return JsonResponse({"error": "Edge already exists."}, status=400)
+        if not source_node or not target_node:
+            return JsonResponse({"error": "Source or target node not found."}, status=404)
 
-        # Kreiraj novi edge sa svim atributima
         new_edge = Edge(
-            origin=origin_node,
+            origin=source_node,
             target=target_node,
             relation=relation,
             weight=weight,
             directed=directed
         )
-        # Ako koristiš id na edge-u, postavi ga ako postoji
-        new_edge.id = edge_id
 
-        # Dodaj dodatne atribute iz properties koji nisu relation, weight, directed
-        for k, v in properties.items():
-            if k not in ("relation", "weight", "directed"):
-                new_edge.add_attribute(k, v)
+        graph.insert_edge(new_edge)
 
-        api_config.graph.insert_edge(new_edge)
-        api_config.load_tree()
+        api_config.load_tree()  # ako treba reload
 
         return JsonResponse({"success": True})
+
     except Exception as e:
         import traceback
         traceback.print_exc()

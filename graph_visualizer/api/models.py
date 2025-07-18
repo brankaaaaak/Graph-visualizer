@@ -81,14 +81,12 @@ class Node:
 
 
 class Edge:
-    def __init__(self, origin, target, relation, weight, directed,attributes=None):
+    def __init__(self, origin, target, relation, weight, directed):
         self._origin = origin
         self._target = target
         self._relation = relation
         self._weight = weight
         self._directed = directed
-        self._attributes=attributes
-
     @property
     def weight(self):
         return self._weight
@@ -116,8 +114,7 @@ class Edge:
     @property
     def is_directed(self):
         return self._directed
-    def add_attribute(self, key, value):
-            self._attributes[key] = value
+    
     def __hash__(self):
         return hash((self._origin,self._target))
     
