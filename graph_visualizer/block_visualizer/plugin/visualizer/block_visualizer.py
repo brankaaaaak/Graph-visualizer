@@ -38,6 +38,7 @@ class BlockVisualizer(BaseVisualizer):
 
         <script type="text/javascript">
         $(document).ready(function () {
+            var selected_node=null;
             var nodesGraph = JSON.parse("{{ nodes|escapejs }}");
             var connectionsGraph = JSON.parse("{{ connections|escapejs }}");
 
@@ -74,7 +75,10 @@ class BlockVisualizer(BaseVisualizer):
                 .enter().append("g")
                 .attr("class", "node")
                 .attr("id", function (d) { return d.id; })
-                .call(force.drag);
+                .call(force.drag)
+                .on('click', function () {
+                    nodeClick(this);
+                });
 
             node.each(function (d) {
                 var g = d3.select(this);
@@ -119,6 +123,28 @@ class BlockVisualizer(BaseVisualizer):
                           .attr("y1", function (d) { return d.source.y; })
                           .attr("x2", function (d) { return d.target.x; })
                           .attr("y2", function (d) { return d.target.y; });
+            }
+            function nodeView(d, color) {
+                var g = d3.select("g#" + d.id);
+                g.select("rect").attr("fill", color);
+            }
+
+            function nodeClick(element) {
+                var nodeId = element.id.replace("id-", "");
+
+                if (selected_node != null) {
+                    nodeView(nodesGraph[selected_node.id.replace("id-", "")], "#241f4c");
+                }
+
+                var new_node = nodesGraph[nodeId];
+                selected_node = new_node;
+                nodeView(selected_node, "pink");
+
+                var description = "ID: " + element.id + "\\n";
+                for (var i = 0; i < new_node.attributes.length; i++) {
+                    description += new_node.attributes[i] + "\\n";
+                }
+                alert(description);
             }
         });
         </script>

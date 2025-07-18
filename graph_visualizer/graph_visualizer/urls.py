@@ -16,7 +16,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
 from api.views import index_view, test_graph_view
 
 urlpatterns = [
