@@ -17,13 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from api.views import expand_node_view, index_view, upload_file
+from api.views import expand_node_from_view, expand_node_view, index_view, upload_file
 from api.views import visualize, index_view,upload_file
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index_view, name='index'), 
     path('upload/', upload_file, name='upload_file'),
-    path('expand_node', expand_node_view, name='expand_node'),
-    path('visualize/', visualize, name='visualize')
+    path('expand_node/', expand_node_view, name='expand_node'),
+    path('visualize/', visualize, name='visualize'),
+    path('expand/<int:node_id>/', expand_node_from_view, name='expand_node_from_view'),
 ]

@@ -6,6 +6,8 @@ from django.shortcuts import render
 from api.models import Edge, Graph, Node
 from api.models import Edge, Graph, Node
 from django.apps.registry import apps
+from django.template.loader import render_to_string
+
 
 def index_view(request):
     api_config = apps.get_app_config('api')
@@ -73,6 +75,7 @@ def generate_tree_html(nodes):
 
         html += '</li>'
     html += '</ul>'
+    #print(html)
     return html
 
 
@@ -100,21 +103,47 @@ def dict_to_graph(graph_dict):
 
 def expand_node_view(request):
     try:
+        print(request)
         node_id = int(request.GET.get('node_id'))
+        print(node_id)
         api_config = apps.get_app_config('api')
         tree_node = api_config.tree.find_tree_node(node_id)
-
         if tree_node is None:
             return JsonResponse({"error": "Node not found"}, status=404)
 
         tree_node.open()
         children_html = generate_tree_html(tree_node.children)
         return JsonResponse({"html": children_html})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"error": str(e)}, status=500)
+
+def expand_node_from_view(request, node_id):
+    try:
+        api_config = apps.get_app_config('api')
+        tree = api_config.tree
+        tree_node = api_config.tree.find_node_by_node_id(node_id)
+        if tree_node is None:
+            for node in tree.roots:
+                node.close()
+            tree_html = generate_tree_html(tree.roots)
+            return HttpResponse(tree_html)
+
+        for node in tree.roots:
+            node.close()
+
+        tree_node.open_parents()
+        tree_html = generate_tree_html(tree.roots)
+
+        return HttpResponse(tree_html)
 
     except Exception as e:
         import traceback
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
+
+        
     
 def visualize(request):
     api_config = apps.get_app_config('api')

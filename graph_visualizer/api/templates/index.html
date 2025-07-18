@@ -165,15 +165,6 @@
             transition: all 0.3s ease;
         }
 
-        .styled-select:hover {
-            border-color: #fb045b;
-        }
-
-        .styled-select:focus {
-            outline: none;
-            border-color: #fb045b;
-            box-shadow: 0 0 5px rgba(251, 4, 91, 0.4);
-        }
 
 
     </style>
@@ -229,18 +220,22 @@
                 const li = anchor.closest("li");
                 const nodeId = anchor.dataset.nodeId;
 
-                // Ako je već otvoreno, samo sakrij djecu
                 if (anchor.classList.contains("node-expanded")) {
                     const childUl = li.querySelector("ul");
                     if (childUl) {
-                        childUl.remove();  // ukloni iz DOM-a
+                        childUl.remove();
                     }
                     anchor.classList.remove("node-expanded");
                     anchor.innerHTML = anchor.innerHTML.replace("➖", "➕");
                     return;
                 }
 
-                // Inače – pošalji AJAX zahtjev na server
+                if (li.querySelector("ul")) {
+                    anchor.classList.add("node-expanded");
+                    anchor.innerHTML = anchor.innerHTML.replace("➕", "➖");
+                    return;
+                }
+
                 fetch(`/expand_node?node_id=${nodeId}`)
                     .then(res => res.json())
                     .then(data => {
@@ -253,6 +248,7 @@
                         }
                     });
             }
+
         });
     });
     </script>

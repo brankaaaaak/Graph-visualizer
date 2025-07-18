@@ -412,7 +412,6 @@ class TreeNode(object):
             elif self._object_type == "edge":
                 # Dodaj ciljni čvor za edge
                 self._children.append(TreeNode(self._object.target, self, "node"))
-"""
     def open(self):
         self._opened = True
 
@@ -432,7 +431,14 @@ class TreeNode(object):
             for target_node in related_nodes:
                 self._children.append(TreeNode(target_node, self, "node"))
 
-
+    """
+    def open(self):
+        self._opened = True
+        if len(self._children) <= 0:
+            if self._object_type == "node":
+                self.add_children(self._object.get_relations())
+            else:
+                self.add_children(self._parent.object.get_related_nodes(self._object))
     def load_children(self):
         if len(self._children) <= 0:
             if self._object_type == "node":
@@ -444,6 +450,7 @@ class TreeNode(object):
         self.open()
         if self._parent:
             self._parent.open_parents()
+
 
     def close(self):
         self._opened = False
@@ -459,6 +466,10 @@ class TreeNode(object):
     @property
     def children(self):
         return self._children
+    
+    @children.setter
+    def children(self, value):
+        self._children = value
 
     @property
     def parent(self):
