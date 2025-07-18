@@ -42,8 +42,8 @@ class SimpleVisualizer(BaseVisualizer):
             var connections = JSON.parse("{{connections |escapejs}}");
             var nodes = JSON.parse("{{nodes |escapejs}}");
 
-            var width = 1000;
-            var height = 600;
+            var width = 900;
+            var height = 400;
 
             connections.forEach(function (connection) {
                 connection.source = nodes[connection.source];
@@ -56,7 +56,7 @@ class SimpleVisualizer(BaseVisualizer):
                 .links(connections)
                 .on("tick", tick)
                 .linkDistance(300)
-                .charge(-5000)
+                .charge(-300)
                 .gravity(0.5);
                 
             d3.select("#main-view svg").remove();
@@ -86,7 +86,7 @@ class SimpleVisualizer(BaseVisualizer):
 
             function nodeView(d, color) {
                 var width = 30;
-                var textSize = 12;
+                var textSize = 10;
                 d3.select("g#" + d.id).append('circle')
                     .attr('cx', 0).attr('cy', 0).attr('r', width).attr('fill', color);
                 d3.select("g#" + d.id).append('text').attr('x', 0).attr('y', 4)
@@ -106,22 +106,44 @@ class SimpleVisualizer(BaseVisualizer):
             }
 
             function nodeClick(element) {
-                var description="id:"+element.id+"\\n";
-                if(selected_node!=null){
-                    nodeView(nodes[selected_node.id.replace("id-","")],"#241f4c");
-                }
+                var nodeId = element.id.replace("id-", "");
 
-                var new_node=nodes[element.id.replace("id-","")];
-                selected_node=new_node;
+            // Reset prethodnog selektovanog čvora ako postoji
+            if (selected_node != null) {
+                nodeView(nodes[selected_node.id.replace("id-", "")], "#241f4c");
+            }
 
-                nodeView(selected_node,"pink")
+            var new_node = nodes[nodeId];
+            selected_node = new_node;
+            nodeView(selected_node, "pink");
 
-                for(var i=0;i<new_node.attributes.length;i++) {
-                   description += new_node.attributes[i] + "\\n";
-                }
-                trimmed_id=element.id.replace("id-","");
+            // Prikaži atribute u alert prozoru
+            var description = "ID: " + element.id + "\\n";
+            for (var i = 0; i < new_node.attributes.length; i++) {
+                description += new_node.attributes[i] + "\\n";
+            }
+            alert(description);
 
-                alert(description);
+            // Pošalji AJAX zahtjev ka serveru da otvori čvor u stablu preko funkcije expand
+            fetch(`/expand/${encodeURIComponent(nodeId)}/`)
+                .then(res => {
+                    if (!res.ok) throw new Error("Server returned " + res.status);
+                    return res.text();
+                })
+                .then(html => {
+                    const treeView = document.getElementById("tree-view");
+                    treeView.innerHTML = "<h3>Tree View</h3>" + html;
+                    setTimeout(() => {
+                        const target = document.querySelector(`[data-node-id="${nodeId}"]`);
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    }, 100);
+                })
+                .catch(err => {
+                    //console.error("Greška pri otvaranju čvora u stablu:", err);
+                    //alert("Greška pri otvaranju čvora u stablu: " + err.message);
+                });
             }
         });
         </script>
