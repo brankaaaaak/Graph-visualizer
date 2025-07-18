@@ -1,9 +1,10 @@
+import json
 from django.http import HttpResponse, JsonResponse
 import time
 from django.http import HttpResponse
 from django.shortcuts import  render
 from django.shortcuts import render
-from api.models import Edge, Graph, Node
+from api.models import Edge, Graph, Node, TreeNode
 from block_visualizer.plugin.visualizer.block_visualizer import BlockVisualizer
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
 from api.models import Edge, Graph, Node
@@ -168,7 +169,7 @@ def visualize(request):
         if v.identifier() == visualizer_id:
             html_snippet = v.visualize(graph, request)
             time.sleep(2)
-            return render(request, "index.html", {"view_html": html_snippet, "tree_html": tree_html,"graph_loaded":graph})
+            return render(request, "index.html", {"view_html": html_snippet, "tree_html": tree_html,"graph_loaded":graph,"current_visualizer":v.identifier()})
     
     return HttpResponse("Invalid visualizer identifier.", status=404)
 
@@ -178,4 +179,53 @@ def check_extension(loader_name, file):
             return file.name.endswith('.xml')
         case "JsonLoader":
             return file.name.endswith('.json')
-    return False      
+    return False  
+
+def create_node(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        node_id = data.get("id")
+        props = data.get("properties", {})
+
+        if not node_id:
+            return JsonResponse({"error": "Missing node ID."}, status=400)
+
+        api_config = apps.get_app_config("api")
+
+        if api_config.graph.get_node(node_id):
+            return JsonResponse({"error": f"Node '{node_id}' already exists."}, status=400)
+
+        # 1. Kreiraj novi Node
+        new_node = Node(node_id)
+        for key, value in props.items():
+            new_node.add_attribute(key, value)
+
+        # 2. Ubaci ga u graf
+        api_config.graph.insert_node(new_node)
+
+        # 3. Dodaj kao root u tree
+        api_config.tree.roots.append(TreeNode(new_node, None, "node"))
+
+
+        # 5. Pozovi visualize logiku direktno
+        visualizer = api_config.visualizers[0]  # možeš čuvati current_visualizer ako hoćeš precizno
+        html_snippet = visualizer.visualize(api_config.graph, request)
+
+        # 6. Osveži tree_html
+        api_config.load_tree()
+        tree_html = generate_tree_html(api_config.tree.roots)
+
+        # 7. Vrati HTML deo da frontend može da osveži prikaz
+        return JsonResponse({
+            "success": True,
+            "view_html": html_snippet,
+            "tree_html": tree_html
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"error": str(e)}, status=500)
