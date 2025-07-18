@@ -42,8 +42,8 @@ class BlockVisualizer(BaseVisualizer):
             var nodesGraph = JSON.parse("{{ nodes|escapejs }}");
             var connectionsGraph = JSON.parse("{{ connections|escapejs }}");
 
-            var width = 800;
-            var height = 350;
+            var width = 900;
+            var height = 500;
 
             connectionsGraph.forEach(function (conn) {
                 conn.source = nodesGraph[conn.source];
