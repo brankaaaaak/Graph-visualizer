@@ -1,6 +1,5 @@
 import copy
 from django.db import models
-
 # Create your models here.
 class Node:
     def __init__(self, id):
@@ -39,13 +38,9 @@ class Node:
         return len(self._edges)
     
     def __eq__(self, value):
-        if self.id == value.id:
-            return True
-        if len(self.edges) != len(value.edges):
+        if not isinstance(value, Node):
             return False
-        if self.attributes != value.attributes:
-            return False
-        return True        
+        return self._id == value._id 
     
     def has_edge(self, edge):
         for e in self._edges:

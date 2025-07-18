@@ -1,22 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<EventProject name="Conference2025" createdBy="andjela" createdAt="2025-07-18">
-    <Location id="1" city="Belgrade" venue="Sava Center" capacity="1500" indoor="true"/>
+<BeautySalons>
+    <Salon id="1" name="Glamur Studio" location="Beograd">
+        <Employee id="2" name="Milica Petrović" role="Frizerka" />
+        <Employee id="3" name="Jovana Ilić" role="Šminkerka" />
+        <Service id="4" name="Feniranje" duration="30" />
+        <Service id="5" name="Šminkanje" duration="45" />
+        <Equipment id="6" name="Fen" />
+        <Equipment id="7" name="Makeup set" />
+    </Salon>
     
-    <Organizer id="10" name="TechEvents Ltd" contactEmail="info@techevents.rs" phone="+38111222333"/>
+    <Salon id="8" name="Lepotica" location="Novi Sad">
+        <Employee id="9" name="Ana Kovač" role="Kozmetičarka" />
+        <Employee id="10" name="Milica Petrović" role="Frizerka" />
+        <Service id="11" name="Manikir" duration="40" />
+        <Service id="4" />
+        <Equipment id="12" name="UV lampa" />
+        <Equipment id="6" />
+    </Salon>
 
-    <Speaker id="101" name="Dragan Petrovic" topic="AI Trends" timeSlot="10:00-11:00" language="English"/>
-    <Speaker id="102" name="Ivana Markovic" topic="Cybersecurity" timeSlot="11:30-12:30" language="Serbian"/>
-    <Speaker id="103" name="Luis Fernández" topic="Cloud Computing" timeSlot="13:00-14:00" language="Spanish"/>
-
-    <Session id="S1" title="Morning Block" start="09:00" end="12:00">
-        <Includes speakerId="101"/>
-        <Includes speakerId="102"/>
-    </Session>
-
-    <Session id="S2" title="Afternoon Block" start="13:00" end="15:00">
-        <Includes speakerId="103"/>
-    </Session>
-
-    <Sponsorship id="SP1" sponsor="Microsoft" type="Platinum" amount="10000"/>
-    <Sponsorship id="SP2" sponsor="Tesla" type="Gold" amount="7000"/>
-</EventProject>
+    <Salon id="13" name="Zvezda Beauty" location="Niš">
+        <Employee id="14" name="Ivana Janković" role="Pedikirka" />
+        <Employee id="3" />
+        <Service id="15" name="Pedikir" duration="50" />
+        <Service id="5" />
+        <Equipment id="16" name="Pedikir set" />
+        <Equipment id="7" />
+    </Salon>
+</BeautySalons>
