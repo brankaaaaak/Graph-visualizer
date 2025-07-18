@@ -56,7 +56,7 @@ class BlockVisualizer(BaseVisualizer):
                 .links(connectionsGraph)
                 .on("tick", tick)
                 .linkDistance(300)
-                .charge(-2000)
+                .charge(-5000)
                 .gravity(0.5);
 
             var svg = d3.select("#main-view")
