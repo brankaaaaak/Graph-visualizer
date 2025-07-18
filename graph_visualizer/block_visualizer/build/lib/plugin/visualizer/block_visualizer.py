@@ -56,7 +56,7 @@ class BlockVisualizer(BaseVisualizer):
                 .links(connectionsGraph)
                 .on("tick", tick)
                 .linkDistance(300)
-                .charge(-2000)
+                .charge(-5000)
                 .gravity(0.5);
 
             var svg = d3.select("#main-view")
@@ -145,7 +145,32 @@ class BlockVisualizer(BaseVisualizer):
                     description += new_node.attributes[i] + "\\n";
                 }
                 alert(description);
-            }
+                 // Pošalji AJAX zahtjev ka serveru da otvori čvor u stablu preko funkcije expand
+                fetch(`/expand/${encodeURIComponent(nodeId)}/`)
+                    .then(res => {
+                        if (!res.ok) throw new Error("Server returned " + res.status);
+                        return res.text();
+                    })
+                    .then(html => {
+                        const treeView = document.getElementById("tree-view");
+                        treeView.innerHTML = "<h3>Tree View</h3>" + html;
+                        const prevSelected = treeView.querySelector(".selected-node");
+                        if (prevSelected) {
+                            prevSelected.classList.remove("selected-node");
+                        }
+                        setTimeout(() => {
+                            const target = treeView.querySelector(`[data-graph-node-id="${nodeId}"]`);
+                            if (target) {
+                                target.classList.add("selected-node");
+                                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }, 100);
+                    })
+                    .catch(err => {
+                        //console.error("Greška pri otvaranju čvora u stablu:", err);
+                        //alert("Greška pri otvaranju čvora u stablu: " + err.message);
+                    });
+                }
         });
         </script>
         """
