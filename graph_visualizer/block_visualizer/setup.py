@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='block-visualizer',
-    version='0.1.0',
+    version='0.2.0',
     description='Block graph visualizer plugin for Django',
     packages=find_packages(),
     namespace_packages=["plugin", "plugin.visualizer"],

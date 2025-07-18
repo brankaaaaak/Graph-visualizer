@@ -145,6 +145,7 @@ class BlockVisualizer(BaseVisualizer):
                     description += new_node.attributes[i] + "\\n";
                 }
                 alert(description);
+<<<<<<< HEAD
                  // Pošalji AJAX zahtjev ka serveru da otvori čvor u stablu preko funkcije expand
                 fetch(`/expand/${encodeURIComponent(nodeId)}/`)
                     .then(res => {
@@ -171,6 +172,45 @@ class BlockVisualizer(BaseVisualizer):
                         //alert("Greška pri otvaranju čvora u stablu: " + err.message);
                     });
                 }
+=======
+            }
+            function updateBirdView() {
+                var mainGroup = d3.select("#main-view svg g");
+                if (mainGroup.empty()) return;
+
+                var birdDiv = d3.select("#bird-view");
+                birdDiv.select("svg").remove();
+
+                var clonedGroup = mainGroup.node().cloneNode(true);
+
+                var birdSvg = birdDiv.append("svg")
+                    .attr("width", birdDiv.node().clientWidth)
+                    .attr("height", birdDiv.node().clientHeight);
+
+                birdSvg.node().appendChild(clonedGroup);
+
+                var padding = 10;
+                var bbox = clonedGroup.getBBox();
+
+                var birdWidth = birdDiv.node().clientWidth - 2 * padding;
+                var birdHeight = birdDiv.node().clientHeight - 2 * padding;
+
+                var scaleWidth = birdWidth / bbox.width;
+                var scaleHeight = birdHeight / bbox.height;
+                var scale = Math.min(scaleWidth, scaleHeight);
+
+                d3.select(clonedGroup)
+                    .attr("transform", `translate(${padding - bbox.x * scale}, ${padding - bbox.y * scale}) scale(${scale})`);
+
+                birdSvg.selectAll("rect").attr("stroke-width", 0.5);
+                birdSvg.selectAll("line").attr("stroke-width", 1);
+                birdSvg.selectAll("text").attr("font-size", 15);
+            }
+
+            force.on("end", function () {
+                updateBirdView();
+            });
+>>>>>>> d7f80237b6f9bdf37fa576b1e7dd04aeac5e6579
         });
         </script>
         """
