@@ -208,7 +208,6 @@ class BlockVisualizer(BaseVisualizer):
             force.on("end", function () {
                 updateBirdView();
             });
->>>>>>> d7f80237b6f9bdf37fa576b1e7dd04aeac5e6579
         });
         </script>
         """
