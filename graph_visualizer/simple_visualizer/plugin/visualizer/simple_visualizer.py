@@ -140,7 +140,6 @@ class SimpleVisualizer(BaseVisualizer):
                     setTimeout(() => {
                         const target = treeView.querySelector(`[data-graph-node-id="${nodeId}"]`);
                         if (target) {
-                            target.classList.add("selected-node");
                             target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
                     }, 100);
