@@ -18,12 +18,11 @@
         .container {
             display: grid;
             grid-template-columns: 300px auto 300px;
-            grid-template-rows: 70px auto 150px 300px;
+            grid-template-rows: 70px auto 150px;
             grid-template-areas: 
                 "header header header"
                 "tree main bird"
-                "tree main bird"
-                "cli cli cli";
+                "tree main bird";
             height: 100vh;
             overflow: hidden;
         }
@@ -169,19 +168,60 @@
             background-color: #ffb6c1; /* svetlo roze */
             font-weight: bold;
         }
-        #cli-terminal {
-            grid-area: cli;
-            background-color: black;
-            color: white;
+        #terminal {
+            position: fixed;
+            bottom: 60px;
+            right: 20px;
+            width: 400px;
+            height: 300px;
+            background-color: #000;
+            color: #0f0;
+            font-family: monospace;
+            padding: 10px;
+            display: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
             overflow-y: auto;
+            z-index: 1000;
+        }
+
+        #toggleButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #toggleButton:hover {
+            background-color: #555;
+        }
+        #terminal-form {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        }
+
+        #terminal-input {
+        flex: 1;
+        background-color: black;
+        color: #0f0;
+        border: none;
+        font-family: monospace;
+        font-size: 1rem;
+        outline: none;
         }
 
 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery.terminal/js/jquery.terminal.min.js"></script>
     <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/jquery.terminal/css/jquery.terminal.min.css" rel="stylesheet"/>
 </head>
 <body>
     <div class="container">
@@ -221,9 +261,17 @@
         <div id="bird-view">
             <h3>Bird View</h3>
         </div>
-        <div id="cli-terminal" style="height: 300px;"></div>
-
     </div>
+    <div id="terminal">
+        <div id="terminal-output">
+            <p>Terminal running...</p>
+        </div>
+        <form id="terminal-form">
+            <label for="terminal-input">$</label>
+            <input type="text" id="terminal-input" autocomplete="off" autofocus />
+        </form>
+    </div>
+    <button id="toggleButton">🖥️ Open terminal</button>
     <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.body.addEventListener("click", function (e) {
@@ -265,286 +313,19 @@
             }
 
         });
+        const terminal = document.getElementById('terminal');
+        const toggleButton = document.getElementById('toggleButton');
+
+        toggleButton.addEventListener('click', () => {
+            if (terminal.style.display === 'none') {
+                terminal.style.display = 'block';
+                toggleButton.textContent = '🗙 Close terminal';
+            } else {
+                terminal.style.display = 'none';
+                toggleButton.textContent = '🖥️ Open terminal';
+            }
+        });
     });
-    const graphData = {
-        nodes: [],
-        edges: []
-    };
-
-    $('#cli-terminal').terminal(function(command, term) {
-        if (!command.trim()) return;
-
-        const args = command.trim().split(/\s+/);
-        const cmd = args[0].toLowerCase();
-
-        function findNodeById(id) {
-            return graphData.nodes.find(n => n.id === id);
-        }
-        function findEdgeById(id) {
-            return graphData.edges.find(e => e.id === id);
-        }
-
-        switch (cmd) {
-            case 'create':
-                if (args.length < 3) {
-                    term.error('Usage: create node|edge --id=ID [--property key=value ...] <source> <target>');
-                    break;
-                }
-                const type = args[1].toLowerCase();
-                if (type === 'node') {
-                    // extract id and properties from args
-                    let id = null;
-                    let properties = {};
-                    args.slice(2).forEach(arg => {
-                        if (arg.startsWith('--id=')) id = arg.slice(5);
-                        else if (arg.startsWith('--property')) {
-                            const propStr = arg.slice(10).trim();
-                            // handle if like --property key=value
-                            const eqIndex = propStr.indexOf('=');
-                            if (eqIndex > -1) {
-                                const key = propStr.slice(0, eqIndex);
-                                const val = propStr.slice(eqIndex + 1);
-                                properties[key] = val;
-                            }
-                        }
-                    });
-                    if (!id) {
-                        term.error('Node must have an id. Usage: create node --id=ID [--property key=value ...]');
-                        break;
-                    }
-                    if (findNodeById(id)) {
-                        term.error(`Node with id '${id}' already exists.`);
-                        break;
-                    }
-                    graphData.nodes.push({id, attributes: properties});
-                    term.echo(`Node '${id}' created.`);
-                } else if (type === 'edge') {
-                    // For edge: create edge --id=ID --property key=val source target
-                    let id = null;
-                    let properties = {};
-                    let source = null;
-                    let target = null;
-
-                    // parse id and properties first
-                    let i = 2;
-                    while (i < args.length) {
-                        let arg = args[i];
-                        if (arg.startsWith('--id=')) {
-                            id = arg.slice(5);
-                        } else if (arg.startsWith('--property')) {
-                            const propStr = arg.slice(10).trim();
-                            const eqIndex = propStr.indexOf('=');
-                            if (eqIndex > -1) {
-                                const key = propStr.slice(0, eqIndex);
-                                const val = propStr.slice(eqIndex + 1);
-                                properties[key] = val;
-                            }
-                        } else {
-                            // assume positional args for source and target
-                            if (!source) source = arg;
-                            else if (!target) target = arg;
-                        }
-                        i++;
-                    }
-                    if (!id) {
-                        term.error('Edge must have an id. Usage: create edge --id=ID --property key=val source target');
-                        break;
-                    }
-                    if (!source || !target) {
-                        term.error('Edge must have source and target nodes.');
-                        break;
-                    }
-                    if (!findNodeById(source)) {
-                        term.error(`Source node '${source}' does not exist.`);
-                        break;
-                    }
-                    if (!findNodeById(target)) {
-                        term.error(`Target node '${target}' does not exist.`);
-                        break;
-                    }
-                    if (findEdgeById(id)) {
-                        term.error(`Edge with id '${id}' already exists.`);
-                        break;
-                    }
-                    graphData.edges.push({id, source, target, attributes: properties});
-                    term.echo(`Edge '${id}' created from '${source}' to '${target}'.`);
-                } else {
-                    term.error('Unknown type. Use node or edge.');
-                }
-                break;
-
-            case 'edit':
-                if (args.length < 4) {
-                    term.error('Usage: edit node|edge --id=ID --property key=value');
-                    break;
-                }
-                const editType = args[1].toLowerCase();
-                let editId = null;
-                let editProperties = {};
-
-                args.slice(2).forEach(arg => {
-                    if (arg.startsWith('--id=')) editId = arg.slice(5);
-                    else if (arg.startsWith('--property')) {
-                        const propStr = arg.slice(10).trim();
-                        const eqIndex = propStr.indexOf('=');
-                        if (eqIndex > -1) {
-                            const key = propStr.slice(0, eqIndex);
-                            const val = propStr.slice(eqIndex + 1);
-                            editProperties[key] = val;
-                        }
-                    }
-                });
-                if (!editId) {
-                    term.error('Must specify --id=ID');
-                    break;
-                }
-                if (editType === 'node') {
-                    let node = findNodeById(editId);
-                    if (!node) {
-                        term.error(`Node '${editId}' not found.`);
-                        break;
-                    }
-                    Object.assign(node.attributes, editProperties);
-                    term.echo(`Node '${editId}' updated.`);
-                } else if (editType === 'edge') {
-                    let edge = findEdgeById(editId);
-                    if (!edge) {
-                        term.error(`Edge '${editId}' not found.`);
-                        break;
-                    }
-                    Object.assign(edge.attributes, editProperties);
-                    term.echo(`Edge '${editId}' updated.`);
-                } else {
-                    term.error('Unknown type. Use node or edge.');
-                }
-                break;
-
-            case 'delete':
-                if (args.length < 3) {
-                    term.error('Usage: delete node|edge --id=ID');
-                    break;
-                }
-                const delType = args[1].toLowerCase();
-                let delId = null;
-                args.slice(2).forEach(arg => {
-                    if (arg.startsWith('--id=')) delId = arg.slice(5);
-                });
-                if (!delId) {
-                    term.error('Must specify --id=ID');
-                    break;
-                }
-                if (delType === 'node') {
-                    let nodeIndex = graphData.nodes.findIndex(n => n.id === delId);
-                    if (nodeIndex === -1) {
-                        term.error(`Node '${delId}' not found.`);
-                        break;
-                    }
-                    // check if node is connected to any edge
-                    const connected = graphData.edges.some(e => e.source === delId || e.target === delId);
-                    if (connected) {
-                        term.error(`Node '${delId}' is connected to edges. Remove edges first.`);
-                        break;
-                    }
-                    graphData.nodes.splice(nodeIndex, 1);
-                    term.echo(`Node '${delId}' deleted.`);
-                } else if (delType === 'edge') {
-                    let edgeIndex = graphData.edges.findIndex(e => e.id === delId);
-                    if (edgeIndex === -1) {
-                        term.error(`Edge '${delId}' not found.`);
-                        break;
-                    }
-                    graphData.edges.splice(edgeIndex, 1);
-                    term.echo(`Edge '${delId}' deleted.`);
-                } else {
-                    term.error('Unknown type. Use node or edge.');
-                }
-                break;
-
-            case 'filter':
-                // Simple example: filter expression passed as one string argument
-                let filterExpr = command.slice(7).trim();
-                if (!filterExpr) {
-                    term.error('Usage: filter <expression>');
-                    break;
-                }
-                // Filter nodes by expression - example: 'Age>30 && Height>=150'
-                // This is a demo, so we'll do a simple eval on attributes (warning: unsafe in real)
-                try {
-                    let filtered = graphData.nodes.filter(node => {
-                        // Build context for eval
-                        let context = {};
-                        for (const [k,v] of Object.entries(node.attributes)) {
-                            // convert numeric strings to numbers if possible
-                            let num = Number(v);
-                            context[k] = isNaN(num) ? `"${v}"` : num;
-                        }
-                        let expr = filterExpr;
-                        // Replace keys in expr with context values, basic substitution
-                        for (const [k,v] of Object.entries(context)) {
-                            let re = new RegExp(`\\b${k}\\b`, 'g');
-                            expr = expr.replace(re, v);
-                        }
-                        return eval(expr);
-                    });
-                    term.echo(`Filtered nodes (${filtered.length}): ${filtered.map(n => n.id).join(', ')}`);
-                } catch(e) {
-                    term.error(`Error in filter expression: ${e.message}`);
-                }
-                break;
-
-            case 'search':
-                // Search nodes by attribute key=value (simple)
-                let searchQuery = command.slice(6).trim();
-                if (!searchQuery) {
-                    term.error('Usage: search <key=value>');
-                    break;
-                }
-                let [key, val] = searchQuery.split('=');
-                if (!key || !val) {
-                    term.error('Usage: search <key=value>');
-                    break;
-                }
-                let results = graphData.nodes.filter(n => n.attributes[key] == val);
-                term.echo(`Found ${results.length} node(s) with ${key}=${val}: ${results.map(n => n.id).join(', ')}`);
-                break;
-
-            case 'clear':
-                graphData.nodes = [];
-                graphData.edges = [];
-                term.echo('Graph cleared.');
-                break;
-
-            case 'help':
-                term.echo(`Available commands:
-                    create node --id=ID [--property key=value ...]
-                    create edge --id=ID --property key=value source target
-                    edit node --id=ID --property key=value
-                    edit edge --id=ID --property key=value
-                    delete node --id=ID
-                    delete edge --id=ID
-                    filter <expression>
-                    search <key=value>
-                    clear
-                    help`);
-                break;
-
-            default:
-                term.error(`Unknown command '${cmd}'. Type 'help' for commands.`);
-        }
-
-        // Optionally update your graph visualization here
-        // renderGraph();
-
-    }, {
-        greetings: `Welcome to Graph CLI!
-    Type 'help' for available commands.`,
-        prompt: '> ',
-        height: 300,
-        name: 'graph_cli',
-    });
-
     </script>
-    
-
 </body>
 </html>
