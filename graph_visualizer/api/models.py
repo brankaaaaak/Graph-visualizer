@@ -236,9 +236,9 @@ class Graph:
                 if edge.target == origin_node and edge.relation == relation:
                     target_node.edges.remove(edge)
                     break
-        self._visited_nodes.clear()
-        self._path.clear()
-        self._nodes_to_contour.clear()
+        #self._visited_nodes.clear()
+        #self._path.clear()
+        #self._nodes_to_contour.clear()
         return True
 
 
@@ -297,6 +297,18 @@ class Graph:
                     return True
             except KeyError:
                 pass
+        return False
+    
+    def remove_node(self, node_to_remove):
+        if node_to_remove in self.nodes:
+            self._nodes.remove(node_to_remove)
+            """if node_to_remove in self._visited_nodes:
+                self._visited_nodes.remove(node_to_remove)
+            if node_to_remove in self._nodes_to_contour:
+                self._nodes_to_contour.remove(node_to_remove)
+            if node_to_remove in self._path:
+                self._path.remove(node_to_remove)"""
+            return True
         return False
 
     def check_as_true(self, edges, connected):   
