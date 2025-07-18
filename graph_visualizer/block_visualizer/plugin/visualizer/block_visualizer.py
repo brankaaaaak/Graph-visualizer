@@ -5,10 +5,10 @@ from api.services.visualizer import BaseVisualizer
 
 class BlockVisualizer(BaseVisualizer):
     def identifier(self):
-        return "complex-visualizer"
+        return "block-visualizer"
 
     def name(self):
-        return "Complex View"
+        return "Block View"
     
     def visualize(self, graph, request):
         nodes = {}
