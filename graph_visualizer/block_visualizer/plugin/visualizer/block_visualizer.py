@@ -102,14 +102,24 @@ class BlockVisualizer(BaseVisualizer):
                     .attr("fill", "white")
                     .text(d.id);
 
+                var maxAttrTextLength = 30;  
+
                 for (var i = 0; i < d.attributes.length; i++) {
+                    var attrText = d.attributes[i];
+                    var displayText = attrText.length > maxAttrTextLength
+                        ? attrText.substring(0, maxAttrTextLength - 3) + "..."
+                        : attrText;
+
                     g.append("text")
                         .attr("x", 5)
                         .attr("y", 30 + i * textSize)
                         .attr("font-size", textSize)
                         .attr("fill", "white")
-                        .text(d.attributes[i]);
+                        .text(displayText)
+                        .append("title")
+                        .text(attrText);  
                 }
+
             });
 
             force.start();
