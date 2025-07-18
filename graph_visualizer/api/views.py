@@ -123,6 +123,7 @@ def expand_node_view(request):
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
 
+
 def expand_node_from_view(request, node_id):
     try:
         api_config = apps.get_app_config('api')

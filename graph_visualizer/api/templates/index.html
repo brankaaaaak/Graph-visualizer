@@ -214,10 +214,11 @@
         document.body.addEventListener("click", function (e) {
             if (e.target.classList.contains("node-toggle")) {
                 e.preventDefault();
-
+                
                 const anchor = e.target;
                 const li = anchor.closest("li");
-                const nodeId = anchor.dataset.nodeId;
+                const nodeId = anchor.dataset.nodeId || anchor.dataset.edgeId;
+
 
                 if (anchor.classList.contains("node-expanded")) {
                     const childUl = li.querySelector("ul");
