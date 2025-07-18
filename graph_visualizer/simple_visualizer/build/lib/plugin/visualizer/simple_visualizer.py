@@ -96,6 +96,29 @@ class SimpleVisualizer(BaseVisualizer):
             }
 
             function tick(e) {
+                var radius = 30;  // poluprečnik čvora (kuglice)
+
+                node.each(function(d) {
+                    // Ograniči X da ne izađe lijevo ili desno izvan SVG
+                    if (d.x < radius) {
+                        d.x = radius;
+                        d.px = d.x + (d.x - d.px) * -1;  // odbij nazad
+                    }
+                    if (d.x > width - radius) {
+                        d.x = width - radius;
+                        d.px = d.x + (d.x - d.px) * -1;
+                    }
+
+                    // Ograniči Y da ne izađe gore ili dole izvan SVG
+                    if (d.y < radius) {
+                        d.y = radius;
+                        d.py = d.y + (d.y - d.py) * -1;  // odbij nazad
+                    }
+                    if (d.y > height - radius) {
+                        d.y = height - radius;
+                        d.py = d.y + (d.y - d.py) * -1;
+                    }
+                });
                 node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
                     .call(force.drag);
 
