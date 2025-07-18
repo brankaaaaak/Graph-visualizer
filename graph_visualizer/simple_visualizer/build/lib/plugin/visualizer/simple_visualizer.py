@@ -96,29 +96,6 @@ class SimpleVisualizer(BaseVisualizer):
             }
 
             function tick(e) {
-                var radius = 30;  // poluprečnik čvora (kuglice)
-
-                node.each(function(d) {
-                    // Ograniči X da ne izađe lijevo ili desno izvan SVG
-                    if (d.x < radius) {
-                        d.x = radius;
-                        d.px = d.x + (d.x - d.px) * -1;  // odbij nazad
-                    }
-                    if (d.x > width - radius) {
-                        d.x = width - radius;
-                        d.px = d.x + (d.x - d.px) * -1;
-                    }
-
-                    // Ograniči Y da ne izađe gore ili dole izvan SVG
-                    if (d.y < radius) {
-                        d.y = radius;
-                        d.py = d.y + (d.y - d.py) * -1;  // odbij nazad
-                    }
-                    if (d.y > height - radius) {
-                        d.y = height - radius;
-                        d.py = d.y + (d.y - d.py) * -1;
-                    }
-                });
                 node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; })
                     .call(force.drag);
 
@@ -156,9 +133,14 @@ class SimpleVisualizer(BaseVisualizer):
                 .then(html => {
                     const treeView = document.getElementById("tree-view");
                     treeView.innerHTML = "<h3>Tree View</h3>" + html;
+                    const prevSelected = treeView.querySelector(".selected-node");
+                    if (prevSelected) {
+                        prevSelected.classList.remove("selected-node");
+                    }
                     setTimeout(() => {
-                        const target = document.querySelector(`[data-node-id="${nodeId}"]`);
+                        const target = treeView.querySelector(`[data-graph-node-id="${nodeId}"]`);
                         if (target) {
+                            target.classList.add("selected-node");
                             target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         }
                     }, 100);

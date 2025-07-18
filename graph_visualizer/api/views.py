@@ -51,22 +51,23 @@ def generate_tree_html(nodes):
 
         arrow = "➖" if node.opened else "➕"
 
-        # Priprema teksta za prikaz
-        
         if isinstance(node.object, Node):
             label = "Node"
             text = f"<strong>{node.object.id}</strong> - {node.object.attributes}"
+            data_attr = f'data-node-id="{node.id}" data-graph-node-id="{node.object.id}"'
         elif isinstance(node.object, str):  
             label = "Edge"
             text = f"<em>{node.object}</em>"
+            data_attr = f'data-edge-id="{node.id}"'
         else:
             label = "Unknown"
             text = str(node.object)
+            data_attr = ''
 
         # Renderuj ovaj čvor
         html += f'''
         <li>
-            <a href="#" class="node-toggle" data-node-id="{node.id}">{arrow} {label}: {text}</a>
+            <a href="#" class="node-toggle" {data_attr}>{arrow} {label}: {text}</a>
         '''
 
         # Ako je čvor otvoren i ima djecu, rekurzivno prikaži
