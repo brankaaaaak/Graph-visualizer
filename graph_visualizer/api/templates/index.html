@@ -313,19 +313,115 @@
             }
 
         });
-        const terminal = document.getElementById('terminal');
-        const toggleButton = document.getElementById('toggleButton');
+        const terminalOutput = document.getElementById("terminal-output");
+        const terminalInput = document.getElementById("terminal-input");
+        const terminalForm = document.getElementById("terminal-form");
 
-        toggleButton.addEventListener('click', () => {
-            if (terminal.style.display === 'none') {
-                terminal.style.display = 'block';
-                toggleButton.textContent = '🗙 Close terminal';
-            } else {
-                terminal.style.display = 'none';
-                toggleButton.textContent = '🖥️ Open terminal';
+    // PARSER ARGS
+    function parseArgs(cmd) {
+        const regex = /--(\w+)=("[^"]*"|'[^']*'|[^\s"]+)/g;
+        const args = {};
+        let match;
+        while ((match = regex.exec(cmd)) !== null) {
+            let key = match[1];
+            let val = match[2];
+            if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+                val = val.slice(1, -1);
             }
-        });
+            args[key] = val;
+        }
+        return args;
+    }
+
+    // TERMINAL COMMAND HANDLER
+    terminalForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const command = terminalInput.value.trim();
+        terminalInput.value = "";
+
+        if (!command) return;
+
+        terminalOutput.innerHTML += `<div>$ ${command}</div>`;
+
+        try {
+            const [action, type] = command.split(" ");
+            const args = parseArgs(command);
+            const parts = command.split(" ");
+
+            if (command === 'help') {
+                terminalOutput.innerHTML += `<pre>
+Komande:
+create node --id=1 --property Name=Alice
+create edge --id=1 --property Name=Siblings 1 2
+edit node --id=1 --property Age=30
+delete node --id=1
+delete edge --id=1
+filter 'Age>20'
+search 'Name=Alice'
+clear
+</pre>`;
+                return;
+            }
+
+            if (command === "clear") {
+               
+                return;
+            }
+
+            if (action === "create" && type === "node") {
+               return;
+            }
+
+            else if (action === "create" && type === "edge") {
+                return;
+            }
+
+            else if (action === "edit" && type === "node") {
+               return;
+            }
+
+            else if (action === "delete" && type === "node") {
+                return;
+            }
+
+            else if (action === "delete" && type === "edge") {
+                return;
+            }
+
+            else if (command.startsWith("search ")) {
+                return;
+            }
+
+            else if (command.startsWith("filter ")) {
+                return;
+            }
+
+            else {
+                terminalOutput.innerHTML += "<div>Unknown command. Try 'help'</div>";
+            }
+
+        } catch (err) {
+            terminalOutput.innerHTML += `<div style="color:red;">Greška: ${err.message}</div>`;
+        }
+
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
     });
+
+    // Terminal show/hide
+    const terminal = document.getElementById('terminal');
+    const toggleButton = document.getElementById('toggleButton');
+
+    toggleButton.addEventListener('click', () => {
+        if (terminal.style.display === 'none') {
+            terminal.style.display = 'block';
+            toggleButton.textContent = '🗙 Close terminal';
+            terminalInput.focus();
+        } else {
+            terminal.style.display = 'none';
+            toggleButton.textContent = '🖥️ Open terminal';
+        }
+    });
+});
     </script>
 </body>
 </html>
