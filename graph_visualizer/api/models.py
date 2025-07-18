@@ -1,3 +1,4 @@
+import copy
 from django.db import models
 
 # Create your models here.
@@ -15,9 +16,21 @@ class Node:
     def id(self):
         return self._id
     
+    @id.setter
+    def id(self, value):
+        self._id = value
+    
     @property
     def attributes(self):
         return self._attributes
+    
+    @edges.setter
+    def edges(self, value):
+        self._edges = value
+
+    @attributes.setter
+    def attributes(self, value):
+        self._attributes = value
 
     def __hash__(self):
         return hash(self._id)
@@ -65,12 +78,12 @@ class Node:
 
 
 class Edge:
-    def __init__(self, origin, target, relation, weight, is_directed):
+    def __init__(self, origin, target, relation, weight, directed):
         self._origin = origin
         self._target = target
         self._relation = relation
         self._weight = weight
-        self._is_directed = is_directed
+        self._directed = directed
 
     @property
     def weight(self):
@@ -84,26 +97,34 @@ class Edge:
     def target(self):
         return self._target
 
+    @target.setter
+    def target(self, value):
+        self._target = value
+
     @property
     def origin(self):
         return self._origin
     
+    @origin.setter
+    def origin(self, value):
+        self._origin = value
+    
     @property
     def is_directed(self):
-        return self._is_directed
+        return self._directed
 
     def __hash__(self):
         return hash((self._origin,self._target))
     
     def __str__(self):
-        return f'({self._origin}, {self._target}, {self._relation}, {self._weight}, {self._is_directed})'
+        return f'({self._origin}, {self._target}, {self._relation}, {self._weight}, {self._directed})'
     
     def __eq__(self, other) -> bool:
         if self._relation != other.relation:
             return False
         elif self._weight != other.weight:
             return False
-        elif self._is_directed != other.is_directed:
+        elif self._directed != other._directed:
             return False
         elif self._target != other.target:
             return False
@@ -117,10 +138,29 @@ class Graph:
         self._nodes = []
         self._visited_nodes = []
         self._path = []
+        self._nodes_to_contour = []
 
     @property
     def nodes(self):
         return self._nodes
+    @nodes.setter
+    def nodes(self, value):
+        self._nodes = value
+
+    @property
+    def path(self):
+        return self._path
+    
+    @path.setter
+    def path(self, value):
+        self._path = value
+
+    @property
+    def visited_nodes(self):
+        return self._visited_nodes
+    @visited_nodes.setter
+    def visited_nodes(self, value):
+        self._visited_nodes = value
 
     def node_degree(self, node):
         return node.degree()
@@ -135,7 +175,7 @@ class Graph:
         return len(self._nodes)
     
     def get_number_of_edges(self):
-        directed = sum(1 for edge in self.get_edges() if edge.is_directed())
+        directed = sum(1 for edge in self.get_edges() if edge._directed())
         undirected = len(self.get_edges()) - directed
         return directed + undirected // 2
     
@@ -143,7 +183,7 @@ class Graph:
         edges = self.get_edges()
         if edges:
             first_edge = list(edges)[0]
-            return first_edge.is_directed
+            return first_edge._directed
         return False
     
     def has_node(self, n):
@@ -164,11 +204,335 @@ class Graph:
             self._nodes.append(node)
 
     def insert_edge(self, origin, target, relation, weight, is_directed):
-        edge = Edge(origin = origin, target= target, relation= relation, weight= weight, is_directed= is_directed)
+        edge = Edge(origin = origin, target= target, relation= relation, weight= weight, directed= is_directed)
         origin.add_edge(target)
         if not is_directed:
             target.add_node(origin)
-        
 
+    def find_subgraphs(self, nodes=None, graphs=None):   
+        if not nodes:
+            nodes = []
+        if not graphs:
+            graphs = []
+        changes = True
+        if not nodes:
+            nodes = copy.deepcopy(self._nodes)
 
+        connected = {}
+        for node in nodes:
+            if len(connected) == 0:
+                connected[node] = True
+            else:
+                connected[node] = False
+
+        if list(connected.values()) == [True * len(nodes)]:
+            subgraph = Graph()
+            subgraph.nodes = list(connected.keys())
+            graphs.append(subgraph)
+            return graphs
+
+        while changes:
+            changes = False
+            for node in nodes:
+                if connected[node]:
+                    if self.check_as_true(node.edges, connected):
+                        changes = True
+                else:
+                    if self.check_if_true(node, connected):
+                        connected[node] = True
+                        if self.check_as_true(node.edges, connected):
+                            changes = True
+
+        if list(connected.values()) == [True for _ in range(len(connected.values()))]:
+            subgraph = Graph()
+            subgraph.nodes = list(connected.keys())
+            graphs.append(subgraph)
+            return graphs
+
+        removed = self.remove_connected_nodes(nodes, connected)
+        subgraph = Graph()
+        subgraph.nodes = removed
+        graphs.append(subgraph)
+        return self.find_subgraphs(nodes, graphs)
     
+    def check_if_true(self, node, connected):
+        for edge in node.edges:
+            try:
+                if connected[edge.origin]:
+                    return True
+                elif connected[edge.target]:
+                    return True
+            except KeyError:
+                pass
+        return False
+
+    def check_as_true(self, edges, connected):   
+        changes = False
+        for edge in edges:
+            if connected[edge.origin] is False:
+                changes = True
+            elif connected[edge.target] is False:
+                changes = True
+            connected[edge.origin] = True
+            connected[edge.target] = True
+
+        return changes
+    
+    def remove_connected_nodes(self, nodes, connected):   
+        removed = []
+        for n in connected.keys():
+            if connected[n]:
+                nodes.remove(n)
+                removed.append(n)
+
+        return removed
+    
+    def check_as_true(self, edges, connected):  
+        changes = False
+        for edge in edges:
+            if connected[edge.origin] is False:
+                changes = True
+            elif connected[edge.target] is False:
+                changes = True
+            connected[edge.origin] = True
+            connected[edge.target] = True
+
+        return changes
+    
+    def is_graph_directed(self):
+        if len(self.get_edges()) > 0:
+            return list(self.get_edges())[0].is_directed
+        
+    def find_conture_nodes(self):   
+        self._nodes_to_contour = []
+        self.visited = []
+        for node in self.nodes:
+            if node not in self._nodes_to_contour:
+                self.path = []
+                self.has_cycle_directed(node)
+
+        return self._nodes_to_contour
+    
+    def has_cycle_directed(self, node):   
+        if node in self.path:
+            if self.path[0] not in self._nodes_to_contour:
+                self._nodes_to_contour.append(self.path[0])
+            return
+        if node in self.visited_nodes:
+            return
+        self.path.append(node)
+        for edge in node.edges:
+            self.has_cycle_directed(edge.target)
+        if node not in self._nodes_to_contour:
+            self._visited_nodes.append(node)
+
+    def has_cycle_undirected(self):  
+        self.visited = []
+        for node in self.nodes:
+            if node in self.visited:
+                if node != self.visited[-1]:
+                    continue
+            if self.depth_first_search(node, None):
+                return True
+        return False
+    
+    def depth_first_search(self, current, parent):
+        self._visited_nodes.append(current)
+        for node in self.nodes:
+            if current.is_related(node):
+                if parent and node == parent:
+                    continue
+                if node in self._visited_nodes:
+                    if node != self._visited_nodes[-1]:
+                        return True
+                elif self.depth_first_search(node, current):
+                    return True
+        return False
+    
+    def find_not_destination_nodes(self):   
+        dict = {}
+        for node in self.nodes:
+            dict[node] = False
+
+        for edge in self.get_edges():
+            dict[edge.target] = True
+
+        roots = []
+        for node in dict.keys():
+            if dict[node] is False:
+                roots.append(node)
+
+        return roots
+
+
+class NodeIdGenerator:
+
+    def __init__(self):
+        self.__current_id = 0
+
+    def next(self):
+        self.__current_id += 1
+        return self.__current_id - 1
+
+    def reset(self):
+        self.__current_id = 0
+
+nodeId = NodeIdGenerator()
+
+class TreeNode(object):
+
+    def __init__(self, object, parent, type):
+        self._opened = False
+        self._object = object
+        self._object_type = type
+        self._id = nodeId.next()
+        self._children = []
+        self._parent = parent
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def opened(self):
+        return self._opened
+
+    @opened.setter
+    def opened(self, value):
+        self._opened = value
+    
+    """
+    def open(self):
+        self._opened = True
+        if len(self._children) <= 0:
+            if self._object_type == "node":
+                # Dodaj povezane edge-ove, ne stringove
+                for edge in self._object.edges:
+                    self._children.append(TreeNode(edge, self, "edge"))
+            elif self._object_type == "edge":
+                # Dodaj ciljni čvor za edge
+                self._children.append(TreeNode(self._object.target, self, "node"))
+"""
+    def open(self):
+        self._opened = True
+
+        if self._children:
+            return  # već otvoreno
+
+        if self._object_type == "node":
+            # Grupiraj po relaciji — dodaj samo relacije, ne pojedinačne edge-ove
+            relations = self._object.get_relations()
+            for relation in relations:
+                self._children.append(TreeNode(relation, self, "edge"))  # ovdje je object string: relation
+
+        elif self._object_type == "edge":
+            # self._object je string, npr. "hobbies"
+            # self._parent.object je Node
+            related_nodes = self._parent.object.get_related_nodes(self._object)
+            for target_node in related_nodes:
+                self._children.append(TreeNode(target_node, self, "node"))
+
+
+    def load_children(self):
+        if len(self._children) <= 0:
+            if self._object_type == "node":
+                self.add_children(self._object.get_relations())
+            else:
+                self.add_children(self._parent.object.get_related_nodes(self._object))
+
+    def open_parents(self):
+        self.open()
+        if self._parent:
+            self._parent.open_parents()
+
+    def close(self):
+        self._opened = False
+
+    @property
+    def object(self):
+        return self._object
+
+    @property
+    def object_type(self):
+        return self._object_type
+
+    @property
+    def children(self):
+        return self._children
+
+    @property
+    def parent(self):
+        return self._parent
+
+    def find_node(self, id):
+        if id == self._id:
+            return self
+        else:
+            for child in self._children:
+                found_node = child.find_node(id)
+                if found_node:
+                    return found_node
+        return None
+
+    def add_children(self, children_objects):
+        for child in children_objects:
+            if self._object_type == "node":
+                child_type = "edge"
+            else:
+                child_type = "node"
+            child_node = TreeNode(child, self, child_type)
+            self._children.append(child_node)
+
+
+class Tree(object):
+
+    def __init__(self, roots=None):
+        nodeId.reset()
+        self._roots = roots if roots is not None else []
+        self._last_opened = 0
+
+    def empty(self):
+        self._roots = []
+        self._last_opened = 0
+        nodeId.reset()
+
+    @property
+    def roots(self):
+        return self._roots
+
+    @roots.setter
+    def roots(self, roots):
+        self._roots = roots
+
+    @property
+    def last_opened(self):
+        return self._last_opened
+
+    @last_opened.setter
+    def last_opened(self, last_opened):
+        self._last_opened = last_opened
+
+    def find_tree_node(self, id):
+        for root_node in self._roots:
+            found_node = root_node.find_node(id)
+            if found_node:
+                return found_node
+        return None
+
+    def find_node_by_node_id(self, id, nodes=None): #by graph node
+        if nodes is None:
+            nodes = self._roots
+        new_nodes = []
+        for node in nodes:
+            if node.object_type != "edge" and node.object.id == id:
+                return node
+            node.load_children()
+            new_nodes += node.children
+        if not new_nodes:
+            return None
+        return self.find_node_by_node_id(id, new_nodes)
+
+    def open_node_by_id(self, id):
+        node = self.find_node_by_node_id(id)
+        if node:
+            node.open_parents()

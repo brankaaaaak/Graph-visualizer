@@ -15,12 +15,13 @@ class SimpleVisualizer(BaseVisualizer):
         for node in graph.nodes:
             attributes = [f"{key}: {value}" for key, value in node.attributes.items()]
             nodes[node.id] = {"id": "id-" + str(node.id), "attributes": attributes}
-
+            
         connections = []
         for edge in graph.get_edges():
             connection = {"source": edge.origin.id, "target": edge.target.id}
             connections.append(connection)
-
+        print(nodes)
+        print(connections)
         view = """
         <style>
         .node {
@@ -42,7 +43,7 @@ class SimpleVisualizer(BaseVisualizer):
             var nodes = JSON.parse("{{nodes |escapejs}}");
 
             var width = 1000;
-            var height = 450;
+            var height = 600;
 
             connections.forEach(function (connection) {
                 connection.source = nodes[connection.source];
@@ -57,7 +58,8 @@ class SimpleVisualizer(BaseVisualizer):
                 .linkDistance(300)
                 .charge(-5000)
                 .gravity(0.5);
-
+                
+            d3.select("#main-view svg").remove();
             var svg = d3.select("#main-view")
                 .append("svg")
                 .attr("width", width)
@@ -105,13 +107,11 @@ class SimpleVisualizer(BaseVisualizer):
 
             function nodeClick(element) {
                 var description="id:"+element.id+"\\n";
-                var id=selected_node.id.replace("id-","");
                 if(selected_node!=null){
-                    nodeView(nodes[id],"#241f4c");
+                    nodeView(nodes[selected_node.id.replace("id-","")],"#241f4c");
                 }
 
-                var element_id=element.id.replace("id-","");
-                var new_node=nodes[element_id];
+                var new_node=nodes[element.id.replace("id-","")];
                 selected_node=new_node;
 
                 nodeView(selected_node,"pink")

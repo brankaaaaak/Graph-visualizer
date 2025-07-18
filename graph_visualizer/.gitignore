@@ -35,4 +35,8 @@ Thumbs.db
 # Egg-info
 *.egg-info/
 
+#Build
+build/
 
+#Dist
+dist/
