@@ -42,8 +42,8 @@ class BlockVisualizer(BaseVisualizer):
             var nodesGraph = JSON.parse("{{ nodes|escapejs }}");
             var connectionsGraph = JSON.parse("{{ connections|escapejs }}");
 
-            var width = 800;
-            var height = 350;
+            var width = 900;
+            var height = 500;
 
             connectionsGraph.forEach(function (conn) {
                 conn.source = nodesGraph[conn.source];
@@ -56,7 +56,7 @@ class BlockVisualizer(BaseVisualizer):
                 .links(connectionsGraph)
                 .on("tick", tick)
                 .linkDistance(300)
-                .charge(-2000)
+                .charge(-5000)
                 .gravity(0.5);
 
             var svg = d3.select("#main-view")
@@ -102,14 +102,24 @@ class BlockVisualizer(BaseVisualizer):
                     .attr("fill", "white")
                     .text(d.id);
 
+                var maxAttrTextLength = 30;  
+
                 for (var i = 0; i < d.attributes.length; i++) {
+                    var attrText = d.attributes[i];
+                    var displayText = attrText.length > maxAttrTextLength
+                        ? attrText.substring(0, maxAttrTextLength - 3) + "..."
+                        : attrText;
+
                     g.append("text")
                         .attr("x", 5)
                         .attr("y", 30 + i * textSize)
                         .attr("font-size", textSize)
                         .attr("fill", "white")
-                        .text(d.attributes[i]);
+                        .text(displayText)
+                        .append("title")
+                        .text(attrText);  
                 }
+
             });
 
             force.start();
@@ -145,7 +155,68 @@ class BlockVisualizer(BaseVisualizer):
                     description += new_node.attributes[i] + "\\n";
                 }
                 alert(description);
+                 // Pošalji AJAX zahtjev ka serveru da otvori čvor u stablu preko funkcije expand
+                fetch(`/expand/${encodeURIComponent(nodeId)}/`)
+                    .then(res => {
+                        if (!res.ok) throw new Error("Server returned " + res.status);
+                        return res.text();
+                    })
+                    .then(html => {
+                        const treeView = document.getElementById("tree-view");
+                        treeView.innerHTML = "<h3>Tree View</h3>" + html;
+                        const prevSelected = treeView.querySelector(".selected-node");
+                        if (prevSelected) {
+                            prevSelected.classList.remove("selected-node");
+                        }
+                        setTimeout(() => {
+                            const target = treeView.querySelector(`[data-graph-node-id="${nodeId}"]`);
+                            if (target) {
+                                target.classList.add("selected-node");
+                                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                        }, 100);
+                    })
+                    .catch(err => {
+                        //console.error("Greška pri otvaranju čvora u stablu:", err);
+                        //alert("Greška pri otvaranju čvora u stablu: " + err.message);
+                    });
+                }
+            function updateBirdView() {
+                var mainGroup = d3.select("#main-view svg g");
+                if (mainGroup.empty()) return;
+
+                var birdDiv = d3.select("#bird-view");
+                birdDiv.select("svg").remove();
+
+                var clonedGroup = mainGroup.node().cloneNode(true);
+
+                var birdSvg = birdDiv.append("svg")
+                    .attr("width", birdDiv.node().clientWidth)
+                    .attr("height", birdDiv.node().clientHeight);
+
+                birdSvg.node().appendChild(clonedGroup);
+
+                var padding = 10;
+                var bbox = clonedGroup.getBBox();
+
+                var birdWidth = birdDiv.node().clientWidth - 2 * padding;
+                var birdHeight = birdDiv.node().clientHeight - 2 * padding;
+
+                var scaleWidth = birdWidth / bbox.width;
+                var scaleHeight = birdHeight / bbox.height;
+                var scale = Math.min(scaleWidth, scaleHeight);
+
+                d3.select(clonedGroup)
+                    .attr("transform", `translate(${padding - bbox.x * scale}, ${padding - bbox.y * scale}) scale(${scale})`);
+
+                birdSvg.selectAll("rect").attr("stroke-width", 0.5);
+                birdSvg.selectAll("line").attr("stroke-width", 1);
+                birdSvg.selectAll("text").attr("font-size", 15);
             }
+
+            force.on("end", function () {
+                updateBirdView();
+            });
         });
         </script>
         """
