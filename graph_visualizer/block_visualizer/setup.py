@@ -1,14 +1,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='complex-visualizer',
+    name='block-visualizer',
     version='0.1.0',
-    description='Complex graph visualizer plugin for Django',
+    description='Block graph visualizer plugin for Django',
     packages=find_packages(),
     namespace_packages=["plugin", "plugin.visualizer"],
     entry_points={
         'visualizer':
-        ['complex-visualizer=plugin.visualizer.complex_visualizer:ComplexVisualizer']
+        ['block-visualizer=plugin.visualizer.block_visualizer:BlockVisualizer']
     },
     classifiers=[
         'Programming Language :: Python :: 3',

@@ -3,7 +3,7 @@ from django.template import engines
 from api.services.visualizer import BaseVisualizer
 
 
-class ComplexVisualizer(BaseVisualizer):
+class BlockVisualizer(BaseVisualizer):
     def identifier(self):
         return "complex-visualizer"
 
