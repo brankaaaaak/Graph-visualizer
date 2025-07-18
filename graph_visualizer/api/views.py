@@ -23,6 +23,9 @@ def upload_file(request):
     loaders = apps.get_app_config('api').loaders
     chosen_file = request.FILES.get('graph_file')
 
+    api_config.base_graph=None
+    api_config.graph =None
+    api_config.tree=None
     raw_graph = None
     for loader in loaders:
         if check_extension(loader.identifier(), chosen_file):

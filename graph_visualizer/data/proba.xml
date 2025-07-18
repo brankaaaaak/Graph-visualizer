@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EventProject name="Conference2025" createdBy="andjela" createdAt="2025-07-18">
+    <Location id="1" city="Belgrade" venue="Sava Center" capacity="1500" indoor="true"/>
+    
+    <Organizer id="10" name="TechEvents Ltd" contactEmail="info@techevents.rs" phone="+38111222333"/>
+
+    <Speaker id="101" name="Dragan Petrovic" topic="AI Trends" timeSlot="10:00-11:00" language="English"/>
+    <Speaker id="102" name="Ivana Markovic" topic="Cybersecurity" timeSlot="11:30-12:30" language="Serbian"/>
+    <Speaker id="103" name="Luis Fernández" topic="Cloud Computing" timeSlot="13:00-14:00" language="Spanish"/>
+
+    <Session id="S1" title="Morning Block" start="09:00" end="12:00">
+        <Includes speakerId="101"/>
+        <Includes speakerId="102"/>
+    </Session>
+
+    <Session id="S2" title="Afternoon Block" start="13:00" end="15:00">
+        <Includes speakerId="103"/>
+    </Session>
+
+    <Sponsorship id="SP1" sponsor="Microsoft" type="Platinum" amount="10000"/>
+    <Sponsorship id="SP2" sponsor="Tesla" type="Gold" amount="7000"/>
+</EventProject>

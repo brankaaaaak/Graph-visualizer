@@ -48,13 +48,3 @@ class XmlLoader(BaseLoader):
                 return node
         graph.insert_node(node)
         return node
-
-
-
-
-        
-
-
-
-    
-    
