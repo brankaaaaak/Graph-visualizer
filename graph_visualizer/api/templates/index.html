@@ -164,17 +164,10 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
-
-        .styled-select:hover {
-            border-color: #fb045b;
+        .selected-node {
+            background-color: #ffb6c1; /* svetlo roze */
+            font-weight: bold;
         }
-
-        .styled-select:focus {
-            outline: none;
-            border-color: #fb045b;
-            box-shadow: 0 0 5px rgba(251, 4, 91, 0.4);
-        }
-
 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -224,23 +217,28 @@
         document.body.addEventListener("click", function (e) {
             if (e.target.classList.contains("node-toggle")) {
                 e.preventDefault();
-
+                
                 const anchor = e.target;
                 const li = anchor.closest("li");
-                const nodeId = anchor.dataset.nodeId;
+                const nodeId = anchor.dataset.nodeId || anchor.dataset.edgeId;
 
-                // Ako je već otvoreno, samo sakrij djecu
+
                 if (anchor.classList.contains("node-expanded")) {
                     const childUl = li.querySelector("ul");
                     if (childUl) {
-                        childUl.remove();  // ukloni iz DOM-a
+                        childUl.remove();
                     }
                     anchor.classList.remove("node-expanded");
                     anchor.innerHTML = anchor.innerHTML.replace("➖", "➕");
                     return;
                 }
 
-                // Inače – pošalji AJAX zahtjev na server
+                if (li.querySelector("ul")) {
+                    anchor.classList.add("node-expanded");
+                    anchor.innerHTML = anchor.innerHTML.replace("➕", "➖");
+                    return;
+                }
+
                 fetch(`/expand_node?node_id=${nodeId}`)
                     .then(res => res.json())
                     .then(data => {
@@ -253,6 +251,7 @@
                         }
                     });
             }
+
         });
     });
     </script>

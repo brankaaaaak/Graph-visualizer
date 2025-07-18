@@ -40,7 +40,7 @@ class ApiConfig(AppConfig):
     def load_tree(self):
         self.tree = Tree()
         for node in find_root_nodes(self.graph.find_subgraphs()):
-            print(f"🌳 Root node: {node} ({type(node)})")
+            #print(f"🌳 Root node: {node} ({type(node)})")
             self.tree.roots.append(TreeNode(node, None, "node"))
 
 

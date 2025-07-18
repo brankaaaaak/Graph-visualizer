@@ -8,6 +8,8 @@ from block_visualizer.plugin.visualizer.block_visualizer import BlockVisualizer
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
 from api.models import Edge, Graph, Node
 from django.apps.registry import apps
+from django.template.loader import render_to_string
+
 
 def index_view(request):
     api_config = apps.get_app_config('api')
@@ -23,6 +25,9 @@ def upload_file(request):
     loaders = apps.get_app_config('api').loaders
     chosen_file = request.FILES.get('graph_file')
 
+    api_config.base_graph=None
+    api_config.graph =None
+    api_config.tree=None
     raw_graph = None
     for loader in loaders:
         if check_extension(loader.identifier(), chosen_file):
@@ -51,22 +56,23 @@ def generate_tree_html(nodes):
 
         arrow = "➖" if node.opened else "➕"
 
-        # Priprema teksta za prikaz
-        
         if isinstance(node.object, Node):
             label = "Node"
             text = f"<strong>{node.object.id}</strong> - {node.object.attributes}"
+            data_attr = f'data-node-id="{node.id}" data-graph-node-id="{node.object.id}"'
         elif isinstance(node.object, str):  
             label = "Edge"
             text = f"<em>{node.object}</em>"
+            data_attr = f'data-edge-id="{node.id}"'
         else:
             label = "Unknown"
             text = str(node.object)
+            data_attr = ''
 
         # Renderuj ovaj čvor
         html += f'''
         <li>
-            <a href="#" class="node-toggle" data-node-id="{node.id}">{arrow} {label}: {text}</a>
+            <a href="#" class="node-toggle" {data_attr}>{arrow} {label}: {text}</a>
         '''
 
         # Ako je čvor otvoren i ima djecu, rekurzivno prikaži
@@ -75,6 +81,7 @@ def generate_tree_html(nodes):
 
         html += '</li>'
     html += '</ul>'
+    #print(html)
     return html
 
 
@@ -102,21 +109,48 @@ def dict_to_graph(graph_dict):
 
 def expand_node_view(request):
     try:
+        print(request)
         node_id = int(request.GET.get('node_id'))
+        print(node_id)
         api_config = apps.get_app_config('api')
         tree_node = api_config.tree.find_tree_node(node_id)
-
         if tree_node is None:
             return JsonResponse({"error": "Node not found"}, status=404)
 
         tree_node.open()
         children_html = generate_tree_html(tree_node.children)
         return JsonResponse({"html": children_html})
-    
     except Exception as e:
         import traceback
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
+
+
+def expand_node_from_view(request, node_id):
+    try:
+        api_config = apps.get_app_config('api')
+        tree = api_config.tree
+        tree_node = api_config.tree.find_node_by_node_id(node_id)
+        if tree_node is None:
+            for node in tree.roots:
+                node.close()
+            tree_html = generate_tree_html(tree.roots)
+            return HttpResponse(tree_html)
+
+        for node in tree.roots:
+            node.close()
+
+        tree_node.open_parents()
+        tree_html = generate_tree_html(tree.roots)
+
+        return HttpResponse(tree_html)
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"error": str(e)}, status=500)
+
+        
     
 def visualize(request):
     api_config = apps.get_app_config('api')
