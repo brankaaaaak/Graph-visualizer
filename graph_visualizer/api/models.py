@@ -73,12 +73,13 @@ class Node:
 
 
 class Edge:
-    def __init__(self, origin, target, relation, weight, directed):
+    def __init__(self, origin, target, relation, weight, directed,attributes=None):
         self._origin = origin
         self._target = target
         self._relation = relation
         self._weight = weight
         self._directed = directed
+        self._attributes=attributes
 
     @property
     def weight(self):
@@ -107,7 +108,8 @@ class Edge:
     @property
     def is_directed(self):
         return self._directed
-
+    def add_attribute(self, key, value):
+            self._attributes[key] = value
     def __hash__(self):
         return hash((self._origin,self._target))
     
@@ -189,6 +191,17 @@ class Graph:
     
     def get_node(self, id):
         return next((node for node in self.nodes if str(node.id) == str(id)), None)
+    
+    def get_edge(self, source_id, target_id):
+        for node in self._nodes:
+            if str(node.id) == str(source_id):
+                for edge in self.get_edges():
+                    if (str(edge.origin.id) == str(source_id) and str(edge.target.id) == str(target_id)):
+                        return edge
+                    if not self.is_directed():
+                        if (str(edge.origin.id) == str(target_id) and str(edge.target.id) == str(source_id)):
+                            return edge
+        return None
 
     
     def insert_node(self, node):
@@ -198,12 +211,11 @@ class Graph:
         else:
             self._nodes.append(node)
 
-    def insert_edge(self, origin, target, relation, weight, is_directed):
-        edge = Edge(origin = origin, target= target, relation= relation, weight= weight, directed= is_directed)
-        origin.add_edge(target)
-        if not is_directed:
-            target.add_node(origin)
+    def insert_edge(self, edge: Edge):
+        edge.origin.add_edge(edge)
 
+        if not edge._directed:
+            edge.target.add_edge(edge)
     def find_subgraphs(self, nodes=None, graphs=None):   
         if not nodes:
             nodes = []

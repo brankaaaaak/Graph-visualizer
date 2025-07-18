@@ -198,32 +198,72 @@ def create_node(request):
         if api_config.graph.get_node(node_id):
             return JsonResponse({"error": f"Node '{node_id}' already exists."}, status=400)
 
-        # 1. Kreiraj novi Node
         new_node = Node(node_id)
         for key, value in props.items():
             new_node.add_attribute(key, value)
 
-        # 2. Ubaci ga u graf
         api_config.graph.insert_node(new_node)
 
-        # 3. Dodaj kao root u tree
         api_config.tree.roots.append(TreeNode(new_node, None, "node"))
 
-
-        # 5. Pozovi visualize logiku direktno
-        visualizer = api_config.visualizers[0]  # možeš čuvati current_visualizer ako hoćeš precizno
-        html_snippet = visualizer.visualize(api_config.graph, request)
-
-        # 6. Osveži tree_html
         api_config.load_tree()
-        tree_html = generate_tree_html(api_config.tree.roots)
 
-        # 7. Vrati HTML deo da frontend može da osveži prikaz
         return JsonResponse({
-            "success": True,
-            "view_html": html_snippet,
-            "tree_html": tree_html
+            "success": True
         })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"error": str(e)}, status=500)
+def create_edge(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        edge_id = data.get("id")
+        origin_id = data.get("origin")
+        target_id = data.get("target")
+        properties = data.get("properties", {})
+        relation = properties.get("relation", "")
+        weight = properties.get("weight", 0)
+        directed = properties.get("directed", False)
+
+        if not edge_id or not origin_id or not target_id:
+            return JsonResponse({"error": "Missing edge id, source or target."}, status=400)
+
+        api_config = apps.get_app_config("api")
+        origin_node = api_config.graph.get_node(origin_id)
+        target_node = api_config.graph.get_node(target_id)
+
+        if not origin_node or not target_node:
+            return JsonResponse({"error": "Source or target node does not exist."}, status=400)
+
+        existing_edge = api_config.graph.get_edge(origin_id, target_id)
+        if existing_edge:
+            return JsonResponse({"error": "Edge already exists."}, status=400)
+
+        # Kreiraj novi edge sa svim atributima
+        new_edge = Edge(
+            origin=origin_node,
+            target=target_node,
+            relation=relation,
+            weight=weight,
+            directed=directed
+        )
+        # Ako koristiš id na edge-u, postavi ga ako postoji
+        new_edge.id = edge_id
+
+        # Dodaj dodatne atribute iz properties koji nisu relation, weight, directed
+        for k, v in properties.items():
+            if k not in ("relation", "weight", "directed"):
+                new_edge.add_attribute(k, v)
+
+        api_config.graph.insert_edge(new_edge)
+        api_config.load_tree()
+
+        return JsonResponse({"success": True})
 
     except Exception as e:
         import traceback

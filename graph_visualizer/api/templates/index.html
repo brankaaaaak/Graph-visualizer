@@ -332,6 +332,12 @@
         }
         return args;
     }
+    function extractPositionalArgs(cmd) {
+        // Splituj komandu na delove po razmacima
+        const parts = cmd.trim().split(/\s+/);
+        // Filtriraj sve delove koji nisu u formatu --key=val
+        return parts.filter(part => !part.startsWith("--") && !part.includes("=") && part !== "create" && part !== "edge");
+    }
 
     // TERMINAL COMMAND HANDLER
     terminalForm.addEventListener("submit", function (e) {
@@ -368,14 +374,14 @@ clear
             }
 
             if (action === "create" && type === "node") {
+                const args = parseArgs(command);
                 const nodeId = args["id"];
-                const props = {};
 
-                // Preostali argumenti tretiraj kao property key-value parove
-                for (let key in args) {
-                    if (key !== "id") {
-                        props[key] = args[key];
-                    }
+                const propRegex = /--property\s+([^=\s]+)=([^\s]+)/g;
+                const props = {};
+                let match;
+                while ((match = propRegex.exec(command)) !== null) {
+                    props[match[1]] = match[2];
                 }
 
                 fetch("/api/create_node/", {
@@ -403,8 +409,62 @@ clear
             }
 
             else if (action === "create" && type === "edge") {
+                const args = parseArgs(command);
+
+                const parts = command.trim().split(/\s+/);
+                let filteredParts = parts.slice(2);
+
+                filteredParts = filteredParts.filter(p => !p.startsWith("--") && !p.includes("="));
+
+                if (!args.id) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: Missing edge id (--id=...)</div>`;
+                    return;
+                }
+                if (filteredParts.length < 2) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: Missing origin and target node IDs</div>`;
+                    return;
+                }
+
+                const origin = filteredParts[filteredParts.length - 2];
+                const target = filteredParts[filteredParts.length - 1];
+
+                const props = {};
+                for (let key in args) {
+                    if (key !== "id") {
+                        props[key] = args[key];
+                    }
+                }
+
+                fetch("/api/create_edge/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({
+                        id: args.id,
+                        origin: origin,
+                        target: target,
+                        properties: props
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Edge created.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+
                 return;
-            }
+}
+
 
             else if (action === "edit" && type === "node") {
                return;
