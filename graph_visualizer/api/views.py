@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import  render
 from django.shortcuts import render
 from api.models import Edge, Graph, Node
+from block_visualizer.plugin.visualizer.block_visualizer import BlockVisualizer
+from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
 from api.models import Edge, Graph, Node
 from django.apps.registry import apps
 
@@ -110,7 +112,7 @@ def expand_node_view(request):
         tree_node.open()
         children_html = generate_tree_html(tree_node.children)
         return JsonResponse({"html": children_html})
-
+    
     except Exception as e:
         import traceback
         traceback.print_exc()
