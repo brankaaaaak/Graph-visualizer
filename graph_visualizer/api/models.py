@@ -311,6 +311,12 @@ class Graph:
             return True
         return False
 
+    def update_node(self, node, key, value):
+        if node in self.nodes:
+            node.add_attribute(key, value)
+            return True
+        return False
+    
     def check_as_true(self, edges, connected):   
         changes = False
         for edge in edges:

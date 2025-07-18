@@ -259,31 +259,6 @@ def delete_node(request):
             "view_html": html_snippet,
             "tree_html": tree_html
         })
-        """if not node_id:
-            return JsonResponse({"error": "Missing node ID."}, status=400)
-
-        api_config = apps.get_app_config("api")
-        graph = api_config.graph
-        node = graph.get_node(node_id)
-
-        if not node:
-            return JsonResponse({"error": f"Node '{node_id}' not found."}, status=404)
-
-        if node.edges:
-            return JsonResponse({"error": "Node has edges."}, status=400)
-
-
-
-        visualizer = api_config.visualizers[0]
-        html_snippet = visualizer.visualize(graph, request)
-        api_config.load_tree()
-        tree_html = generate_tree_html(api_config.tree.roots)
-
-        return JsonResponse({
-                "success": True,
-                "view_html": html_snippet,
-                "tree_html": tree_html
-            })"""
 
     except Exception as e:
         import traceback
@@ -291,6 +266,7 @@ def delete_node(request):
         return JsonResponse({"error": str(e)}, status=500)
     
 def delete_edge(request):
+
     api_config = apps.get_app_config('api')
     graph = apps.get_app_config('api').graph
     if request.method == "POST":
@@ -320,3 +296,42 @@ def delete_edge(request):
             import traceback
             traceback.print_exc()
             return JsonResponse({"success": False, "error": str(e)})
+        
+def edit_node(request):
+    api_config = apps.get_app_config('api')
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            node_id = data.get('id')
+            properties = data.get('properties', {})
+
+            if not node_id:
+                return JsonResponse({'success': False, 'error': 'Node ID is required'})
+            
+            if not isinstance(properties, dict) or len(properties) != 1:
+                return JsonResponse({'success': False, 'error': 'Exactly one property must be provided'})
+            node = api_config.graph.get_node(node_id)
+            if not node:
+                return JsonResponse({'success': False, 'error': 'Node not found'})
+            key, value = next(iter(properties.items()))
+            success = api_config.graph.update_node(node, key, value)
+            if not success:
+                return JsonResponse({"success": False, "error": "Veza nije pronađena."})
+
+            visualizer = api_config.visualizers[0]
+            html_snippet = visualizer.visualize(api_config.graph, request)
+            api_config.load_tree()
+            tree_html = generate_tree_html(api_config.tree.roots)
+
+            return JsonResponse({
+                "success": True,
+                "view_html": html_snippet,
+                "tree_html": tree_html
+            })
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Only POST allowed'})
