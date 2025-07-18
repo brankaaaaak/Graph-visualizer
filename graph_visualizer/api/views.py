@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import  render
 from django.shortcuts import render
 from api.models import Edge, Graph, Node
+from block_visualizer.plugin.visualizer.block_visualizer import BlockVisualizer
+from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
 from api.models import Edge, Graph, Node
 from django.apps.registry import apps
 from django.template.loader import render_to_string
