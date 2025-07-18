@@ -43,7 +43,7 @@ class SimpleVisualizer(BaseVisualizer):
             var nodes = JSON.parse("{{nodes |escapejs}}");
 
             var width = 900;
-            var height = 400;
+            var height = 500;
 
             connections.forEach(function (connection) {
                 connection.source = nodes[connection.source];
@@ -56,7 +56,7 @@ class SimpleVisualizer(BaseVisualizer):
                 .links(connections)
                 .on("tick", tick)
                 .linkDistance(300)
-                .charge(-300)
+                .charge(-5000)
                 .gravity(0.5);
                 
             d3.select("#main-view svg").remove();
@@ -85,8 +85,8 @@ class SimpleVisualizer(BaseVisualizer):
             force.start();
 
             function nodeView(d, color) {
-                var width = 30;
-                var textSize = 10;
+                var width = 35;
+                var textSize = 15;
                 d3.select("g#" + d.id).append('circle')
                     .attr('cx', 0).attr('cy', 0).attr('r', width).attr('fill', color);
                 d3.select("g#" + d.id).append('text').attr('x', 0).attr('y', 4)
