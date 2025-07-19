@@ -170,7 +170,7 @@ def visualize(request):
         if v.identifier() == visualizer_id:
             html_snippet = v.visualize(graph, request)
             time.sleep(2)
-            return render(request, "index.html", {"view_html": html_snippet, "tree_html": tree_html,"graph_loaded":graph,"current_visualizer":v.identifier()})
+            return render(request, "index.html", {"view_html": html_snippet, "tree_html": tree_html,"graph_visualized":graph,"current_visualizer":v.identifier()})
     
     return HttpResponse("Invalid visualizer identifier.", status=404)
 
