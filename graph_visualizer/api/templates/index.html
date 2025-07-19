@@ -614,6 +614,34 @@ clear
             }
 
             else if (command.startsWith("filter ")) {
+                const filterCondition = command.slice("filter ".length).trim().replace(/^['"]|['"]$/g, "");
+
+                fetch(`/api/filter/?condition=${encodeURIComponent(filterCondition)}`, {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .then(res => {
+                    if (res.redirected) {
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                        return;
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Greška: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Neuspelo: ${err.message}</div>`;
+                });
+
                 return;
             }
 

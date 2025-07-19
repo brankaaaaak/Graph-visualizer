@@ -1,4 +1,5 @@
 import json
+import re
 from django.http import HttpResponse, JsonResponse
 import time
 from django.http import HttpResponse
@@ -446,5 +447,66 @@ def clear_graph(request):
         import traceback
         traceback.print_exc()
         return JsonResponse({"success": False, "error": str(e)}, status=500)
+    
+def filter_view(request):
+    import re
+    condition = request.GET.get("condition", "")
+    if not condition:
+        return JsonResponse({"success": False, "error": "Condition is required"}, status=400)
+
+    old_graph = apps.get_app_config('api').graph
+    if old_graph is None:
+        return JsonResponse({"success": False, "error": "No graph loaded"}, status=400)
+
+    # Format: key operator value (e.g., Age > 20)
+    match = re.match(r"(\w+)\s*(==|=|!=|<=|>=|<|>)\s*['\"]?([\w\s]+)['\"]?", condition)
+    if not match:
+        return JsonResponse({"success": False, "error": "Invalid filter format"}, status=400)
+
+    key, operator, value = match.groups()
+    try:
+        value = int(value)
+    except ValueError:
+        pass  # ostaje string
+
+    def match_condition(props):
+        if not props:
+            return False
+        node_val = props.get(key)
+        if node_val is None:
+            return False
+        if isinstance(value, int) and isinstance(node_val, str) and node_val.isdigit():
+            node_val = int(node_val)
+        try:
+            if operator in ("=", "=="):
+                return node_val == value
+            elif operator == "!=":
+                return node_val != value
+            elif operator == "<":
+                return node_val < value
+            elif operator == ">":
+                return node_val > value
+            elif operator == "<=":
+                return node_val <= value
+            elif operator == ">=":
+                return node_val >= value
+        except:
+            return False
+        return False
+
+    new_graph = Graph()
+    for node in old_graph.get_nodes():
+        if match_condition(node.get_attributes()):
+            new_graph.insert_node(node)
+
+    for edge in old_graph.get_edges():
+        if new_graph.get_node(edge.origin) and new_graph.get_node(edge.target):
+            new_graph.insert_edge(edge)
+
+    apps.get_app_config('api').graph = new_graph
+    apps.get_app_config('api').load_tree()
+
+    return JsonResponse({"success": True})
+
 
     

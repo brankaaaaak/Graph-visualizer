@@ -62,7 +62,8 @@ class Node:
                 return edge  
         return None
 
-
+    def get_attributes(self):
+        return self._attributes
     def add_attribute(self, key, value):
         self._attributes[key] = value
     
