@@ -278,7 +278,7 @@ def delete_node(request):
         
         success = api_config.graph.remove_node(node)
         if not success:
-            return JsonResponse({"success": False, "error": "Veza nije pronađena."})
+            return JsonResponse({"success": False, "error": "Can not delete node."})
 
         visualizer = api_config.visualizers[0]
         html_snippet = visualizer.visualize(api_config.graph, request)
@@ -311,7 +311,7 @@ def delete_edge(request):
             
             success = graph.remove_edge(origin, target, relation)
             if not success:
-                return JsonResponse({"success": False, "error": "Veza nije pronađena."})
+                return JsonResponse({"success": False, "error": "Edge not found"})
 
             visualizer = api_config.visualizers[0]
             html_snippet = visualizer.visualize(graph, request)
@@ -339,7 +339,7 @@ def edit_edge(request):
             new_relation = data.get("new_relation")
 
             if not all([origin_id, old_relation, target_id, new_relation]):
-                return JsonResponse({"success": False, "error": "Nedostaju neki podaci."})
+                return JsonResponse({"success": False, "error": "Missing data."})
             
 
             print(origin_id)
@@ -387,7 +387,7 @@ def edit_node(request):
             key, value = next(iter(properties.items()))
             success = api_config.graph.update_node(node, key, value)
             if not success:
-                return JsonResponse({"success": False, "error": "Veza nije pronađena."})
+                return JsonResponse({"success": False, "error": "Can not edit node."})
 
             visualizer = api_config.visualizers[0]
             html_snippet = visualizer.visualize(api_config.graph, request)
