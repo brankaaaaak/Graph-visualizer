@@ -95,6 +95,9 @@ class Edge:
     @property
     def relation(self):
         return self._relation
+    @relation.setter
+    def relation(self, value):
+        self._relation = value
 
     @property
     def target(self):
@@ -223,6 +226,7 @@ class Graph:
 
         if not edge._directed:
             edge.target.add_edge(edge)
+
     def remove_edge(self, origin_id, target_id, relation):
         
         origin_node = self.get_node(origin_id)

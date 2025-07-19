@@ -353,9 +353,10 @@
 Komande:
 create node --id=1 --property Name=Alice
 create edge --id=1 --property Name=Siblings 1 2
-edit node --id=1 --property Age=30
+edit node [id] [property_name=value]
+edit edge [node_id] [edge] [node_id] [new_edge]
 delete node --id=1
-delete edge --id=1
+delete edge [node_id] [edge] [node_id]
 filter 'Age>20'
 search Alice
 clear
@@ -511,6 +512,45 @@ clear
                 .then(data => {
                     if (data.success) {
                         terminalOutput.innerHTML += `<div style="color:lightgreen;">Node ${nodeId} updated.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+
+                return;
+            }else if (action === "edit" && type === "edge") {
+                const parts = command.split(" ");
+                if (parts.length < 6) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Greška: Unos treba da bude: edit edge [origin] [relation] [target] [new_relation]</div>`;
+                    return;
+                }
+                const origin = parts[2];
+                const oldRelation = parts[3];
+                const target = parts[4];
+                const newRelation = parts[5];
+
+                fetch(`/api/edit_edge/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({
+                        origin: origin,
+                        old_relation: oldRelation,
+                        target: target,
+                        new_relation: newRelation
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Edge updated from '${oldRelation}' to '${newRelation}' between ${origin} and ${target}.</div>`;
                         const currentVisualizer = "{{ current_visualizer|escapejs }}";
                         window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
                     } else {

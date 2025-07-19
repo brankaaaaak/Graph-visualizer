@@ -327,7 +327,47 @@ def delete_edge(request):
             import traceback
             traceback.print_exc()
             return JsonResponse({"success": False, "error": str(e)})
-        
+
+def edit_edge(request):
+    api_config = apps.get_app_config('api')
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            origin_id = data.get("origin")
+            old_relation = data.get("old_relation")
+            target_id = data.get("target")
+            new_relation = data.get("new_relation")
+
+            if not all([origin_id, old_relation, target_id, new_relation]):
+                return JsonResponse({"success": False, "error": "Nedostaju neki podaci."})
+            
+
+            print(origin_id)
+            print(old_relation)
+            print(target_id)
+            print(new_relation)
+
+            edge = api_config.graph.get_edge(origin_id, target_id)
+            api_config.graph.remove_edge(origin_id, target_id, old_relation)
+            edge.relation = new_relation
+            api_config.graph.insert_edge(edge)
+            visualizer = api_config.visualizers[0]
+            html_snippet = visualizer.visualize(api_config.graph, request)
+            api_config.load_tree()
+            tree_html = generate_tree_html(api_config.tree.roots)
+
+            return JsonResponse({
+                "success": True,
+                "view_html": html_snippet,
+                "tree_html": tree_html
+            })
+
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "error": "Invalid JSON."})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Only POST allowed'})
 def edit_node(request):
     api_config = apps.get_app_config('api')
     if request.method == 'POST':
