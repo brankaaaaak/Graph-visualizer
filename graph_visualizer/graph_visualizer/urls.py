@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import clear_graph, create_edge, create_node, delete_edge, delete_node, edit_node, expand_node_from_view, expand_node_view, filter_view, index_view, reset_graph, search, upload_file,visualize
+from api.views import clear_graph, create_edge, create_node, delete_edge, delete_node, edit_edge, edit_node, expand_node_from_view, expand_node_view, filter_view, index_view, reset_graph, search, upload_file,visualize
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index_view, name='index'), 
@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/delete_node/', delete_node, name='delete_node'),
     path('api/delete_edge/', delete_edge, name='delete_edge'),
     path('api/edit_node/', edit_node, name='edit_node'),
+    path('api/edit_edge/', edit_edge, name='edit_edge'),
     path("api/search/", search, name="search"),
     path('api/clear/', clear_graph, name='clear_graph'),
     path('api/filter/',filter_view,name="filter_view"),

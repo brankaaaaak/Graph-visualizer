@@ -397,12 +397,13 @@
 
             if (command === 'help') {
                 terminalOutput.innerHTML += `<pre>
-Komande:
+Commands:
 create node --id=1 --property Name=Alice
 create edge --id=1 --property Name=Siblings 1 2
-edit node --id=1 --property Age=30
+edit node [id] [property_name=value]
+edit edge [node_id] [edge] [node_id] [new_edge]
 delete node --id=1
-delete edge --id=1
+delete edge [node_id] [edge] [node_id]
 filter 'Age>20'
 search Alice
 clear
@@ -424,11 +425,11 @@ clear
                     terminalOutput.innerHTML = ""; 
                     window.location.href = "/"; 
                 } else {
-                    terminalOutput.innerHTML += `<div style="color:red;">Greška: ${data.error}</div>`;
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
                 }
             })
             .catch(err => {
-                terminalOutput.innerHTML += `<div style="color:red;">Greška: ${err.message}</div>`;
+                terminalOutput.innerHTML += `<div style="color:red;">Error: ${err.message}</div>`;
             });
 
             return;
@@ -523,14 +524,14 @@ clear
             else if (action === "edit" && type === "node") {
                const parts = command.split(" ");
                 if (parts.length < 4) {
-                    terminalOutput.innerHTML += `<div style="color:red;">Greška: format treba biti: edit node [id] [key]=[value]</div>`;
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: format must be: edit node [id] [key]=[value]</div>`;
                     return;
                 }
                 const nodeId = parts[2]; 
                 const propertyPart = parts.slice(3).join(" ");
 
                 if (!propertyPart.includes("=")) {
-                    terminalOutput.innerHTML += `<div style="color:red;">Greška: property treba biti u formatu key=value</div>`;
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: property must be in format key=value</div>`;
                     return;
                 }
 
@@ -539,7 +540,7 @@ clear
                 const value = valueParts.join("=").trim();
 
                 if (!key || !value) {
-                    terminalOutput.innerHTML += `<div style="color:red;">Greška: property treba biti u formatu key=value</div>`;
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: property must be in format key=value</div>`;
                     return;
                 }
 
@@ -558,6 +559,45 @@ clear
                 .then(data => {
                     if (data.success) {
                         terminalOutput.innerHTML += `<div style="color:lightgreen;">Node ${nodeId} updated.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+
+                return;
+            }else if (action === "edit" && type === "edge") {
+                const parts = command.split(" ");
+                if (parts.length < 6) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Error:  format must be: edit edge [origin] [relation] [target] [new_relation]</div>`;
+                    return;
+                }
+                const origin = parts[2];
+                const oldRelation = parts[3];
+                const target = parts[4];
+                const newRelation = parts[5];
+
+                fetch(`/api/edit_edge/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({
+                        origin: origin,
+                        old_relation: oldRelation,
+                        target: target,
+                        new_relation: newRelation
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Edge updated from '${oldRelation}' to '${newRelation}' between ${origin} and ${target}.</div>`;
                         const currentVisualizer = "{{ current_visualizer|escapejs }}";
                         window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
                     } else {
@@ -602,7 +642,7 @@ clear
                 const parts = command.split(" ");
 
                 if (parts.length < 5) {
-                    terminalOutput.innerHTML += `<div style="color:red;">Greška: Unos treba da bude: delete edge [origin] [relation] [target]</div>`;
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: format must be: delete edge [origin] [relation] [target]</div>`;
                     return;
                 }
 
@@ -654,7 +694,7 @@ clear
                     }
                 })
                 .catch(err => {
-                    terminalOutput.innerHTML += `<div style="color:red;">Neuspelo: ${err.message}</div>`;
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
                 });
 
                 return;
@@ -686,7 +726,7 @@ clear
                     }
                 })
                 .catch(err => {
-                    terminalOutput.innerHTML += `<div style="color:red;">Neuspelo: ${err.message}</div>`;
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
                 });
 
                 return;
@@ -697,7 +737,7 @@ clear
             }
 
         } catch (err) {
-            terminalOutput.innerHTML += `<div style="color:red;">Greška: ${err.message}</div>`;
+            terminalOutput.innerHTML += `<div style="color:red;">Error: ${err.message}</div>`;
         }
 
         terminalOutput.scrollTop = terminalOutput.scrollHeight;
