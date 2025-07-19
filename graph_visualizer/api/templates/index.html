@@ -18,9 +18,10 @@
         .container {
             display: grid;
             grid-template-columns: 300px auto 300px;
-            grid-template-rows: 70px auto 150px;
+            grid-template-rows: 70px 30px auto 150px;
             grid-template-areas: 
                 "header header header"
+                "topbar topbar topbar"
                 "tree main bird"
                 "tree main bird";
             height: 100vh;
@@ -217,7 +218,39 @@
         font-size: 1rem;
         outline: none;
         }
+        .top-bar {
+            grid-area: topbar;
+            background-color: #fb045b; /* ista boja kao header */
+            display: flex;
+            gap: 10px;
+            padding: 5px 10px;
+            align-items: center;
+            }
 
+
+        .top-bar input {
+            padding: 4px 6px;  
+            font-size: 13px;
+            width: 200px;
+            border-radius: 4px;
+            border: none;
+        }
+
+        .top-bar button {
+            padding: 4px 10px;       /* manji button padding */
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            background-color: #3c2956;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .top-bar button:hover {
+            background-color: #f3eef3;
+            color: #3c2956;
+        }
 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -227,6 +260,7 @@
     <div class="container">
         <header>
             <div>Graph Visualizer</div>
+            
             <div class="center-dropdown">
                 {% if graph_loaded %}
             <form method="get" action="{% url 'visualize' %}">
@@ -250,6 +284,17 @@
                 </div>
             </form>
         </header>
+        {% if graph_loaded %}
+        <div class="top-bar">
+            <input id="search-input" type="text" placeholder="Search node by ID or label..." />
+            <button onclick="searchNode()">Search</button>
+
+            <input id="filter-input" type="text" placeholder="Filter (e.g. Age > 20)" />
+            <button onclick="applyFilter()">Filter</button>
+
+            <button onclick="resetGraph()">Reset</button>
+        </div>
+        {% endif %}
         <div id="tree-view">
             <h3>Tree View</h3>
             {{ tree_html|safe }}
@@ -671,6 +716,77 @@ clear
         }
     });
 });
+function searchNode() {
+    const query = document.getElementById('search-input').value.trim();
+    if (!query) {
+        alert('Please enter search query');
+        return;
+    }
+    fetch(`/api/search/?query=${encodeURIComponent(query)}`, {
+        method: 'GET',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // osveži stranicu sa istim vizualizatorom da vidiš rezultate
+            const currentVisualizer = "{{ current_visualizer|escapejs }}";
+            window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+        } else {
+            alert('Search error: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(err => {
+        alert('Search failed: ' + err.message);
+    });
+}
+
+    function applyFilter() {
+        const condition = document.getElementById('filter-input').value.trim();
+        if (!condition) {
+            alert('Please enter filter condition');
+            return;
+        }
+        fetch(`/api/filter/?condition=${encodeURIComponent(condition)}`, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+            } else {
+                alert('Filter error: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(err => {
+            alert('Filter failed: ' + err.message);
+        });
+    }
+
+    function resetGraph() {
+        fetch('/api/clear/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // refresh stranice
+                window.location.href = '/';
+            } else {
+                alert('Reset error: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(err => {
+            alert('Reset failed: ' + err.message);
+        });
+    }
+
     </script>
 </body>
 </html>
