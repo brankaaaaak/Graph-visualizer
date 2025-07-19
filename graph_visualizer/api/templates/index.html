@@ -364,7 +364,27 @@ clear
             }
 
             if (command === "clear") {
-                return;
+                fetch("/api/clear/", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    terminalOutput.innerHTML = ""; 
+                    window.location.href = "/"; 
+                } else {
+                    terminalOutput.innerHTML += `<div style="color:red;">Greška: ${data.error}</div>`;
+                }
+            })
+            .catch(err => {
+                terminalOutput.innerHTML += `<div style="color:red;">Greška: ${err.message}</div>`;
+            });
+
+            return;
             }
 
             if (action === "create" && type === "node") {

@@ -430,5 +430,21 @@ def create_graph(original_graph, filtered_graph):
                     new_graph.insert_edge(new_edge)
 
     return new_graph
+def clear_graph(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+    
+    try:
+        api_config = apps.get_app_config('api')
+        api_config.graph = None
+        api_config.base_graph = None
+        api_config.tree = None
+        api_config.current_visualizer = None
+        
+        return JsonResponse({"success": True})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
 
     
