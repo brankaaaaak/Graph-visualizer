@@ -365,3 +365,70 @@ def edit_node(request):
             return JsonResponse({'success': False, 'error': str(e)})
     else:
         return JsonResponse({'success': False, 'error': 'Only POST allowed'})
+
+def search(request):
+        query = request.GET.get("query", "")
+        if not query:
+            return JsonResponse({"success": False, "error": "Query is required"}, status=400)
+
+        old_graph = apps.get_app_config('api').graph
+        if old_graph is None:
+            return JsonResponse({"success": False, "error": "No graph loaded"}, status=400)
+
+        new_graph = Graph()
+
+        for node in old_graph.get_nodes():
+            search_node(new_graph, node, query)
+
+        # napravi novi graf samo sa pronađenim čvorovima i granama
+        apps.get_app_config('api').graph = create_graph(old_graph, new_graph)
+        apps.get_app_config('api').load_tree()
+
+        return JsonResponse({
+            "success": True
+        })
+
+def search_node(new_graph, node, query):
+    found = False
+    query = query.strip().lower()
+
+    for key, value in node.attributes.items():
+        if query in str(key).lower() or query in str(value).lower():
+            found = True
+            break
+
+    if query in str(node.id).lower():
+        found = True
+
+    if found:
+        new_node = Node(node.id)
+        for key, value in node.attributes.items():
+            new_node.add_attribute(key, value)
+        new_graph.insert_node(new_node)
+        
+def create_graph(original_graph, filtered_graph):
+    new_graph = Graph()
+
+    for node in filtered_graph.nodes:
+        new_graph.insert_node(node)
+
+    for node in filtered_graph.nodes:
+        original_node = original_graph.get_node(node.id)
+        if original_node:
+            for edge in original_node.edges:
+                origin_id = edge.origin.id
+                target_id = edge.target.id
+
+                if new_graph.get_node(origin_id) and new_graph.get_node(target_id):
+                    new_edge = Edge(
+                        origin=new_graph.get_node(origin_id),
+                        target=new_graph.get_node(target_id),
+                        relation=edge.relation,
+                        weight=edge.weight,
+                        directed=edge.directed
+                    )
+                    new_graph.insert_edge(new_edge)
+
+    return new_graph
+
+    

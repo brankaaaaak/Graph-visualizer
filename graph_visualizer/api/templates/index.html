@@ -332,12 +332,6 @@
         }
         return args;
     }
-    function extractPositionalArgs(cmd) {
-        // Splituj komandu na delove po razmacima
-        const parts = cmd.trim().split(/\s+/);
-        // Filtriraj sve delove koji nisu u formatu --key=val
-        return parts.filter(part => !part.startsWith("--") && !part.includes("=") && part !== "create" && part !== "edge");
-    }
 
     // TERMINAL COMMAND HANDLER
     terminalForm.addEventListener("submit", function (e) {
@@ -363,7 +357,7 @@ edit node --id=1 --property Age=30
 delete node --id=1
 delete edge --id=1
 filter 'Age>20'
-search 'Name=Alice'
+search Alice
 clear
 </pre>`;
                 return;
@@ -575,6 +569,27 @@ clear
             }
 
             else if (command.startsWith("search ")) {
+                const searchString = command.slice("search ".length).trim().replace(/^['"]|['"]$/g, "");
+
+                fetch(`/api/search/?query=${encodeURIComponent(searchString)}`, {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Greška: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Neuspelo: ${err.message}</div>`;
+                });
+
                 return;
             }
 

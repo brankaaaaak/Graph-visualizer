@@ -172,7 +172,8 @@ class Graph:
         for node in self._nodes:
             edges.update(node.edges)  
         return edges
-    
+    def get_nodes(self):
+        return self._nodes
     def get_number_of_nodes(self):
         return len(self._nodes)
     
