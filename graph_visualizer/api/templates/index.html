@@ -292,7 +292,9 @@
             <input id="filter-input" type="text" placeholder="Filter (e.g. Age > 20)" />
             <button onclick="applyFilter()">Filter</button>
 
-            <button onclick="resetGraph()">Reset</button>
+            <button onclick="clearGraph()">Clear</button>
+
+            <button onclick="reset()">Reset</button>
         </div>
         {% endif %}
         <div id="tree-view">
@@ -729,7 +731,6 @@ function searchNode() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // osveži stranicu sa istim vizualizatorom da vidiš rezultate
             const currentVisualizer = "{{ current_visualizer|escapejs }}";
             window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
         } else {
@@ -765,7 +766,7 @@ function searchNode() {
         });
     }
 
-    function resetGraph() {
+    function clearGraph() {
         fetch('/api/clear/', {
             method: 'POST',
             headers: {
@@ -786,7 +787,25 @@ function searchNode() {
             alert('Reset failed: ' + err.message);
         });
     }
+    function reset(){
+        fetch('/api/reset_graph/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+            } else {
+                console.error("Reset failed:", data.error);
+            }
+        })
+        .catch(err => console.error("Request failed:", err));
 
+    }
     </script>
 </body>
 </html>

@@ -511,3 +511,14 @@ def filter_view(request):
     apps.get_app_config('api').load_tree()
 
     return JsonResponse({"success": True})
+def reset_graph(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+
+    api_config = apps.get_app_config('api')
+    
+    api_config.graph = api_config.base_graph
+    
+    api_config.load_tree()
+
+    return JsonResponse({"success": True})
