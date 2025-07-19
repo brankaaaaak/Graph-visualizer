@@ -38,13 +38,11 @@ class XmlLoader(BaseLoader):
             if not isinstance(child, ET.Element):
                 continue
 
-            # Ako dete ima podstablo - napravi novi čvor i poveži ga
-            if len(child):  # ima decu, znači pravi čvor
+            if len(child):
                 child_node = self.create_node(graph, child)
                 edge = Edge(origin=node, target=child_node, relation=child.tag, weight=0, directed=True)
                 node.add_edge(edge)
             else:
-                # Nema dece - to je atribut, dodaj ga kao atribut roditeljskom čvoru
                 text = child.text.strip() if child.text else ''
                 if text:
                     node.add_attribute(child.tag, text)
