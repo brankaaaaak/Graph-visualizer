@@ -119,7 +119,7 @@ class Edge:
     def is_directed(self):
         return self._directed
     @property
-    def get_weight(self):
+    def weight(self):
         return self._weight
     def __hash__(self):
         return hash((self._origin,self._target))

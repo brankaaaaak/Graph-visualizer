@@ -458,7 +458,7 @@ def search_node(new_graph, old_graph, node, query):
                 new_other = new_graph.get_node(other.id)
 
             # Dodaj granu
-            new_edge = Edge(origin=new_node, target=new_other, relation=edge.relation, weight=edge.get_weight, directed=edge.is_directed)
+            new_edge = Edge(origin=new_node, target=new_other, relation=edge.relation, weight=edge.weight, directed=edge.is_directed)
             new_node.add_edge(new_edge)
 
         # (opciono) Dodaj i sve ulazne grane iz starog grafa
@@ -475,7 +475,7 @@ def search_node(new_graph, old_graph, node, query):
                     new_node = copy_node(node)
                     new_graph.insert_node(new_node)
 
-                new_edge = Edge(origin=new_origin, target=new_node, relation=edge.relation, weight=edge.get_weight, directed=edge.is_directed)
+                new_edge = Edge(origin=new_origin, target=new_node, relation=edge.relation, weight=edge.weight, directed=edge.is_directed)
                 new_origin.add_edge(new_edge)
 def copy_node(original_node):
     new_node = Node(original_node.id)
@@ -576,18 +576,52 @@ def filter_view(request):
         return False
 
     new_graph = Graph()
+
+    # Pronađi čvorove koji zadovoljavaju uslov
+    matched_nodes = []
     for node in old_graph.get_nodes():
         if match_condition(node.get_attributes()):
-            new_graph.insert_node(node)
+            matched_nodes.append(node)
 
-    for edge in old_graph.get_edges():
-        if new_graph.get_node(edge.origin) and new_graph.get_node(edge.target):
-            new_graph.insert_edge(edge)
+    # Dodaj čvorove, njihove povezane čvorove i grane
+    for node in matched_nodes:
+        if not new_graph.has_node(node):
+            new_node = copy_node(node)
+            new_graph.insert_node(new_node)
+        else:
+            new_node = new_graph.get_node(node.id)
 
+        # Izlazne grane (target)
+        for edge in node.edges:
+            target = edge.target
+            if not new_graph.has_node(target):
+                new_target = copy_node(target)
+                new_graph.insert_node(new_target)
+            else:
+                new_target = new_graph.get_node(target.id)
+
+            new_edge = Edge(origin=new_node, target=new_target, relation=edge.relation, weight=edge.weight, directed=edge.is_directed)
+            new_node.add_edge(new_edge)
+
+        # Ulazne grane (origin → ovaj čvor)
+        for edge in old_graph.get_edges():
+            if edge.target.id == node.id:
+                origin = edge.origin
+                if not new_graph.has_node(origin):
+                    new_origin = copy_node(origin)
+                    new_graph.insert_node(new_origin)
+                else:
+                    new_origin = new_graph.get_node(origin.id)
+
+                new_edge = Edge(origin=new_origin, target=new_node, relation=edge.relation, weight=edge.weight, directed=edge.is_directed)
+                new_origin.add_edge(new_edge)
+
+    # Ažuriraj aktivni graf
     apps.get_app_config('api').graph = new_graph
     apps.get_app_config('api').load_tree()
 
     return JsonResponse({"success": True})
+
 def reset_graph(request):
     if request.method != "POST":
         return JsonResponse({"error": "Only POST allowed"}, status=405)
