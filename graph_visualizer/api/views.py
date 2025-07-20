@@ -408,30 +408,28 @@ def edit_node(request):
         return JsonResponse({'success': False, 'error': 'Only POST allowed'})
 
 def search(request):
-        query = request.GET.get("query", "")
-        if not query:
-            return JsonResponse({"success": False, "error": "Query is required"}, status=400)
+    query = request.GET.get("query", "")
+    if not query:
+        return JsonResponse({"success": False, "error": "Query is required"}, status=400)
 
-        old_graph = apps.get_app_config('api').graph
-        if old_graph is None:
-            return JsonResponse({"success": False, "error": "No graph loaded"}, status=400)
+    old_graph = apps.get_app_config('api').graph
+    if old_graph is None:
+        return JsonResponse({"success": False, "error": "No graph loaded"}, status=400)
 
-        new_graph = Graph()
+    new_graph = Graph()
 
-        for node in old_graph.get_nodes():
-            search_node(new_graph, node, query)
+    for node in old_graph.get_nodes():
+        search_node(new_graph, old_graph, node, query)
 
-        # napravi novi graf samo sa pronađenim čvorovima i granama
-        apps.get_app_config('api').graph = create_graph(old_graph, new_graph)
-        apps.get_app_config('api').load_tree()
+    # ažuriranje aplikacije sa novim grafom
+    apps.get_app_config('api').graph = new_graph
+    apps.get_app_config('api').load_tree()
 
-        return JsonResponse({
-            "success": True
-        })
+    return JsonResponse({"success": True})
 
-def search_node(new_graph, node, query):
-    found = False
+def search_node(new_graph, old_graph, node, query):
     query = query.strip().lower()
+    found = False
 
     for key, value in node.attributes.items():
         if query in str(key).lower() or query in str(value).lower():
@@ -442,10 +440,49 @@ def search_node(new_graph, node, query):
         found = True
 
     if found:
-        new_node = Node(node.id)
-        for key, value in node.attributes.items():
-            new_node.add_attribute(key, value)
-        new_graph.insert_node(new_node)
+        # Dodaj originalni čvor u novi graf
+        if not new_graph.has_node(node):
+            new_node = copy_node(node)
+            new_graph.insert_node(new_node)
+        else:
+            new_node = new_graph.get_node(node.id)
+
+        # Dodaj sve izlazne grane i povezane čvorove
+        for edge in node.edges:
+            other = edge.target
+            # Dodaj target čvor ako ga nema
+            if not new_graph.has_node(other):
+                new_other = copy_node(other)
+                new_graph.insert_node(new_other)
+            else:
+                new_other = new_graph.get_node(other.id)
+
+            # Dodaj granu
+            new_edge = Edge(origin=new_node, target=new_other, relation=edge.relation, weight=edge.get_weight, directed=edge.is_directed)
+            new_node.add_edge(new_edge)
+
+        # (opciono) Dodaj i sve ulazne grane iz starog grafa
+        for edge in old_graph.get_edges():
+            if edge.target.id == node.id:
+                origin = edge.origin
+                if not new_graph.has_node(origin):
+                    new_origin = copy_node(origin)
+                    new_graph.insert_node(new_origin)
+                else:
+                    new_origin = new_graph.get_node(origin.id)
+
+                if not new_graph.has_node(node):
+                    new_node = copy_node(node)
+                    new_graph.insert_node(new_node)
+
+                new_edge = Edge(origin=new_origin, target=new_node, relation=edge.relation, weight=edge.get_weight, directed=edge.is_directed)
+                new_origin.add_edge(new_edge)
+def copy_node(original_node):
+    new_node = Node(original_node.id)
+    for key, value in original_node.attributes.items():
+        new_node.add_attribute(key, value)
+    return new_node
+
         
 def create_graph(original_graph, filtered_graph):
     new_graph = Graph()
