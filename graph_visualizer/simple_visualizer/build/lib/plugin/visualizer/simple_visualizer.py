@@ -89,6 +89,8 @@ class SimpleVisualizer(BaseVisualizer):
                 .enter().append('g')
                 .attr('class', 'node')
                 .attr('id', function (d) { return d.id; })
+                .attr("pointer-events", "all")
+                .on("mousedown", function() { d3.event.stopPropagation(); })
                 .on('click', function () {
                     nodeClick(this);
                 });
