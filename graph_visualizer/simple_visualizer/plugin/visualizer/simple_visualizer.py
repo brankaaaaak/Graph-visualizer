@@ -38,6 +38,9 @@ class SimpleVisualizer(BaseVisualizer):
         </style>
         <script type="text/javascript">
         $(document).ready(function () {
+            var currentScale = 1;
+            var currentTranslate = [0, 0];
+
             var selected_node = null;
             var connections = JSON.parse("{{connections |escapejs}}");
             var nodes = JSON.parse("{{nodes |escapejs}}");
@@ -60,11 +63,21 @@ class SimpleVisualizer(BaseVisualizer):
                 .gravity(0.5);
                 
             d3.select("#main-view svg").remove();
-            var svg = d3.select("#main-view")
+            var svgRoot = d3.select("#main-view")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
+                .call(d3.behavior.zoom().on("zoom", function () {
+                    currentScale = d3.event.scale;
+                    currentTranslate = d3.event.translate;
+                    svg.attr("transform", "translate(" + currentTranslate + ") scale(" + currentScale + ")");
+                    drawViewport(); 
+                }))
+
                 .append("g");
+
+            var svg = svgRoot;
+
 
             var connection = svg.selectAll('.connection')
                 .data(connections)
@@ -110,17 +123,60 @@ class SimpleVisualizer(BaseVisualizer):
                 let scale = Math.min(scaleWidth, scaleHeight);
 
                 d3.select(clonedGroup)
+                    .attr("class", "bird-group")
                     .attr("transform", `translate(${padding - bbox.x * scale}, ${padding - bbox.y * scale}) scale(${scale})`);
 
-                birdSvg.selectAll("circle").attr("r", 50);
-                birdSvg.selectAll("text").attr("font-size", 15);
 
-                birdSvg.selectAll("line").attr("stroke-width", 1.2);
+                birdSvg.selectAll("circle").attr("r", 40);
+                birdSvg.selectAll("text").attr("font-size", 11);
+
+                birdSvg.selectAll("line").attr("stroke-width", 0.9);
+                drawViewport();
             }
 
             force.on("end", function() {
                 updateBirdView();
             });
+            function drawViewport() {
+                let birdSvg = d3.select("#bird-view").select("svg");
+                let group = birdSvg.select("g");
+                if (group.empty()) return;
+
+                let birdBBox = group.node().getBBox();
+
+                let birdWidth = birdSvg.node().clientWidth;
+                let birdHeight = birdSvg.node().clientHeight;
+
+                let scaleWidth = (birdWidth - 40) / birdBBox.width;
+                let scaleHeight = (birdHeight - 40) / birdBBox.height;
+                let scale = Math.min(scaleWidth, scaleHeight);
+
+                // Pozicija i dimenzije viewporta u bird view koordinatama
+                let viewWidth = width / currentScale;
+                let viewHeight = height / currentScale;
+                let x = -currentTranslate[0] / currentScale;
+                let y = -currentTranslate[1] / currentScale;
+
+                let viewportX = (x - birdBBox.x) * scale + 20;
+                let viewportY = (y - birdBBox.y) * scale + 20;
+                let viewportWidth = viewWidth * scale;
+                let viewportHeight = viewHeight * scale;
+
+                // Ukloni prethodni viewport ako postoji
+                birdSvg.selectAll(".viewport-rect").remove();
+
+                // Dodaj novi
+                birdSvg.append("rect")
+                    .attr("class", "viewport-rect")
+                    .attr("x", viewportX)
+                    .attr("y", viewportY)
+                    .attr("width", viewportWidth)
+                    .attr("height", viewportHeight)
+                    .attr("stroke", "red")
+                    .attr("fill", "none")
+                    .attr("stroke-width", 2);
+            }
+
 
 
             function nodeView(d, color) {
