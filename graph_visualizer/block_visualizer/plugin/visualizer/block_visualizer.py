@@ -38,6 +38,9 @@ class BlockVisualizer(BaseVisualizer):
 
         <script type="text/javascript">
         $(document).ready(function () {
+            var currentScale = 1;
+            var currentTranslate = [0, 0];
+
             var selected_node=null;
             var nodesGraph = JSON.parse("{{ nodes|escapejs }}");
             var connectionsGraph = JSON.parse("{{ connections|escapejs }}");
@@ -59,11 +62,19 @@ class BlockVisualizer(BaseVisualizer):
                 .charge(-5000)
                 .gravity(0.5);
 
-            var svg = d3.select("#main-view")
+            var svgRoot = d3.select("#main-view")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
-                .append("g");
+                .call(d3.behavior.zoom().on("zoom", function () {
+                    currentScale = d3.event.scale;
+                    currentTranslate = d3.event.translate;
+                    svg.attr("transform", "translate(" + currentTranslate + ") scale(" + currentScale + ")");
+                    drawViewport();
+                }));
+
+            var svg = svgRoot.append("g");
+
 
             var connection = svg.selectAll(".connection")
                 .data(connectionsGraph)
@@ -75,6 +86,8 @@ class BlockVisualizer(BaseVisualizer):
                 .enter().append("g")
                 .attr("class", "node")
                 .attr("id", function (d) { return d.id; })
+                .attr("pointer-events", "all")
+                .on("mousedown", function() { d3.event.stopPropagation(); })
                 .call(force.drag)
                 .on('click', function () {
                     nodeClick(this);
@@ -211,13 +224,52 @@ class BlockVisualizer(BaseVisualizer):
 
                 birdSvg.selectAll("rect").attr("stroke-width", 0.5);
                 birdSvg.selectAll("line").attr("stroke-width", 1);
-                birdSvg.selectAll("text").attr("font-size", 15);
+                birdSvg.selectAll("text").attr("font-size", 9);
+                drawViewport();
+
             }
 
             force.on("end", function () {
                 updateBirdView();
             });
-        });
+            function drawViewport() {
+                var birdSvg = d3.select("#bird-view").select("svg");
+                var group = birdSvg.select("g");
+                if (group.empty()) return;
+
+                var birdBBox = group.node().getBBox();
+
+                var birdWidth = birdSvg.node().clientWidth;
+                var birdHeight = birdSvg.node().clientHeight;
+
+                var scaleWidth = (birdWidth - 20) / birdBBox.width;
+                var scaleHeight = (birdHeight - 20) / birdBBox.height;
+                var scale = Math.min(scaleWidth, scaleHeight);
+
+                var viewWidth = width / currentScale;
+                var viewHeight = height / currentScale;
+                var x = -currentTranslate[0] / currentScale;
+                var y = -currentTranslate[1] / currentScale;
+
+                var viewportX = (x - birdBBox.x) * scale + 10;
+                var viewportY = (y - birdBBox.y) * scale + 10;
+                var viewportWidth = viewWidth * scale;
+                var viewportHeight = viewHeight * scale;
+
+                birdSvg.selectAll(".viewport-rect").remove();
+
+                birdSvg.append("rect")
+                    .attr("class", "viewport-rect")
+                    .attr("x", viewportX)
+                    .attr("y", viewportY)
+                    .attr("width", viewportWidth)
+                    .attr("height", viewportHeight)
+                    .attr("stroke", "red")
+                    .attr("fill", "none")
+                    .attr("stroke-width", 2);
+            }
+
+                    });
         </script>
         """
 

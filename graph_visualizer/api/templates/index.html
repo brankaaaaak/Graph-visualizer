@@ -18,9 +18,10 @@
         .container {
             display: grid;
             grid-template-columns: 300px auto 300px;
-            grid-template-rows: 70px auto 150px;
+            grid-template-rows: 70px 30px auto 150px;
             grid-template-areas: 
                 "header header header"
+                "topbar topbar topbar"
                 "tree main bird"
                 "tree main bird";
             height: 100vh;
@@ -168,6 +169,94 @@
             background-color: #ffb6c1; /* svetlo roze */
             font-weight: bold;
         }
+        #terminal {
+            position: fixed;
+            bottom: 60px;
+            right: 20px;
+            width: 400px;
+            height: 300px;
+            background-color: #000;
+            color: #0f0;
+            font-family: monospace;
+            padding: 10px;
+            display: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        #toggleButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #toggleButton:hover {
+            background-color: #555;
+        }
+        #terminal-form {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        }
+
+        #terminal-input {
+        flex: 1;
+        background-color: black;
+        color: #0f0;
+        border: none;
+        font-family: monospace;
+        font-size: 1rem;
+        outline: none;
+        }
+        .top-bar-wrapper {
+            grid-area: topbar;
+            background-color: #fb045b; 
+            height: 30px; 
+        }
+
+        .top-bar {
+            grid-area: topbar;
+            background-color: #fb045b; /* ista boja kao header */
+            display: flex;
+            gap: 10px;
+            padding: 5px 10px;
+            align-items: center;
+            }
+
+
+        .top-bar input {
+            padding: 4px 6px;  
+            font-size: 13px;
+            width: 200px;
+            border-radius: 4px;
+            border: none;
+        }
+
+        .top-bar button {
+            padding: 4px 10px;       /* manji button padding */
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: none;
+            background-color: #3c2956;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .top-bar button:hover {
+            background-color: #f3eef3;
+            color: #3c2956;
+        }
 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -177,6 +266,7 @@
     <div class="container">
         <header>
             <div>Graph Visualizer</div>
+            
             <div class="center-dropdown">
                 {% if graph_loaded %}
             <form method="get" action="{% url 'visualize' %}">
@@ -200,6 +290,21 @@
                 </div>
             </form>
         </header>
+        <div class="top-bar-wrapper">
+            {% if graph_visualized %}
+            <div class="top-bar">
+                <input id="search-input" type="text" placeholder="Search node by ID or label..." />
+                <button onclick="searchNode()">Search</button>
+
+                <input id="filter-input" type="text" placeholder="Filter (e.g. Age > 20)" />
+                <button onclick="applyFilter()">Filter</button>
+
+                <button onclick="clearGraph()">Clear</button>
+
+                <button onclick="reset()">Reset</button>
+            </div>
+            {% endif %}
+        </div>
         <div id="tree-view">
             <h3>Tree View</h3>
             {{ tree_html|safe }}
@@ -212,6 +317,18 @@
             <h3>Bird View</h3>
         </div>
     </div>
+    {% if graph_visualized %}
+        <div id="terminal">
+            <div id="terminal-output">
+                <p>Terminal running...</p>
+            </div>
+            <form id="terminal-form">
+                <label for="terminal-input">$</label>
+                <input type="text" id="terminal-input" autocomplete="off" autofocus />
+            </form>
+        </div>
+        <button id="toggleButton">🖥️ Open terminal</button>
+    {% endif %}
     <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.body.addEventListener("click", function (e) {
@@ -253,7 +370,492 @@
             }
 
         });
+        const terminalOutput = document.getElementById("terminal-output");
+        const terminalInput = document.getElementById("terminal-input");
+        const terminalForm = document.getElementById("terminal-form");
+
+    // PARSER ARGS
+    function parseArgs(cmd) {
+        const regex = /--(\w+)=("[^"]*"|'[^']*'|[^\s"]+)/g;
+        const args = {};
+        let match;
+        while ((match = regex.exec(cmd)) !== null) {
+            let key = match[1];
+            let val = match[2];
+            if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+                val = val.slice(1, -1);
+            }
+            args[key] = val;
+        }
+        return args;
+    }
+
+    // TERMINAL COMMAND HANDLER
+    terminalForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const command = terminalInput.value.trim();
+        terminalInput.value = "";
+
+        if (!command) return;
+
+        terminalOutput.innerHTML += `<div>$ ${command}</div>`;
+
+        try {
+            const [action, type] = command.split(" ");
+            const args = parseArgs(command);
+            const parts = command.split(" ");
+
+            if (command === 'help') {
+                terminalOutput.innerHTML += `<pre>
+Commands:
+create node --id=1 --property Name=Alice
+create edge --id=1 --property Name=Siblings 1 2
+edit node [id] [property_name=value]
+edit edge [node_id] [edge] [node_id] [new_edge]
+delete node --id=1
+delete edge [node_id] [edge] [node_id]
+filter 'Age>20'
+search Alice
+clear
+</pre>`;
+                return;
+            }
+
+            if (command === "clear") {
+                fetch("/api/clear/", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    terminalOutput.innerHTML = ""; 
+                    window.location.href = "/"; 
+                } else {
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                }
+            })
+            .catch(err => {
+                terminalOutput.innerHTML += `<div style="color:red;">Error: ${err.message}</div>`;
+            });
+
+            return;
+            }
+
+            if (action === "create" && type === "node") {
+                const args = parseArgs(command);
+                const nodeId = args["id"];
+
+                const propRegex = /--property\s+([^=\s]+)=([^\s]+)/g;
+                const props = {};
+                let match;
+                while ((match = propRegex.exec(command)) !== null) {
+                    props[match[1]] = match[2];
+                }
+
+                fetch("/api/create_node/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ id: nodeId, properties: props })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Node ${nodeId} created.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+                return;
+            }
+
+            else if (action === "create" && type === "edge") {
+                const args = parseArgs(command);
+                const edgeId = args["id"];
+
+                const parts = command.trim().split(/\s+/);
+                const origin = parts[parts.length - 2];
+                const target = parts[parts.length - 1];
+
+                let relation = null;
+                const propRegex = /--property\s+name=([^\s]+)/;
+                const match = propRegex.exec(command);
+                if (match) {
+                    relation = match[1];
+                } else {
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: Missing relation property.</div>`;
+                    return;
+                }
+
+                const bodyData = {
+                    id: edgeId,
+                    source: origin,
+                    target: target,
+                    relation: relation
+                };
+
+                fetch("/api/create_edge/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                   body: JSON.stringify(bodyData)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Edge created.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+
+                return;
+}
+
+
+            else if (action === "edit" && type === "node") {
+               const parts = command.split(" ");
+                if (parts.length < 4) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: format must be: edit node [id] [key]=[value]</div>`;
+                    return;
+                }
+                const nodeId = parts[2]; 
+                const propertyPart = parts.slice(3).join(" ");
+
+                if (!propertyPart.includes("=")) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: property must be in format key=value</div>`;
+                    return;
+                }
+
+                const [keyRaw, ...valueParts] = propertyPart.split("=");
+                const key = keyRaw.trim();
+                const value = valueParts.join("=").trim();
+
+                if (!key || !value) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: property must be in format key=value</div>`;
+                    return;
+                }
+
+                const props = {};
+                props[key] = value;
+
+                fetch("/api/edit_node/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ id: nodeId, properties: props })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Node ${nodeId} updated.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+
+                return;
+            }else if (action === "edit" && type === "edge") {
+                const parts = command.split(" ");
+                if (parts.length < 6) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Error:  format must be: edit edge [origin] [relation] [target] [new_relation]</div>`;
+                    return;
+                }
+                const origin = parts[2];
+                const oldRelation = parts[3];
+                const target = parts[4];
+                const newRelation = parts[5];
+
+                fetch(`/api/edit_edge/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({
+                        origin: origin,
+                        old_relation: oldRelation,
+                        target: target,
+                        new_relation: newRelation
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Edge updated from '${oldRelation}' to '${newRelation}' between ${origin} and ${target}.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+
+                return;
+            }
+
+            else if (action === "delete" && type === "node") {
+                const nodeId = args["id"];
+
+                fetch(`/api/delete_node/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ id: nodeId })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Node ${nodeId} deleted.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+                return;
+            }
+
+            else if (action === "delete" && type === "edge") {
+                const parts = command.split(" ");
+
+                if (parts.length < 5) {
+                    terminalOutput.innerHTML += `<div style="color:red;">Error: format must be: delete edge [origin] [relation] [target]</div>`;
+                    return;
+                }
+
+                const origin = parts[2];
+                const relation = parts[3];
+                const target = parts[4];
+
+                fetch(`/api/delete_edge/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ origin: origin, relation: relation, target: target })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        terminalOutput.innerHTML += `<div style="color:lightgreen;">Edge from ${origin} to ${target} (${relation}) deleted.</div>`;
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Error: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+
+                return;
+            }
+
+            else if (command.startsWith("search ")) {
+                const searchString = command.slice("search ".length).trim().replace(/^['"]|['"]$/g, "");
+
+                fetch(`/api/search/?query=${encodeURIComponent(searchString)}`, {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Greška: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+
+                return;
+            }
+
+            else if (command.startsWith("filter ")) {
+                const filterCondition = command.slice("filter ".length).trim().replace(/^['"]|['"]$/g, "");
+
+                fetch(`/api/filter/?condition=${encodeURIComponent(filterCondition)}`, {
+                    method: "GET",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .then(res => {
+                    if (res.redirected) {
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                        return;
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                        window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+                    } else {
+                        terminalOutput.innerHTML += `<div style="color:red;">Greška: ${data.error}</div>`;
+                    }
+                })
+                .catch(err => {
+                    terminalOutput.innerHTML += `<div style="color:red;">Request failed: ${err.message}</div>`;
+                });
+
+                return;
+            }
+
+            else {
+                terminalOutput.innerHTML += "<div>Unknown command. Try 'help'</div>";
+            }
+
+        } catch (err) {
+            terminalOutput.innerHTML += `<div style="color:red;">Error: ${err.message}</div>`;
+        }
+
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
     });
+
+    // Terminal show/hide
+    const terminal = document.getElementById('terminal');
+    const toggleButton = document.getElementById('toggleButton');
+
+    toggleButton.addEventListener('click', () => {
+        if (terminal.style.display === 'none') {
+            terminal.style.display = 'block';
+            toggleButton.textContent = '🗙 Close terminal';
+            terminalInput.focus();
+        } else {
+            terminal.style.display = 'none';
+            toggleButton.textContent = '🖥️ Open terminal';
+        }
+    });
+});
+function searchNode() {
+    const query = document.getElementById('search-input').value.trim();
+    if (!query) {
+        alert('Please enter search query');
+        return;
+    }
+    fetch(`/api/search/?query=${encodeURIComponent(query)}`, {
+        method: 'GET',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            const currentVisualizer = "{{ current_visualizer|escapejs }}";
+            window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+        } else {
+            alert('Search error: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(err => {
+        alert('Search failed: ' + err.message);
+    });
+}
+
+    function applyFilter() {
+        const condition = document.getElementById('filter-input').value.trim();
+        if (!condition) {
+            alert('Please enter filter condition');
+            return;
+        }
+        fetch(`/api/filter/?condition=${encodeURIComponent(condition)}`, {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+            } else {
+                alert('Filter error: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(err => {
+            alert('Filter failed: ' + err.message);
+        });
+    }
+
+    function clearGraph() {
+        fetch('/api/clear/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                // refresh stranice
+                window.location.href = '/';
+            } else {
+                alert('Reset error: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(err => {
+            alert('Reset failed: ' + err.message);
+        });
+    }
+    function reset(){
+        fetch('/api/reset_graph/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const currentVisualizer = "{{ current_visualizer|escapejs }}";
+                window.location.href = `/visualize?visualizer=${encodeURIComponent(currentVisualizer)}`;
+            } else {
+                console.error("Reset failed:", data.error);
+            }
+        })
+        .catch(err => console.error("Request failed:", err));
+
+    }
     </script>
 </body>
 </html>

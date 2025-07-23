@@ -1,9 +1,11 @@
+import json
+import re
 from django.http import HttpResponse, JsonResponse
 import time
 from django.http import HttpResponse
 from django.shortcuts import  render
 from django.shortcuts import render
-from api.models import Edge, Graph, Node
+from api.models import Edge, Graph, Node, TreeNode
 from block_visualizer.plugin.visualizer.block_visualizer import BlockVisualizer
 from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
 from api.models import Edge, Graph, Node
@@ -168,7 +170,7 @@ def visualize(request):
         if v.identifier() == visualizer_id:
             html_snippet = v.visualize(graph, request)
             time.sleep(2)
-            return render(request, "index.html", {"view_html": html_snippet, "tree_html": tree_html,"graph_loaded":graph})
+            return render(request, "index.html", {"view_html": html_snippet, "tree_html": tree_html,"graph_visualized":graph,"current_visualizer":v.identifier()})
     
     return HttpResponse("Invalid visualizer identifier.", status=404)
 
@@ -178,4 +180,456 @@ def check_extension(loader_name, file):
             return file.name.endswith('.xml')
         case "JsonLoader":
             return file.name.endswith('.json')
-    return False      
+    return False  
+
+def create_node(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        node_id = data.get("id")
+        props = data.get("properties", {})
+
+        if not node_id:
+            return JsonResponse({"error": "Missing node ID."}, status=400)
+
+        api_config = apps.get_app_config("api")
+
+        if api_config.graph.get_node(node_id):
+            return JsonResponse({"error": f"Node '{node_id}' already exists."}, status=400)
+
+        new_node = Node(node_id)
+        for key, value in props.items():
+            new_node.add_attribute(key, value)
+
+        api_config.graph.insert_node(new_node)
+
+        api_config.tree.roots.append(TreeNode(new_node, None, "node"))
+
+        api_config.load_tree()
+
+        return JsonResponse({
+            "success": True
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"error": str(e)}, status=500)
+def create_edge(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+
+        edge_id = data.get("id")
+        source_id = data.get("source")
+        target_id = data.get("target")
+        relation = data.get("relation")
+        weight = data.get("weight", 1)  
+        directed = data.get("directed", False)  
+
+        if not edge_id or not source_id or not target_id or not relation:
+            return JsonResponse({"error": "Missing edge id, source, target or relation."}, status=400)
+
+        api_config = apps.get_app_config("api")
+        graph = api_config.graph
+
+        source_node = graph.get_node(source_id)
+        target_node = graph.get_node(target_id)
+
+        if not source_node or not target_node:
+            return JsonResponse({"error": "Source or target node not found."}, status=404)
+
+        new_edge = Edge(
+            origin=source_node,
+            target=target_node,
+            relation=relation,
+            weight=weight,
+            directed=directed
+        )
+
+        graph.insert_edge(new_edge)
+
+        api_config.load_tree()  # ako treba reload
+
+        return JsonResponse({"success": True})
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"error": str(e)}, status=500)
+def delete_node(request):
+    api_config = apps.get_app_config("api")
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+
+    try:
+        data = json.loads(request.body)
+        node_id = data.get("id")
+
+        node = api_config.graph.get_node(node_id)
+        if not node:
+            return JsonResponse({"error": f"Node '{node_id}' not found."}, status=404)
+        if node.edges:
+            return JsonResponse({"error": "Node has edges."}, status=400)
+        
+        success = api_config.graph.remove_node(node)
+        if not success:
+            return JsonResponse({"success": False, "error": "Can not delete node."})
+
+        visualizer = api_config.visualizers[0]
+        html_snippet = visualizer.visualize(api_config.graph, request)
+        api_config.load_tree()
+        tree_html = generate_tree_html(api_config.tree.roots)
+
+        return JsonResponse({
+            "success": True,
+            "view_html": html_snippet,
+            "tree_html": tree_html
+        })
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"error": str(e)}, status=500)
+    
+def delete_edge(request):
+
+    api_config = apps.get_app_config('api')
+    graph = apps.get_app_config('api').graph
+    if request.method == "POST":
+        data = json.loads(request.body)
+        origin = data.get("origin")
+        target = data.get("target")
+        relation = data.get("relation")
+        
+
+        try:
+            
+            success = graph.remove_edge(origin, target, relation)
+            if not success:
+                return JsonResponse({"success": False, "error": "Edge not found"})
+
+            visualizer = api_config.visualizers[0]
+            html_snippet = visualizer.visualize(graph, request)
+            api_config.load_tree()
+            tree_html = generate_tree_html(api_config.tree.roots)
+
+            return JsonResponse({
+                "success": True,
+                "view_html": html_snippet,
+                "tree_html": tree_html
+            })
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return JsonResponse({"success": False, "error": str(e)})
+
+def edit_edge(request):
+    api_config = apps.get_app_config('api')
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            origin_id = data.get("origin")
+            old_relation = data.get("old_relation")
+            target_id = data.get("target")
+            new_relation = data.get("new_relation")
+
+            if not all([origin_id, old_relation, target_id, new_relation]):
+                return JsonResponse({"success": False, "error": "Missing data."})
+            
+
+            print(origin_id)
+            print(old_relation)
+            print(target_id)
+            print(new_relation)
+
+            edge = api_config.graph.get_edge(origin_id, target_id)
+            api_config.graph.remove_edge(origin_id, target_id, old_relation)
+            edge.relation = new_relation
+            api_config.graph.insert_edge(edge)
+            visualizer = api_config.visualizers[0]
+            html_snippet = visualizer.visualize(api_config.graph, request)
+            api_config.load_tree()
+            tree_html = generate_tree_html(api_config.tree.roots)
+
+            return JsonResponse({
+                "success": True,
+                "view_html": html_snippet,
+                "tree_html": tree_html
+            })
+
+        except json.JSONDecodeError:
+            return JsonResponse({"success": False, "error": "Invalid JSON."})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Only POST allowed'})
+def edit_node(request):
+    api_config = apps.get_app_config('api')
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            node_id = data.get('id')
+            properties = data.get('properties', {})
+
+            if not node_id:
+                return JsonResponse({'success': False, 'error': 'Node ID is required'})
+            
+            if not isinstance(properties, dict) or len(properties) != 1:
+                return JsonResponse({'success': False, 'error': 'Exactly one property must be provided'})
+            node = api_config.graph.get_node(node_id)
+            if not node:
+                return JsonResponse({'success': False, 'error': 'Node not found'})
+            key, value = next(iter(properties.items()))
+            success = api_config.graph.update_node(node, key, value)
+            if not success:
+                return JsonResponse({"success": False, "error": "Can not edit node."})
+
+            visualizer = api_config.visualizers[0]
+            html_snippet = visualizer.visualize(api_config.graph, request)
+            api_config.load_tree()
+            tree_html = generate_tree_html(api_config.tree.roots)
+
+            return JsonResponse({
+                "success": True,
+                "view_html": html_snippet,
+                "tree_html": tree_html
+            })
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Invalid JSON'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Only POST allowed'})
+
+def search(request):
+    query = request.GET.get("query", "")
+    if not query:
+        return JsonResponse({"success": False, "error": "Query is required"}, status=400)
+
+    old_graph = apps.get_app_config('api').graph
+    if old_graph is None:
+        return JsonResponse({"success": False, "error": "No graph loaded"}, status=400)
+
+    new_graph = Graph()
+
+    for node in old_graph.get_nodes():
+        search_node(new_graph, old_graph, node, query)
+
+    # ažuriranje aplikacije sa novim grafom
+    apps.get_app_config('api').graph = new_graph
+    apps.get_app_config('api').load_tree()
+
+    return JsonResponse({"success": True})
+
+def search_node(new_graph, old_graph, node, query):
+    query = query.strip().lower()
+    found = False
+
+    for key, value in node.attributes.items():
+        if query in str(key).lower() or query in str(value).lower():
+            found = True
+            break
+
+    if query in str(node.id).lower():
+        found = True
+
+    if found:
+        # Dodaj originalni čvor u novi graf
+        if not new_graph.has_node(node):
+            new_node = copy_node(node)
+            new_graph.insert_node(new_node)
+        else:
+            new_node = new_graph.get_node(node.id)
+
+        # Dodaj sve izlazne grane i povezane čvorove
+        for edge in node.edges:
+            other = edge.target
+            # Dodaj target čvor ako ga nema
+            if not new_graph.has_node(other):
+                new_other = copy_node(other)
+                new_graph.insert_node(new_other)
+            else:
+                new_other = new_graph.get_node(other.id)
+
+            # Dodaj granu
+            new_edge = Edge(origin=new_node, target=new_other, relation=edge.relation, weight=edge.weight, directed=edge.is_directed)
+            new_node.add_edge(new_edge)
+
+        # (opciono) Dodaj i sve ulazne grane iz starog grafa
+        for edge in old_graph.get_edges():
+            if edge.target.id == node.id:
+                origin = edge.origin
+                if not new_graph.has_node(origin):
+                    new_origin = copy_node(origin)
+                    new_graph.insert_node(new_origin)
+                else:
+                    new_origin = new_graph.get_node(origin.id)
+
+                if not new_graph.has_node(node):
+                    new_node = copy_node(node)
+                    new_graph.insert_node(new_node)
+
+                new_edge = Edge(origin=new_origin, target=new_node, relation=edge.relation, weight=edge.weight, directed=edge.is_directed)
+                new_origin.add_edge(new_edge)
+def copy_node(original_node):
+    new_node = Node(original_node.id)
+    for key, value in original_node.attributes.items():
+        new_node.add_attribute(key, value)
+    return new_node
+
+        
+def create_graph(original_graph, filtered_graph):
+    new_graph = Graph()
+
+    for node in filtered_graph.nodes:
+        new_graph.insert_node(node)
+
+    for node in filtered_graph.nodes:
+        original_node = original_graph.get_node(node.id)
+        if original_node:
+            for edge in original_node.edges:
+                origin_id = edge.origin.id
+                target_id = edge.target.id
+
+                if new_graph.get_node(origin_id) and new_graph.get_node(target_id):
+                    new_edge = Edge(
+                        origin=new_graph.get_node(origin_id),
+                        target=new_graph.get_node(target_id),
+                        relation=edge.relation,
+                        weight=edge.weight,
+                        directed=edge.directed
+                    )
+                    new_graph.insert_edge(new_edge)
+
+    return new_graph
+def clear_graph(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+    
+    try:
+        api_config = apps.get_app_config('api')
+        api_config.graph = None
+        api_config.base_graph = None
+        api_config.tree = None
+        api_config.current_visualizer = None
+        
+        return JsonResponse({"success": True})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"success": False, "error": str(e)}, status=500)
+    
+def filter_view(request):
+    import re
+    condition = request.GET.get("condition", "")
+    if not condition:
+        return JsonResponse({"success": False, "error": "Condition is required"}, status=400)
+
+    old_graph = apps.get_app_config('api').graph
+    if old_graph is None:
+        return JsonResponse({"success": False, "error": "No graph loaded"}, status=400)
+
+    match = re.match(r"(\w+)\s*(==|=|!=|<=|>=|<|>)\s*['\"]?([\w\s\.\-]+)['\"]?", condition)
+    if not match:
+        return JsonResponse({"success": False, "error": "Invalid filter format"}, status=400)
+
+    key, operator, value = match.groups()
+
+    if re.match(r"^-?\d+\.\d+$", value): 
+        value = float(value)
+    elif re.match(r"^-?\d+$", value):
+        value = int(value)
+
+    def match_condition(props):
+        if not props:
+            return False
+        node_val = props.get(key)
+        if node_val is None:
+            return False
+
+        try:
+            if isinstance(value, (int, float)):
+                if isinstance(node_val, str) and re.match(r"^-?\d+(\.\d+)?$", node_val):
+                    node_val = float(node_val) if '.' in node_val else int(node_val)
+
+            if operator in ("=", "=="):
+                return node_val == value
+            elif operator == "!=":
+                return node_val != value
+            elif operator == "<":
+                return node_val < value
+            elif operator == ">":
+                return node_val > value
+            elif operator == "<=":
+                return node_val <= value
+            elif operator == ">=":
+                return node_val >= value
+        except:
+            return False
+
+        return False
+
+    new_graph = Graph()
+
+    # Pronađi čvorove koji zadovoljavaju uslov
+    matched_nodes = []
+    for node in old_graph.get_nodes():
+        if match_condition(node.get_attributes()):
+            matched_nodes.append(node)
+
+    # Dodaj čvorove, njihove povezane čvorove i grane
+    for node in matched_nodes:
+        if not new_graph.has_node(node):
+            new_node = copy_node(node)
+            new_graph.insert_node(new_node)
+        else:
+            new_node = new_graph.get_node(node.id)
+
+        # Izlazne grane (target)
+        for edge in node.edges:
+            target = edge.target
+            if not new_graph.has_node(target):
+                new_target = copy_node(target)
+                new_graph.insert_node(new_target)
+            else:
+                new_target = new_graph.get_node(target.id)
+
+            new_edge = Edge(origin=new_node, target=new_target, relation=edge.relation, weight=edge.weight, directed=edge.is_directed)
+            new_node.add_edge(new_edge)
+
+        # Ulazne grane (origin → ovaj čvor)
+        for edge in old_graph.get_edges():
+            if edge.target.id == node.id:
+                origin = edge.origin
+                if not new_graph.has_node(origin):
+                    new_origin = copy_node(origin)
+                    new_graph.insert_node(new_origin)
+                else:
+                    new_origin = new_graph.get_node(origin.id)
+
+                new_edge = Edge(origin=new_origin, target=new_node, relation=edge.relation, weight=edge.weight, directed=edge.is_directed)
+                new_origin.add_edge(new_edge)
+
+    # Ažuriraj aktivni graf
+    apps.get_app_config('api').graph = new_graph
+    apps.get_app_config('api').load_tree()
+
+    return JsonResponse({"success": True})
+
+def reset_graph(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "Only POST allowed"}, status=405)
+
+    api_config = apps.get_app_config('api')
+    
+    api_config.graph = api_config.base_graph
+    
+    api_config.load_tree()
+
+    return JsonResponse({"success": True})

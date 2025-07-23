@@ -22,11 +22,11 @@ class XmlLoader(BaseLoader):
         return xml_root
     
     def make_graph(self, root_element):
-        self._id_sequence=0
+        self._id_sequence = 0
         graph = Graph()
         self.create_node(graph, root_element)
         return graph
-    
+
     def create_node(self, graph, elem):
         self._id_sequence += 1
         node = Node(self._id_sequence)
@@ -34,17 +34,20 @@ class XmlLoader(BaseLoader):
         for key, value in elem.attrib.items():
             node.add_attribute(key, value)
 
-        if elem.text and elem.text.strip():
-            node.add_attribute('text', elem.text.strip())
-
         for child in elem:
             if not isinstance(child, ET.Element):
-                continue 
-            
-            child_node = self.create_node(graph, child)
-            
-            edge = Edge(origin=node, target=child_node, relation=child.tag, weight=0, directed=True)
-            node.add_edge(edge)
+                continue
+
+            # Ako dete ima podstablo - napravi novi čvor i poveži ga
+            if len(child):  # ima decu, znači pravi čvor
+                child_node = self.create_node(graph, child)
+                edge = Edge(origin=node, target=child_node, relation=child.tag, weight=0, directed=True)
+                node.add_edge(edge)
+            else:
+                # Nema dece - to je atribut, dodaj ga kao atribut roditeljskom čvoru
+                text = child.text.strip() if child.text else ''
+                if text:
+                    node.add_attribute(child.tag, text)
 
         if node not in graph.nodes:
             graph.insert_node(node)

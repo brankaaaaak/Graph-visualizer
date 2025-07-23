@@ -1,4 +1,4 @@
-<BeautySalons>
+<BeautySalons lola="lola">
     <Salon id="1" name="Glamur Studio" location="Beograd">
         <Employee id="2" name="Milica Petrović" role="Frizerka" />
         <Employee id="3" name="Jovana Ilić" role="Šminkerka" />
