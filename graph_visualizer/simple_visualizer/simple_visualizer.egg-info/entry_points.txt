@@ -1,2 +1,0 @@
-[visualizer]
-simple-visualizer = plugin.visualizer.simple_visualizer:SimpleVisualizer

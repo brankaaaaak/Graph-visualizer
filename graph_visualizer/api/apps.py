@@ -39,9 +39,11 @@ class ApiConfig(AppConfig):
     
     def load_tree(self):
         self.tree = Tree()
+        added_ids = set()
         for node in find_root_nodes(self.graph.find_subgraphs()):
-            #print(f"🌳 Root node: {node} ({type(node)})")
-            self.tree.roots.append(TreeNode(node, None, "node"))
+            if node.id not in added_ids:
+                self.tree.roots.append(TreeNode(node, None, "node"))
+                added_ids.add(node.id)
 
 
 def load_plugins(entry_point):
@@ -71,12 +73,20 @@ def find_root_nodes(subgraphs):
                         roots.append(n)
     return roots
 
-def merge_lists_distinct(first_list, second_list):
+"""def merge_lists_distinct(first_list, second_list):
     for i in first_list:
         if i not in second_list:
             second_list.append(i)
 
+    return second_list"""
+def merge_lists_distinct(first_list, second_list):
+    seen_ids = set(n.id for n in second_list)
+    for i in first_list:
+        if i.id not in seen_ids:
+            second_list.append(i)
+            seen_ids.add(i.id)
     return second_list
+
 
 def print_tree(tree):
     def print_node(node, level=0):
