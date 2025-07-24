@@ -257,7 +257,13 @@
             background-color: #f3eef3;
             color: #3c2956;
         }
-
+        .header-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px 10px;
+        }
+ 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
@@ -266,29 +272,42 @@
     <div class="container">
         <header>
             <div>Graph Visualizer</div>
-            
-            <div class="center-dropdown">
+            <!-- Workspace dropdown -->
+            <div class="header-block">
+                <form id="workspace-form" style="display: flex; align-items: center; gap: 10px;">
+                    <select id="workspace-select" class="styled-select">
+                        <option disabled selected>Choose workspace...</option>
+                        {% for ws in workspaces %}
+                            <option value="{{ ws }}" {% if ws == current_workspace %}selected{% endif %}>Workspace {{ ws }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" onclick="addWorkspace()" class="submit-button">+ Add Workspace</button>
+                </form>
+            </div>
+            <div class="header-block">
                 {% if graph_loaded %}
-            <form method="get" action="{% url 'visualize' %}">
-            <select name="visualizer" required class="styled-select">
-                <option value="" selected disabled>Choose visualizer...</option>
-                {% for id, name in visualizers %}
-                    <option value="{{ id }}">{{ name }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit" class="submit-button">Go</button>
-        </form>
-        {% else %}
-            <p style="color: rgb(70, 23, 56); font-style: italic;">Please upload a file first to choose visualizer.</p>
-        {% endif %}
-        </div>
-            <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
-                    <input type="file" name="graph_file" required>
-                    <input type="submit" value="Upload">
-                </div>
-            </form>
+                <form method="get" action="{% url 'visualize' %}" style="display: flex; align-items: center; gap: 10px;">
+                    <select name="visualizer" required class="styled-select">
+                        <option value="" selected disabled>Choose visualizer...</option>
+                        {% for id, name in visualizers %}
+                            <option value="{{ id }}">{{ name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="submit-button">Go</button>
+                </form>
+                {% else %}
+                    <p style="color: rgb(70, 23, 56); font-style: italic;">Please upload a file first to choose visualizer.</p>
+                {% endif %}
+            </div>
+            <div>
+                <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="file" name="graph_file" required>
+                        <input type="submit" value="Upload">
+                    </div>
+                </form>
+            </div>
         </header>
         <div class="top-bar-wrapper">
             {% if graph_visualized %}
@@ -856,6 +875,30 @@ function searchNode() {
         .catch(err => console.error("Request failed:", err));
 
     }
+    function addWorkspace() {
+        fetch("/workspace/add/", {
+            method: "GET"
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const select = document.getElementById("workspace-select");
+                const opt = document.createElement("option");
+                opt.value = data.workspace_id;
+                opt.textContent = "Workspace " + data.workspace_id;
+                select.appendChild(opt);
+                select.value = data.workspace_id;
+                alert("Workspace saved!");
+            }
+        });
+    }
+
+    document.getElementById("workspace-select").addEventListener("change", function () {
+        const selectedId = this.value;
+        if (selectedId) {
+            window.location.href = `/workspace/switch/${selectedId}/`;
+        }
+    });
     </script>
 </body>
 </html>

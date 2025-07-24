@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import clear_graph, create_edge, create_node, delete_edge, delete_node, edit_edge, edit_node, expand_node_from_view, expand_node_view, filter_view, index_view, reset_graph, search, upload_file,visualize
+from api.views import add_workspace, clear_graph, create_edge, create_node, delete_edge, delete_node, edit_edge, edit_node, expand_node_from_view, expand_node_view, filter_view, index_view, reset_graph, search, switch_workspace, upload_file,visualize
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index_view, name='index'), 
@@ -33,5 +33,7 @@ urlpatterns = [
     path("api/search/", search, name="search"),
     path('api/clear/', clear_graph, name='clear_graph'),
     path('api/filter/',filter_view,name="filter_view"),
-    path('api/reset_graph/',reset_graph,name="reset_graph")
+    path('api/reset_graph/',reset_graph,name="reset_graph"),
+    path("workspace/add/", add_workspace, name="add_workspace"),
+    path("workspace/switch/<str:ws_id>/", switch_workspace, name="switch_workspace"),
 ]

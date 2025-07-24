@@ -14,6 +14,8 @@ class ApiConfig(AppConfig):
     graph= None
     visualizer=None
     loader=None
+    workspaces = {}  
+    current_workspace = None
 
     def ready(self):
         self.loaders = load_plugins("loader")
@@ -44,6 +46,17 @@ class ApiConfig(AppConfig):
             if node.id not in added_ids:
                 self.tree.roots.append(TreeNode(node, None, "node"))
                 added_ids.add(node.id)
+
+    def switch_workspace(self, ws_id):
+        if ws_id in self.workspaces:
+            self.graph = self.workspaces[ws_id]['graph']
+            self.base_graph = self.workspaces[ws_id]['base_graph']
+            self.tree = self.workspaces[ws_id]['tree']
+            self.visualizer = self.workspaces[ws_id]['visualizer']
+            self.loader = self.workspaces[ws_id]['loader']
+            self.current_workspace = ws_id
+            return True
+        return False
 
 
 def load_plugins(entry_point):
