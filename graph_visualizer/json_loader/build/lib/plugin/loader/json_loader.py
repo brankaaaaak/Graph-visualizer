@@ -106,7 +106,9 @@ class JsonLoader(BaseLoader):
     
     def update_graph(self, node, parent, relation):
         self.alter_existing_node(node)
-        self.add_new_edge(node, parent, relation)
+        if parent is not None:
+            self.add_new_edge(node, parent, relation)
+
 
     def add_new_edge(self, child_node, parent_node, relation):
         edge = Edge(parent_node, child_node, relation, 0, True)

@@ -219,8 +219,8 @@ def create_node(request):
 
         new_node = Node(node_id)
         
-        if "id" in props and str(props["id"]).isdigit():
-            props["id"] = int(props["id"])
+        if "id" not in props and str(node_id).isdigit():
+            props["id"] = int(node_id)
         else:
             props["id"] = node_id
 
