@@ -427,8 +427,8 @@
             if (command === 'help') {
                 terminalOutput.innerHTML += `<pre>
 Commands:
-create node --id=1 --property Name=Alice
-create edge --id=1 --property Name=Siblings 1 2
+create node --id=1 --property name=Alice
+create edge --property name=Siblings 1 2
 edit node [id] [property_name=value]
 edit edge [node_id] [edge] [node_id] [new_edge]
 delete node --id=1
@@ -501,7 +501,6 @@ clear
 
             else if (action === "create" && type === "edge") {
                 const args = parseArgs(command);
-                const edgeId = args["id"];
 
                 const parts = command.trim().split(/\s+/);
                 const origin = parts[parts.length - 2];
@@ -518,10 +517,10 @@ clear
                 }
 
                 const bodyData = {
-                    id: edgeId,
                     source: origin,
                     target: target,
-                    relation: relation
+                    relation: relation,
+                    directed:true
                 };
 
                 fetch("/api/create_edge/", {
