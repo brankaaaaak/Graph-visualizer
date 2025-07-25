@@ -1,9 +1,10 @@
 import json
 import re
+import uuid
 from django.http import HttpResponse, JsonResponse
 import time
 from django.http import HttpResponse
-from django.shortcuts import  render
+from django.shortcuts import  redirect, render
 from django.shortcuts import render
 from api.models import Edge, Graph, Node, TreeNode
 from block_visualizer.plugin.visualizer.block_visualizer import BlockVisualizer
@@ -18,8 +19,13 @@ def index_view(request):
     visualizers = api_config.visualizers
     visualizers_data = [(v.identifier(), v.name()) for v in visualizers]
 
+    """return render(request, 'index.html', {
+        'visualizers': visualizers_data,
+    })"""
     return render(request, 'index.html', {
         'visualizers': visualizers_data,
+        'current_workspace': api_config.current_workspace,
+        'workspaces': list(api_config.workspaces.keys()),
     })
 
 def upload_file(request):
@@ -36,6 +42,7 @@ def upload_file(request):
             raw_graph= loader.load_file(chosen_file, key_field="id")
             api_config.base_graph = loader.make_graph(raw_graph)                 
             api_config.graph = api_config.base_graph
+            api_config.loader = loader
             break
     if not raw_graph:
         return render(request, 'index.html', {"error": "Unsupported file type or loading failed."})
@@ -46,7 +53,9 @@ def upload_file(request):
 
     return render(request, 'index.html', {
         "visualizers": visualizers_data,
-        "graph_loaded": graph_loaded
+        "graph_loaded": graph_loaded,
+        "current_workspace": api_config.current_workspace,
+        "workspaces": list(api_config.workspaces.keys()),
     })
 
 def generate_tree_html(nodes):
@@ -168,9 +177,18 @@ def visualize(request):
 
     for v in visualizers:
         if v.identifier() == visualizer_id:
+            api_config.visualizer = v
             html_snippet = v.visualize(graph, request)
             time.sleep(2)
-            return render(request, "index.html", {"view_html": html_snippet, "tree_html": tree_html,"graph_visualized":graph,"current_visualizer":v.identifier()})
+            return render(request, "index.html", {
+                "view_html": html_snippet,
+                "tree_html": tree_html,
+                "graph_visualized": graph,
+                "current_visualizer": v.identifier(),
+                "current_workspace": api_config.current_workspace,
+                "workspaces": list(api_config.workspaces.keys())
+            })
+
     
     return HttpResponse("Invalid visualizer identifier.", status=404)
 
@@ -200,8 +218,15 @@ def create_node(request):
             return JsonResponse({"error": f"Node '{node_id}' already exists."}, status=400)
 
         new_node = Node(node_id)
+        
+        if "id" not in props and str(node_id).isdigit():
+            props["id"] = int(node_id)
+        else:
+            props["id"] = node_id
+
         for key, value in props.items():
             new_node.add_attribute(key, value)
+        
 
         api_config.graph.insert_node(new_node)
 
@@ -224,14 +249,13 @@ def create_edge(request):
     try:
         data = json.loads(request.body)
 
-        edge_id = data.get("id")
         source_id = data.get("source")
         target_id = data.get("target")
         relation = data.get("relation")
         weight = data.get("weight", 1)  
         directed = data.get("directed", False)  
 
-        if not edge_id or not source_id or not target_id or not relation:
+        if not source_id or not target_id or not relation:
             return JsonResponse({"error": "Missing edge id, source, target or relation."}, status=400)
 
         api_config = apps.get_app_config("api")
@@ -253,7 +277,7 @@ def create_edge(request):
 
         graph.insert_edge(new_edge)
 
-        api_config.load_tree()  # ako treba reload
+        api_config.load_tree() 
 
         return JsonResponse({"success": True})
 
@@ -633,3 +657,34 @@ def reset_graph(request):
     api_config.load_tree()
 
     return JsonResponse({"success": True})
+
+def add_workspace(request):
+    api = apps.get_app_config("api")
+    if not api.graph:
+        return JsonResponse({"error": "No graph loaded"}, status=400)
+    if not api.visualizer:
+        return JsonResponse({"error": "No visualizer selected"}, status=400)
+    if not api.loader:
+        return JsonResponse({"error": "No loader used"}, status=400)
+
+    ws_id = str(uuid.uuid4())[:8]
+
+    api.workspaces[ws_id] = {
+        "graph": api.graph,
+        "base_graph": api.base_graph,
+        "tree": api.tree,
+        "visualizer": api.visualizer,
+        "loader": api.loader
+    }
+    api.current_workspace = ws_id
+    return JsonResponse({"success": True, "workspace_id": ws_id})
+
+
+def switch_workspace(request, ws_id):
+    api = apps.get_app_config("api")
+    success = api.switch_workspace(ws_id)
+    if not success:
+        return JsonResponse({"error": "Workspace not found"}, status=404)
+
+    api.load_tree()
+    return redirect(f"/visualize?visualizer={api.visualizer.identifier()}")
