@@ -1,5 +1,4 @@
 import json
-import re
 import uuid
 from django.http import HttpResponse, JsonResponse
 import time
@@ -7,55 +6,46 @@ from django.http import HttpResponse
 from django.shortcuts import  redirect, render
 from django.shortcuts import render
 from api.models import Edge, Graph, Node, TreeNode
-from block_visualizer.plugin.visualizer.block_visualizer import BlockVisualizer
-from simple_visualizer.plugin.visualizer.simple_visualizer import SimpleVisualizer
-from api.models import Edge, Graph, Node
 from django.apps.registry import apps
-from django.template.loader import render_to_string
-
+from graph_platform.core import state
 
 def index_view(request):
-    api_config = apps.get_app_config('api')
-    visualizers = api_config.visualizers
+    visualizers = state.visualizers
     visualizers_data = [(v.identifier(), v.name()) for v in visualizers]
 
-    """return render(request, 'index.html', {
-        'visualizers': visualizers_data,
-    })"""
     return render(request, 'index.html', {
         'visualizers': visualizers_data,
-        'current_workspace': api_config.current_workspace,
-        'workspaces': list(api_config.workspaces.keys()),
+        'current_workspace': state.current_workspace,
+        'workspaces': list(state.workspaces.keys()),
     })
 
 def upload_file(request):
-    api_config = apps.get_app_config('api')
-    loaders = apps.get_app_config('api').loaders
+    loaders = state.loaders
     chosen_file = request.FILES.get('graph_file')
-
-    api_config.base_graph=None
-    api_config.graph =None
-    api_config.tree=None
     raw_graph = None
-    for loader in loaders:
+    state.base_graph=None
+    state.graph =None
+    state.tree=None
+    for loader in state.loaders:
         if check_extension(loader.identifier(), chosen_file):
-            raw_graph= loader.load_file(chosen_file, key_field="id")
-            api_config.base_graph = loader.make_graph(raw_graph)                 
-            api_config.graph = api_config.base_graph
-            api_config.loader = loader
+            raw_graph = loader.load_file(chosen_file, key_field="id")
+            state.base_graph = loader.make_graph(raw_graph)
+            state.graph = state.base_graph
+            state.loader = loader
             break
+    
     if not raw_graph:
         return render(request, 'index.html', {"error": "Unsupported file type or loading failed."})
-    graph = apps.get_app_config('api').graph
+    graph = state.graph
     graph_loaded = graph is not None and graph.nodes
    
-    visualizers_data = [(v.identifier(), v.name()) for v in api_config.visualizers]
+    visualizers_data = [(v.identifier(), v.name()) for v in state.visualizers]
 
     return render(request, 'index.html', {
         "visualizers": visualizers_data,
         "graph_loaded": graph_loaded,
-        "current_workspace": api_config.current_workspace,
-        "workspaces": list(api_config.workspaces.keys()),
+        "current_workspace": state.current_workspace,
+        "workspaces": list(state.workspaces.keys()),
     })
 
 def generate_tree_html(nodes):
@@ -123,8 +113,7 @@ def expand_node_view(request):
         print(request)
         node_id = int(request.GET.get('node_id'))
         print(node_id)
-        api_config = apps.get_app_config('api')
-        tree_node = api_config.tree.find_tree_node(node_id)
+        tree_node = state.tree.find_tree_node(node_id)
         if tree_node is None:
             return JsonResponse({"error": "Node not found"}, status=404)
 
@@ -139,9 +128,8 @@ def expand_node_view(request):
 
 def expand_node_from_view(request, node_id):
     try:
-        api_config = apps.get_app_config('api')
-        tree = api_config.tree
-        tree_node = api_config.tree.find_node_by_node_id(node_id)
+        tree = state.tree
+        tree_node = state.tree.find_node_by_node_id(node_id)
         if tree_node is None:
             for node in tree.roots:
                 node.close()
@@ -164,20 +152,19 @@ def expand_node_from_view(request, node_id):
         
     
 def visualize(request):
-    api_config = apps.get_app_config('api')
     visualizer_id = request.GET.get('visualizer')
     if not visualizer_id:
         return HttpResponse("No visualizer specified.", status=400)
 
-    graph = apps.get_app_config('api').graph
-    visualizers = apps.get_app_config('api').visualizers
+    graph = state.graph
+    visualizers = state.visualizers
 
-    api_config.load_tree()
-    tree_html = generate_tree_html(api_config.tree.roots)
+    state.load_tree()
+    tree_html = generate_tree_html(state.tree.roots)
 
     for v in visualizers:
         if v.identifier() == visualizer_id:
-            api_config.visualizer = v
+            state.visualizer = v
             html_snippet = v.visualize(graph, request)
             time.sleep(2)
             return render(request, "index.html", {
@@ -185,8 +172,8 @@ def visualize(request):
                 "tree_html": tree_html,
                 "graph_visualized": graph,
                 "current_visualizer": v.identifier(),
-                "current_workspace": api_config.current_workspace,
-                "workspaces": list(api_config.workspaces.keys())
+                "current_workspace": state.current_workspace,
+                "workspaces": list(state.workspaces.keys())
             })
 
     
@@ -212,9 +199,8 @@ def create_node(request):
         if not node_id:
             return JsonResponse({"error": "Missing node ID."}, status=400)
 
-        api_config = apps.get_app_config("api")
 
-        if api_config.graph.get_node(node_id):
+        if state.graph.get_node(node_id):
             return JsonResponse({"error": f"Node '{node_id}' already exists."}, status=400)
 
         new_node = Node(node_id)
@@ -228,11 +214,11 @@ def create_node(request):
             new_node.add_attribute(key, value)
         
 
-        api_config.graph.insert_node(new_node)
+        state.graph.insert_node(new_node)
 
-        api_config.tree.roots.append(TreeNode(new_node, None, "node"))
+        state.tree.roots.append(TreeNode(new_node, None, "node"))
 
-        api_config.load_tree()
+        state.load_tree()
 
         return JsonResponse({
             "success": True
@@ -258,8 +244,7 @@ def create_edge(request):
         if not source_id or not target_id or not relation:
             return JsonResponse({"error": "Missing edge id, source, target or relation."}, status=400)
 
-        api_config = apps.get_app_config("api")
-        graph = api_config.graph
+        graph = state.graph
 
         source_node = graph.get_node(source_id)
         target_node = graph.get_node(target_id)
@@ -277,7 +262,7 @@ def create_edge(request):
 
         graph.insert_edge(new_edge)
 
-        api_config.load_tree() 
+        state.load_tree() 
 
         return JsonResponse({"success": True})
 
@@ -286,7 +271,6 @@ def create_edge(request):
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
 def delete_node(request):
-    api_config = apps.get_app_config("api")
     if request.method != "POST":
         return JsonResponse({"error": "Only POST allowed"}, status=405)
 
@@ -294,20 +278,20 @@ def delete_node(request):
         data = json.loads(request.body)
         node_id = data.get("id")
 
-        node = api_config.graph.get_node(node_id)
+        node = state.graph.get_node(node_id)
         if not node:
             return JsonResponse({"error": f"Node '{node_id}' not found."}, status=404)
         if node.edges:
             return JsonResponse({"error": "Node has edges."}, status=400)
         
-        success = api_config.graph.remove_node(node)
+        success = state.graph.remove_node(node)
         if not success:
             return JsonResponse({"success": False, "error": "Can not delete node."})
 
-        visualizer = api_config.visualizers[0]
-        html_snippet = visualizer.visualize(api_config.graph, request)
-        api_config.load_tree()
-        tree_html = generate_tree_html(api_config.tree.roots)
+        visualizer = state.visualizers[0]
+        html_snippet = visualizer.visualize(state.graph, request)
+        state.load_tree()
+        tree_html = generate_tree_html(state.tree.roots)
 
         return JsonResponse({
             "success": True,
@@ -322,8 +306,7 @@ def delete_node(request):
     
 def delete_edge(request):
 
-    api_config = apps.get_app_config('api')
-    graph = apps.get_app_config('api').graph
+    graph = state.graph
     if request.method == "POST":
         data = json.loads(request.body)
         origin = data.get("origin")
@@ -337,10 +320,10 @@ def delete_edge(request):
             if not success:
                 return JsonResponse({"success": False, "error": "Edge not found"})
 
-            visualizer = api_config.visualizers[0]
+            visualizer = state.visualizers[0]
             html_snippet = visualizer.visualize(graph, request)
-            api_config.load_tree()
-            tree_html = generate_tree_html(api_config.tree.roots)
+            state.load_tree()
+            tree_html = generate_tree_html(state.tree.roots)
 
             return JsonResponse({
                 "success": True,
@@ -353,7 +336,6 @@ def delete_edge(request):
             return JsonResponse({"success": False, "error": str(e)})
 
 def edit_edge(request):
-    api_config = apps.get_app_config('api')
     if request.method == "POST":
         try:
             data = json.loads(request.body)
@@ -371,14 +353,14 @@ def edit_edge(request):
             print(target_id)
             print(new_relation)
 
-            edge = api_config.graph.get_edge(origin_id, target_id)
-            api_config.graph.remove_edge(origin_id, target_id, old_relation)
+            edge = state.graph.get_edge(origin_id, target_id)
+            state.graph.remove_edge(origin_id, target_id, old_relation)
             edge.relation = new_relation
-            api_config.graph.insert_edge(edge)
-            visualizer = api_config.visualizers[0]
-            html_snippet = visualizer.visualize(api_config.graph, request)
-            api_config.load_tree()
-            tree_html = generate_tree_html(api_config.tree.roots)
+            state.graph.insert_edge(edge)
+            visualizer = state.visualizers[0]
+            html_snippet = visualizer.visualize(state.graph, request)
+            state.load_tree()
+            tree_html = generate_tree_html(state.tree.roots)
 
             return JsonResponse({
                 "success": True,
@@ -393,7 +375,6 @@ def edit_edge(request):
     else:
         return JsonResponse({'success': False, 'error': 'Only POST allowed'})
 def edit_node(request):
-    api_config = apps.get_app_config('api')
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -405,18 +386,18 @@ def edit_node(request):
             
             if not isinstance(properties, dict) or len(properties) != 1:
                 return JsonResponse({'success': False, 'error': 'Exactly one property must be provided'})
-            node = api_config.graph.get_node(node_id)
+            node = state.graph.get_node(node_id)
             if not node:
                 return JsonResponse({'success': False, 'error': 'Node not found'})
             key, value = next(iter(properties.items()))
-            success = api_config.graph.update_node(node, key, value)
+            success = state.graph.update_node(node, key, value)
             if not success:
                 return JsonResponse({"success": False, "error": "Can not edit node."})
 
-            visualizer = api_config.visualizers[0]
-            html_snippet = visualizer.visualize(api_config.graph, request)
-            api_config.load_tree()
-            tree_html = generate_tree_html(api_config.tree.roots)
+            visualizer = state.visualizers[0]
+            html_snippet = visualizer.visualize(state.graph, request)
+            state.load_tree()
+            tree_html = generate_tree_html(state.tree.roots)
 
             return JsonResponse({
                 "success": True,
@@ -436,7 +417,7 @@ def search(request):
     if not query:
         return JsonResponse({"success": False, "error": "Query is required"}, status=400)
 
-    old_graph = apps.get_app_config('api').graph
+    old_graph = state.graph
     if old_graph is None:
         return JsonResponse({"success": False, "error": "No graph loaded"}, status=400)
 
@@ -446,8 +427,8 @@ def search(request):
         search_node(new_graph, old_graph, node, query)
 
     # ažuriranje aplikacije sa novim grafom
-    apps.get_app_config('api').graph = new_graph
-    apps.get_app_config('api').load_tree()
+    state.graph = new_graph
+    state.load_tree()
 
     return JsonResponse({"success": True})
 
@@ -537,11 +518,10 @@ def clear_graph(request):
         return JsonResponse({"error": "Only POST allowed"}, status=405)
     
     try:
-        api_config = apps.get_app_config('api')
-        api_config.graph = None
-        api_config.base_graph = None
-        api_config.tree = None
-        api_config.current_visualizer = None
+        state.graph = None
+        state.base_graph = None
+        state.tree = None
+        state.current_visualizer = None
         
         return JsonResponse({"success": True})
     except Exception as e:
@@ -555,7 +535,7 @@ def filter_view(request):
     if not condition:
         return JsonResponse({"success": False, "error": "Condition is required"}, status=400)
 
-    old_graph = apps.get_app_config('api').graph
+    old_graph = state.graph
     if old_graph is None:
         return JsonResponse({"success": False, "error": "No graph loaded"}, status=400)
 
@@ -641,8 +621,8 @@ def filter_view(request):
                 new_origin.add_edge(new_edge)
 
     # Ažuriraj aktivni graf
-    apps.get_app_config('api').graph = new_graph
-    apps.get_app_config('api').load_tree()
+    state.graph = new_graph
+    state.load_tree()
 
     return JsonResponse({"success": True})
 
@@ -650,41 +630,38 @@ def reset_graph(request):
     if request.method != "POST":
         return JsonResponse({"error": "Only POST allowed"}, status=405)
 
-    api_config = apps.get_app_config('api')
     
-    api_config.graph = api_config.base_graph
+    state.graph = state.base_graph
     
-    api_config.load_tree()
+    state.load_tree()
 
     return JsonResponse({"success": True})
 
 def add_workspace(request):
-    api = apps.get_app_config("api")
-    if not api.graph:
+    if not state.graph:
         return JsonResponse({"error": "No graph loaded"}, status=400)
-    if not api.visualizer:
+    if not state.visualizer:
         return JsonResponse({"error": "No visualizer selected"}, status=400)
-    if not api.loader:
+    if not state.loader:
         return JsonResponse({"error": "No loader used"}, status=400)
 
     ws_id = str(uuid.uuid4())[:8]
 
-    api.workspaces[ws_id] = {
-        "graph": api.graph,
-        "base_graph": api.base_graph,
-        "tree": api.tree,
-        "visualizer": api.visualizer,
-        "loader": api.loader
+    state.workspaces[ws_id] = {
+        "graph": state.graph,
+        "base_graph": state.base_graph,
+        "tree": state.tree,
+        "visualizer": state.visualizer,
+        "loader": state.loader
     }
-    api.current_workspace = ws_id
+    state.current_workspace = ws_id
     return JsonResponse({"success": True, "workspace_id": ws_id})
 
 
 def switch_workspace(request, ws_id):
-    api = apps.get_app_config("api")
-    success = api.switch_workspace(ws_id)
+    success = state.switch_workspace(ws_id)
     if not success:
         return JsonResponse({"error": "Workspace not found"}, status=404)
 
-    api.load_tree()
-    return redirect(f"/visualize?visualizer={api.visualizer.identifier()}")
+    state.load_tree()
+    return redirect(f"/visualize?visualizer={state.visualizer.identifier()}")

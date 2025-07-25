@@ -1,28 +1,94 @@
-[
-  {
-    "id": "1",
-    "title": "Clean Code",
-    "author": {
-      "id": "auth1",
-      "name": "Robert C. Martin",
-      "birth": {
-        "year": 1952,
-        "country": "USA"
-      }
+{
+  "people": [
+    {
+      "id": 1,
+      "name": "Sergey Prokopyev",
+      "hobbies": ["football", "tennis", "reading"],
+      "friends": [{"id": 2}, {"id": 6}, {"id": 10}, {"id": 11}]
     },
-    "tags": ["software", "craftsmanship", "clean"]
-  },
-  {
-    "id": "2",
-    "title": "The Pragmatic Programmer",
-    "author": {
-      "id": "auth2",
-      "name": "Andrew Hunt",
-      "birth": {
-        "year": 1964,
-        "country": "USA"
-      }
+    {
+      "id": 2,
+      "name": "Dmitry Petelin",
+      "hobbies": ["football", "bowling", "reading"],
+      "friends": [{"id": 1}, {"id": 6}, {"id": 10}]
     },
-    "tags": ["software", "development"]
-  }
-]
+    {
+      "id": 3,
+      "name": "Frank Rubio",
+      "hobbies": ["painting", "singing", "chess"],
+      "friends": [{"id": 4}, {"id": 6}, {"id": 12}]
+    },
+    {
+      "id": 4,
+      "name": "Nicole Mann",
+      "hobbies": ["cooking", "singing"],
+      "friends": [{"id": 3}, {"id": 6}]
+    },
+    {
+      "id": 5,
+      "name": "Josh Cassada",
+      "hobbies": ["fishing", "hunting", "hiking"],
+      "friends": [{"id": 6}, {"id": 13}]
+    },
+    {
+      "id": 6,
+      "name": "Koichi Wakata",
+      "hobbies": ["fishing", "cycling"],
+      "friends": [{"id": 2}, {"id": 3}, {"id": 4}, {"id": 5}]
+    },
+    {
+      "id": 7,
+      "name": "Anna Kikina",
+      "hobbies": ["dancing", "photography"],
+      "friends": [{"id": 8}, {"id": 12}]
+    },
+    {
+      "id": 8,
+      "name": "Fei Junlong",
+      "hobbies": ["teaching", "golfing"],
+      "friends": [{"id": 7}, {"id": 9}]
+    },
+    {
+      "id": 9,
+      "name": "Deng Qingming",
+      "hobbies": ["dancing", "yoga"],
+      "friends": [{"id": 8}, {"id": 14}]
+    },
+    {
+      "id": 10,
+      "name": "Zhang Lu",
+      "hobbies": ["dancing", "teaching", "swimming"],
+      "friends": [{"id": 2}, {"id": 1}]
+    },
+    {
+      "id": 11,
+      "name": "Yuri Malenchenko",
+      "hobbies": ["spacewalking", "tennis"],
+      "friends": [{"id": 1}, {"id": 12}, {"id": 15}]
+    },
+    {
+      "id": 12,
+      "name": "Christina Koch",
+      "hobbies": ["hiking", "photography"],
+      "friends": [{"id": 3}, {"id": 7}, {"id": 11}]
+    },
+    {
+      "id": 13,
+      "name": "Oleg Artemyev",
+      "hobbies": ["fishing", "skiing"],
+      "friends": [{"id": 5}, {"id": 14}]
+    },
+    {
+      "id": 14,
+      "name": "Samantha Cristoforetti",
+      "hobbies": ["yoga", "astronomy"],
+      "friends": [{"id": 9}, {"id": 13}, {"id": 15}]
+    },
+    {
+      "id": 15,
+      "name": "Thomas Pesquet",
+      "hobbies": ["flying", "astronomy"],
+      "friends": [{"id": 11}, {"id": 14}]
+    }
+  ]
+}
