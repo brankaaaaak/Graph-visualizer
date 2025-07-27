@@ -1,0 +1,50 @@
+{
+  "people": [
+    {
+      "id": 1,
+      "name": "Alice Novak",
+      "hobbies": ["reading", "chess"],
+      "friends": [{"id": 2}, {"id": 3}]
+    },
+    {
+      "id": 2,
+      "name": "Branko Petrović",
+      "hobbies": ["football", "gaming"],
+      "friends": [{"id": 4}]
+    },
+    {
+      "id": 3,
+      "name": "Catherine Liu",
+      "hobbies": ["yoga", "photography"],
+      "friends": [{"id": 5}]
+    },
+    {
+      "id": 4,
+      "name": "Daniel Schmidt",
+      "hobbies": ["coding", "hiking"],
+      "friends": [{"id": 6}]
+    },
+    {
+      "id": 5,
+      "name": "Elena Rossi",
+      "hobbies": ["drawing", "running"],
+      "friends": [{"id": 6}, {"id": 7}]
+    },
+    {
+      "id": 6,
+      "name": "Farid Khan",
+      "hobbies": ["robotics", "biking"]
+    },
+    {
+      "id": 7,
+      "name": "Goran Marković",
+      "hobbies": ["music", "skiing"],
+      "friends": [{"id": 8}]
+    },
+    {
+      "id": 8,
+      "name": "Hana Al-Salem",
+      "hobbies": ["languages", "cooking"]
+    }
+  ]
+}

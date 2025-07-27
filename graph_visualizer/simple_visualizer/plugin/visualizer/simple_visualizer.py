@@ -91,9 +91,21 @@ class SimpleVisualizer(BaseVisualizer):
                 .attr('id', function (d) { return d.id; })
                 .attr("pointer-events", "all")
                 .on("mousedown", function() { d3.event.stopPropagation(); })
-                .on('click', function () {
+                .on("click", function () {
                     nodeClick(this);
-                });
+                })
+                .on("dragstart", function (d) {
+                    d.fixed = true;
+                })
+                .on("mouseover", function (d) {
+                    d3.select(this).append("title")
+                        .text(d.attributes.join(", "));
+                })
+                .on("mouseout", function () {
+                    d3.select(this).select("title").remove();
+                })
+                .call(force.drag);
+
 
             d3.selectAll('.node').each(function (d) { nodeView(d, '#241f4c'); });
 

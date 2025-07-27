@@ -87,11 +87,22 @@ class BlockVisualizer(BaseVisualizer):
                 .attr("class", "node")
                 .attr("id", function (d) { return d.id; })
                 .attr("pointer-events", "all")
-                .on("mousedown", function() { d3.event.stopPropagation(); })
-                .call(force.drag)
-                .on('click', function () {
+                .on("mousedown", function () { d3.event.stopPropagation(); })
+                .on("dragstart", function (d) {
+                    d.fixed = true;
+                })
+                .on("click", function () {
                     nodeClick(this);
-                });
+                })
+                .on("mouseover", function (d) {
+                    d3.select(this).append("title")
+                        .text(d.attributes.join(", "));
+                })
+                .on("mouseout", function () {
+                    d3.select(this).select("title").remove();
+                })
+                .call(force.drag);
+
 
             node.each(function (d) {
                 var g = d3.select(this);

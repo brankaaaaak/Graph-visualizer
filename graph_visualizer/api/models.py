@@ -591,7 +591,8 @@ class Tree(object):
             nodes = self._roots
         new_nodes = []
         for node in nodes:
-            if node.object_type != "edge" and node.object.id == id:
+            #if node.object_type != "edge" and node.object.id == id:
+            if node.object_type != "edge" and str(node.object.id) == str(id):
                 return node
             node.load_children()
             new_nodes += node.children
