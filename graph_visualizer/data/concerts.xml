@@ -89,4 +89,184 @@
             <availability>Available</availability>
         </tickets>
     </concert>
+    <concert id="11" genre="Rock" location="Hyde Park">
+        <artist>Foo Fighters</artist>
+        <date>2023-07-10</date>
+        <duration>2h 10m</duration>
+        <tickets>
+            <price>95.00</price>
+            <availability>Few Left</availability>
+        </tickets>
+    </concert>
+    <concert id="12" genre="Pop" location="O2 Arena">
+        <artist>Dua Lipa</artist>
+        <date>2023-08-15</date>
+        <duration>1h 50m</duration>
+        <tickets>
+            <price>88.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="13" genre="Electronic" location="Ultra Music Festival">
+        <artist>David Guetta</artist>
+        <date>2024-03-25</date>
+        <duration>1h 40m</duration>
+        <tickets>
+            <price>110.00</price>
+            <availability>Sold Out</availability>
+        </tickets>
+    </concert>
+    <concert id="14" genre="Jazz" location="Blue Note Tokyo">
+        <artist>Diana Krall</artist>
+        <date>2023-10-08</date>
+        <duration>1h 20m</duration>
+        <tickets>
+            <price>75.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="15" genre="Classical" location="Carnegie Hall">
+        <artist>Yo-Yo Ma</artist>
+        <date>2024-05-18</date>
+        <duration>2h 5m</duration>
+        <tickets>
+            <price>100.00</price>
+            <availability>Few Left</availability>
+        </tickets>
+    </concert>
+    <concert id="16" genre="Hip Hop" location="Barclays Center">
+        <artist>Drake</artist>
+        <date>2023-11-12</date>
+        <duration>1h 55m</duration>
+        <tickets>
+            <price>115.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="17" genre="Indie" location="Coachella">
+        <artist>Tame Impala</artist>
+        <date>2024-04-14</date>
+        <duration>1h 30m</duration>
+        <tickets>
+            <price>98.00</price>
+            <availability>Sold Out</availability>
+        </tickets>
+    </concert>
+    <concert id="18" genre="Folk" location="Newport Folk Festival">
+        <artist>Fleet Foxes</artist>
+        <date>2023-07-22</date>
+        <duration>1h 45m</duration>
+        <tickets>
+            <price>80.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="19" genre="Metal" location="Download Festival">
+        <artist>Slipknot</artist>
+        <date>2024-06-10</date>
+        <duration>2h 5m</duration>
+        <tickets>
+            <price>100.00</price>
+            <availability>Few Left</availability>
+        </tickets>
+    </concert>
+    <concert id="20" genre="Reggae" location="Rototom Sunsplash">
+        <artist>Protoje</artist>
+        <date>2024-08-16</date>
+        <duration>1h 40m</duration>
+        <tickets>
+            <price>60.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="21" genre="Rock" location="Tokyo Dome">
+        <artist>Red Hot Chili Peppers</artist>
+        <date>2023-12-10</date>
+        <duration>2h</duration>
+        <tickets>
+            <price>105.00</price>
+            <availability>Sold Out</availability>
+        </tickets>
+    </concert>
+    <concert id="22" genre="Pop" location="Accor Arena">
+        <artist>Adele</artist>
+        <date>2023-10-20</date>
+        <duration>2h</duration>
+        <tickets>
+            <price>130.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="23" genre="Jazz" location="Ronnie Scott's">
+        <artist>Esperanza Spalding</artist>
+        <date>2023-11-28</date>
+        <duration>1h 30m</duration>
+        <tickets>
+            <price>70.00</price>
+            <availability>Few Left</availability>
+        </tickets>
+    </concert>
+    <concert id="24" genre="Electronic" location="Electric Daisy Carnival">
+        <artist>Deadmau5</artist>
+        <date>2024-05-20</date>
+        <duration>1h 50m</duration>
+        <tickets>
+            <price>95.00</price>
+            <availability>Sold Out</availability>
+        </tickets>
+    </concert>
+    <concert id="25" genre="Classical" location="Vienna Musikverein">
+        <artist>Vienna Philharmonic</artist>
+        <date>2024-01-01</date>
+        <duration>2h</duration>
+        <tickets>
+            <price>150.00</price>
+            <availability>Sold Out</availability>
+        </tickets>
+    </concert>
+    <concert id="26" genre="Hip Hop" location="United Center">
+        <artist>J. Cole</artist>
+        <date>2023-09-14</date>
+        <duration>1h 50m</duration>
+        <tickets>
+            <price>90.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="27" genre="Folk" location="Greek Theatre">
+        <artist>Iron and Wine</artist>
+        <date>2023-10-05</date>
+        <duration>1h 45m</duration>
+        <tickets>
+            <price>70.00</price>
+            <availability>Few Left</availability>
+        </tickets>
+    </concert>
+    <concert id="28" genre="Indie" location="Primavera Sound">
+        <artist>Vampire Weekend</artist>
+        <date>2024-06-03</date>
+        <duration>1h 40m</duration>
+        <tickets>
+            <price>92.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="29" genre="Metal" location="Hellfest">
+        <artist>Iron Maiden</artist>
+        <date>2023-06-20</date>
+        <duration>2h</duration>
+        <tickets>
+            <price>110.00</price>
+            <availability>Sold Out</availability>
+        </tickets>
+    </concert>
+    <concert id="30" genre="Reggae" location="One Love Festival">
+        <artist>Chronixx</artist>
+        <date>2024-09-12</date>
+        <duration>1h 30m</duration>
+        <tickets>
+            <price>65.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
 </concerts>
