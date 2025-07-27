@@ -48,7 +48,9 @@ python setup.py install
 cd ..
 ```
 ### 3. Run the Django server
+```bash
 python manage.py runserver
+```
 
 Then open your browser and navigate to:
 📍 http://127.0.0.1:8000/
