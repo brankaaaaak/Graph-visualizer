@@ -1,0 +1,78 @@
+<world>
+    <location id="1" continent="Asia" climate="Tropical">
+        <name>Bali</name>
+        <country>Indonesia</country>
+        <activities>
+            <activity>Surfing</activity>
+            <activity>Yoga</activity>
+            <activity>Hiking</activity>
+        </activities>
+    </location>
+
+    <island id="2" continent="Oceania" climate="Humid">
+        <name>Bora Bora</name>
+        <country>French Polynesia</country>
+        <features>
+            <feature>Lagoon</feature>
+            <feature>Overwater Bungalows</feature>
+            <feature>Coral Reef</feature>
+        </features>
+    </island>
+
+    <desert id="3" continent="Africa" climate="Arid">
+        <name>Namib Desert</name>
+        <country>Namibia</country>
+        <features>
+            <feature>Red Dunes</feature>
+            <feature>Dead Vlei</feature>
+            <feature>Oryx</feature>
+        </features>
+    </desert>
+
+    <location id="4" continent="South America" climate="Temperate">
+        <name>Machu Picchu</name>
+        <country>Peru</country>
+        <activities>
+            <activity>Hiking</activity>
+            <activity>History Tours</activity>
+        </activities>
+    </location>
+
+    <island id="5" continent="Asia" climate="Tropical">
+        <name>Palawan</name>
+        <country>Philippines</country>
+        <features>
+            <feature>Limestone Cliffs</feature>
+            <feature>Underground River</feature>
+        </features>
+    </island>
+
+    <desert id="6" continent="South America" climate="Dry">
+        <name>Atacama</name>
+        <country>Chile</country>
+        <features>
+            <feature>Salt Flats</feature>
+            <feature>Geysers</feature>
+            <feature>Valle de la Luna</feature>
+        </features>
+    </desert>
+
+    <location id="7" continent="Africa" climate="Tropical">
+        <name>Zanzibar</name>
+        <country>Tanzania</country>
+        <activities>
+            <activity>Spice Tour</activity>
+            <activity>Diving</activity>
+            <activity>Stone Town Tour</activity>
+        </activities>
+    </location>
+
+    <location id="8" continent="Europe" climate="Mediterranean">
+        <name>Santorini</name>
+        <country>Greece</country>
+        <activities>
+            <activity>Sunset Watching</activity>
+            <activity>Wine Tasting</activity>
+        </activities>
+    </location>
+</world>

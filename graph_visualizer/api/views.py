@@ -284,6 +284,18 @@ def delete_node(request):
         if node.edges:
             return JsonResponse({"error": "Node has edges."}, status=400)
         
+        has_any_edge = False
+        for other in state.graph.nodes:
+            for edge in other.edges:
+                if edge.target == node or edge.origin == node:
+                    has_any_edge = True
+                    break
+            if has_any_edge:
+                break
+
+        if has_any_edge:
+            return JsonResponse({"error": "Node has incoming or outgoing edges."}, status=400)
+        
         success = state.graph.remove_node(node)
         if not success:
             return JsonResponse({"success": False, "error": "Can not delete node."})

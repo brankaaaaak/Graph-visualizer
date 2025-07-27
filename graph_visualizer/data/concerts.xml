@@ -1,0 +1,92 @@
+<concerts>
+    <concert id="1" genre="Rock" location="Wembley Stadium">
+        <artist>Queen</artist>
+        <date>1986-07-12</date>
+        <duration>2h 15m</duration>
+        <tickets>
+            <price>45.00</price>
+            <availability>Sold Out</availability>
+        </tickets>
+    </concert>
+    <concert id="2" genre="Pop" location="Madison Square Garden">
+        <artist>Taylor Swift</artist>
+        <date>2023-10-15</date>
+        <duration>2h 30m</duration>
+        <tickets>
+            <price>120.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="3" genre="Electronic" location="Tomorrowland">
+        <artist>Armin van Buuren</artist>
+        <date>2024-07-21</date>
+        <duration>1h 45m</duration>
+        <tickets>
+            <price>85.00</price>
+            <availability>Few Left</availability>
+        </tickets>
+    </concert>
+    <concert id="4" genre="Jazz" location="Montreux Jazz Festival">
+        <artist>Herbie Hancock</artist>
+        <date>2022-07-10</date>
+        <duration>1h 30m</duration>
+        <tickets>
+            <price>60.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="5" genre="Classical" location="Sydney Opera House">
+        <artist>Lang Lang</artist>
+        <date>2023-12-01</date>
+        <duration>2h</duration>
+        <tickets>
+            <price>95.00</price>
+            <availability>Sold Out</availability>
+        </tickets>
+    </concert>
+    <concert id="6" genre="Hip Hop" location="Staples Center">
+        <artist>Kendrick Lamar</artist>
+        <date>2023-11-05</date>
+        <duration>1h 50m</duration>
+        <tickets>
+            <price>110.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="7" genre="Indie" location="Glastonbury">
+        <artist>Arctic Monkeys</artist>
+        <date>2023-06-24</date>
+        <duration>1h 40m</duration>
+        <tickets>
+            <price>70.00</price>
+            <availability>Few Left</availability>
+        </tickets>
+    </concert>
+    <concert id="8" genre="Folk" location="Red Rocks Amphitheatre">
+        <artist>Bon Iver</artist>
+        <date>2023-09-18</date>
+        <duration>1h 45m</duration>
+        <tickets>
+            <price>65.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+    <concert id="9" genre="Metal" location="Wacken Open Air">
+        <artist>Metallica</artist>
+        <date>2023-08-02</date>
+        <duration>2h</duration>
+        <tickets>
+            <price>90.00</price>
+            <availability>Sold Out</availability>
+        </tickets>
+    </concert>
+    <concert id="10" genre="Reggae" location="Kingston National Stadium">
+        <artist>Damian Marley</artist>
+        <date>2024-01-25</date>
+        <duration>1h 35m</duration>
+        <tickets>
+            <price>55.00</price>
+            <availability>Available</availability>
+        </tickets>
+    </concert>
+</concerts>
