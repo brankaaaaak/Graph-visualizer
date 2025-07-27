@@ -29,6 +29,7 @@ venv\Scripts\activate #on Windows
 ### 2. Install Django and all plugin dependencies
 From the root of the project, run:
 
+```bash
 pip install django
 cd xml_loader
 python setup.py install
@@ -42,7 +43,7 @@ cd ..
 cd block_visualizer
 python setup.py install
 cd ..
-
+```
 ### 3. Run the Django server
 python manage.py runserver
 
