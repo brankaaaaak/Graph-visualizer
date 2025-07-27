@@ -1,7 +1,23 @@
 import copy
 from django.db import models
-# Create your models here.
+"""
+Data structures used to represent the graph model.
+
+Contains:
+- Node: a graph node with attributes and edges
+- Edge: a connection between two nodes with a relation
+- Graph: collection of nodes and algorithms
+- TreeNode / Tree: hierarchical structure for tree view
+"""
 class Node:
+    """
+    Represents a node in the graph.
+
+    Attributes:
+        id (Any): Unique identifier.
+        attributes (dict): Key-value attributes of the node.
+        edges (List[Edge]): Outgoing edges from the node.
+    """
     def __init__(self, id):
         self._id = id
         self._edges = []
@@ -82,6 +98,16 @@ class Node:
 
 
 class Edge:
+    """
+    Represents an edge between two nodes.
+
+    Attributes:
+        origin (Node): Source node.
+        target (Node): Destination node.
+        relation (str): Relation name or label.
+        weight (float): Weight of the edge.
+        directed (bool): Whether the edge is directed.
+    """
     def __init__(self, origin, target, relation, weight, directed):
         self._origin = origin
         self._target = target
@@ -142,6 +168,13 @@ class Edge:
         return self._origin, self._target
 
 class Graph:
+    """
+    Represents a graph structure.
+
+    Attributes:
+        nodes (List[Node]): List of all nodes in the graph.
+        directed (bool): Whether the graph is directed.
+    """
     def __init__(self):
         self._nodes = []
         self._visited_nodes = []
@@ -253,18 +286,17 @@ class Graph:
                 if edge.target == origin_node and edge.relation == relation:
                     target_node.edges.remove(edge)
                     break
-        #self._visited_nodes.clear()
-        #self._path.clear()
-        #self._nodes_to_contour.clear()
         return True
     def find_subgraphs(self, nodes=None, graphs=None):   
+        """
+        Splits the graph into subgraphs (connected components).
+        """
         if not nodes:
             nodes = []
         if not graphs:
             graphs = []
         changes = True
         if not nodes:
-            #nodes = copy.deepcopy(self._nodes)
             nodes = list(self._nodes)
 
         connected = {}
@@ -317,12 +349,6 @@ class Graph:
     def remove_node(self, node_to_remove):
         if node_to_remove in self.nodes:
             self._nodes.remove(node_to_remove)
-            """if node_to_remove in self._visited_nodes:
-                self._visited_nodes.remove(node_to_remove)
-            if node_to_remove in self._nodes_to_contour:
-                self._nodes_to_contour.remove(node_to_remove)
-            if node_to_remove in self._path:
-                self._path.remove(node_to_remove)"""
             return True
         return False
 
@@ -360,6 +386,9 @@ class Graph:
             return list(self.get_edges())[0].is_directed
         
     def find_conture_nodes(self):   
+        """
+        Returns nodes with no incoming edges.
+        """
         self._nodes_to_contour = []
         self.visited = []
         for node in self.nodes:
@@ -383,6 +412,9 @@ class Graph:
             self._visited_nodes.append(node)
 
     def has_cycle_undirected(self):  
+        """
+        Checks for cycles in an undirected graph using DFS.
+        """
         self.visited = []
         for node in self.nodes:
             if node in self.visited:
@@ -406,6 +438,9 @@ class Graph:
         return False
     
     def find_not_destination_nodes(self):   
+        """
+        Returns nodes with no outgoing edges.
+        """
         dict = {}
         for node in self.nodes:
             dict[node] = False
@@ -436,7 +471,16 @@ class NodeIdGenerator:
 nodeId = NodeIdGenerator()
 
 class TreeNode(object):
+    """
+    Represents a node in a tree view (hierarchical structure).
 
+    Attributes:
+        object (Node | Edge): Original graph object.
+        parent (TreeNode): Parent node in the tree.
+        label (str): Relationship label.
+        children (List[TreeNode]): Child tree nodes.
+        open (bool): Whether the node is expanded.
+    """
     def __init__(self, object, parent, type):
         self._opened = False
         self._object = object
@@ -457,60 +501,6 @@ class TreeNode(object):
     def opened(self, value):
         self._opened = value
     
-    """
-    def open(self):
-        self._opened = True
-        if len(self._children) <= 0:
-            if self._object_type == "node":
-                # Dodaj povezane edge-ove, ne stringove
-                for edge in self._object.edges:
-                    self._children.append(TreeNode(edge, self, "edge"))
-            elif self._object_type == "edge":
-                # Dodaj ciljni čvor za edge
-                self._children.append(TreeNode(self._object.target, self, "node"))
-    def open(self):
-        self._opened = True
-
-        if self._children:
-            return  # već otvoreno
-
-        if self._object_type == "node":
-            # Grupiraj po relaciji — dodaj samo relacije, ne pojedinačne edge-ove
-            relations = self._object.get_relations()
-            for relation in relations:
-                self._children.append(TreeNode(relation, self, "edge"))  # ovdje je object string: relation
-
-        elif self._object_type == "edge":
-            # self._object je string, npr. "hobbies"
-            # self._parent.object je Node
-            related_nodes = self._parent.object.get_related_nodes(self._object)
-            for target_node in related_nodes:
-                self._children.append(TreeNode(target_node, self, "node"))
-
-    """
-    def open(self):
-        self._opened = True
-        if len(self._children) <= 0:
-            if self._object_type == "node":
-                self.add_children(self._object.get_relations())
-            else:
-                self.add_children(self._parent.object.get_related_nodes(self._object))
-    def load_children(self):
-        if len(self._children) <= 0:
-            if self._object_type == "node":
-                self.add_children(self._object.get_relations())
-            else:
-                self.add_children(self._parent.object.get_related_nodes(self._object))
-
-    def open_parents(self):
-        self.open()
-        if self._parent:
-            self._parent.open_parents()
-
-
-    def close(self):
-        self._opened = False
-
     @property
     def object(self):
         return self._object
@@ -530,6 +520,29 @@ class TreeNode(object):
     @property
     def parent(self):
         return self._parent
+    
+    def open(self):
+        self._opened = True
+        if len(self._children) <= 0:
+            if self._object_type == "node":
+                self.add_children(self._object.get_relations())
+            else:
+                self.add_children(self._parent.object.get_related_nodes(self._object))
+            
+    def load_children(self):
+        if len(self._children) <= 0:
+            if self._object_type == "node":
+                self.add_children(self._object.get_relations())
+            else:
+                self.add_children(self._parent.object.get_related_nodes(self._object))
+
+    def open_parents(self):
+        self.open()
+        if self._parent:
+            self._parent.open_parents()
+
+    def close(self):
+        self._opened = False
 
     def find_node(self, id):
         if id == self._id:
@@ -552,15 +565,18 @@ class TreeNode(object):
 
 
 class Tree(object):
+    """
+    Represents the entire tree (hierarchical graph structure).
 
+    Attributes:
+        roots (List[TreeNode]): List of root nodes.
+    """
     def __init__(self, roots=None):
         nodeId.reset()
         self._roots = roots if roots is not None else []
-        self._last_opened = 0
 
     def empty(self):
         self._roots = []
-        self._last_opened = 0
         nodeId.reset()
 
     @property
@@ -570,14 +586,6 @@ class Tree(object):
     @roots.setter
     def roots(self, roots):
         self._roots = roots
-
-    @property
-    def last_opened(self):
-        return self._last_opened
-
-    @last_opened.setter
-    def last_opened(self, last_opened):
-        self._last_opened = last_opened
 
     def find_tree_node(self, id):
         for root_node in self._roots:
