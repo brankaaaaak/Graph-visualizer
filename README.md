@@ -1,4 +1,7 @@
 # Graph-visualizer
+[![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Django](https://img.shields.io/badge/Django-4.x-blueviolet)](https://www.djangoproject.com/)
+
 Graph Visualizer is a Django-based web platform for visualizing and interacting with graph data.  
 It supports pluggable data source parsers (loaders) and graph visualizers, offering a flexible and extensible architecture.
 
