@@ -1,0 +1,279 @@
+<world> 
+    <location id="1" continent="Asia" climate="Tropical">
+        <name>Bali</name>
+        <country>Indonesia</country>
+        <activities>
+            <activity>Surfing</activity>
+            <activity>Yoga</activity>
+            <activity>Hiking</activity>
+        </activities>
+    </location>
+
+    <island id="2" continent="Oceania" climate="Humid">
+        <name>Bora Bora</name>
+        <country>French Polynesia</country>
+        <features>
+            <feature>Lagoon</feature>
+            <feature>Overwater Bungalows</feature>
+            <feature>Coral Reef</feature>
+        </features>
+    </island>
+
+    <desert id="3" continent="Africa" climate="Arid">
+        <name>Namib Desert</name>
+        <country>Namibia</country>
+        <features>
+            <feature>Red Dunes</feature>
+            <feature>Dead Vlei</feature>
+            <feature>Oryx</feature>
+        </features>
+    </desert>
+
+    <location id="4" continent="South America" climate="Temperate">
+        <name>Machu Picchu</name>
+        <country>Peru</country>
+        <activities>
+            <activity>Hiking</activity>
+            <activity>History Tours</activity>
+        </activities>
+    </location>
+
+    <island id="5" continent="Asia" climate="Tropical">
+        <name>Palawan</name>
+        <country>Philippines</country>
+        <features>
+            <feature>Limestone Cliffs</feature>
+            <feature>Underground River</feature>
+        </features>
+    </island>
+
+    <desert id="6" continent="South America" climate="Dry">
+        <name>Atacama</name>
+        <country>Chile</country>
+        <features>
+            <feature>Salt Flats</feature>
+            <feature>Geysers</feature>
+            <feature>Valle de la Luna</feature>
+        </features>
+    </desert>
+
+    <location id="7" continent="Africa" climate="Tropical">
+        <name>Zanzibar</name>
+        <country>Tanzania</country>
+        <activities>
+            <activity>Spice Tour</activity>
+            <activity>Diving</activity>
+            <activity>Stone Town Tour</activity>
+        </activities>
+    </location>
+
+    <location id="8" continent="Europe" climate="Mediterranean">
+        <name>Santorini</name>
+        <country>Greece</country>
+        <activities>
+            <activity>Sunset Watching</activity>
+            <activity>Wine Tasting</activity>
+        </activities>
+    </location>
+
+    <island id="9" continent="Asia" climate="Tropical">
+        <name>Maldives</name>
+        <country>Maldives</country>
+        <features>
+            <feature>Coral Reefs</feature>
+            <feature>Luxury Resorts</feature>
+            <feature>Snorkeling</feature>
+        </features>
+    </island>
+
+    <island id="10" continent="Africa" climate="Tropical">
+        <name>Seychelles</name>
+        <country>Seychelles</country>
+        <features>
+            <feature>Granite Boulders</feature>
+            <feature>Marine Parks</feature>
+            <feature>Secluded Beaches</feature>
+        </features>
+    </island>
+
+    <location id="11" continent="North America" climate="Temperate">
+        <name>Banff</name>
+        <country>Canada</country>
+        <activities>
+            <activity>Hiking</activity>
+            <activity>Skiing</activity>
+            <activity>Lake Tour</activity>
+        </activities>
+    </location>
+
+    <location id="12" continent="Europe" climate="Continental">
+        <name>Hallstatt</name>
+        <country>Austria</country>
+        <activities>
+            <activity>Boat Riding</activity>
+            <activity>Salt Mine Tour</activity>
+        </activities>
+    </location>
+
+    <location id="13" continent="Asia" climate="Temperate">
+        <name>Kyoto</name>
+        <country>Japan</country>
+        <activities>
+            <activity>Temple Visit</activity>
+            <activity>Cherry Blossom Viewing</activity>
+        </activities>
+    </location>
+
+    <location id="14" continent="Europe" climate="Mediterranean">
+        <name>Amalfi Coast</name>
+        <country>Italy</country>
+        <activities>
+            <activity>Boat Ride</activity>
+            <activity>Food Tour</activity>
+        </activities>
+    </location>
+
+    <desert id="15" continent="Asia" climate="Arid">
+        <name>Gobi Desert</name>
+        <country>Mongolia</country>
+        <features>
+            <feature>Sand Dunes</feature>
+            <feature>Dinosaur Fossils</feature>
+        </features>
+    </desert>
+
+    <location id="16" continent="Africa" climate="Tropical">
+        <name>Victoria Falls</name>
+        <country>Zambia</country>
+        <activities>
+            <activity>Waterfall Viewing</activity>
+            <activity>Rafting</activity>
+        </activities>
+    </location>
+
+    <island id="17" continent="Oceania" climate="Tropical">
+        <name>Fiji</name>
+        <country>Fiji</country>
+        <features>
+            <feature>Coral Reefs</feature>
+            <feature>Volcanoes</feature>
+        </features>
+    </island>
+
+    <location id="18" continent="Asia" climate="Mountain">
+        <name>Himalayas</name>
+        <country>Nepal</country>
+        <activities>
+            <activity>Trekking</activity>
+            <activity>Climbing</activity>
+        </activities>
+    </location>
+
+    <location id="19" continent="South America" climate="Rainforest">
+        <name>Amazon</name>
+        <country>Brazil</country>
+        <activities>
+            <activity>Boat Safari</activity>
+            <activity>Wildlife Watching</activity>
+        </activities>
+    </location>
+
+    <location id="20" continent="Europe" climate="Temperate">
+        <name>Plitvice Lakes</name>
+        <country>Croatia</country>
+        <activities>
+            <activity>Waterfall Tour</activity>
+            <activity>Nature Walk</activity>
+        </activities>
+    </location>
+
+    <location id="21" continent="North America" climate="Desert">
+        <name>Grand Canyon</name>
+        <country>USA</country>
+        <activities>
+            <activity>Hiking</activity>
+            <activity>Helicopter Tour</activity>
+        </activities>
+    </location>
+
+    <island id="22" continent="Oceania" climate="Tropical">
+        <name>Cook Islands</name>
+        <country>New Zealand</country>
+        <features>
+            <feature>Lagoons</feature>
+            <feature>Polynesian Culture</feature>
+        </features>
+    </island>
+
+    <location id="23" continent="Africa" climate="Temperate">
+        <name>Cape Town</name>
+        <country>South Africa</country>
+        <activities>
+            <activity>Table Mountain Hike</activity>
+            <activity>Winelands Tour</activity>
+        </activities>
+    </location>
+
+    <desert id="24" continent="Asia" climate="Arid">
+        <name>Thar Desert</name>
+        <country>India</country>
+        <features>
+            <feature>Camel Safari</feature>
+            <feature>Sand Dunes</feature>
+        </features>
+    </desert>
+
+    <location id="25" continent="Europe" climate="Oceanic">
+        <name>Reykjavik</name>
+        <country>Iceland</country>
+        <activities>
+            <activity>Northern Lights</activity>
+            <activity>Hot Springs</activity>
+        </activities>
+    </location>
+
+    <location id="26" continent="Asia" climate="Tropical">
+        <name>Langkawi</name>
+        <country>Malaysia</country>
+        <activities>
+            <activity>Cable Car Ride</activity>
+            <activity>Island Hopping</activity>
+        </activities>
+    </location>
+
+    <island id="27" continent="Oceania" climate="Tropical">
+        <name>Moorea</name>
+        <country>French Polynesia</country>
+        <features>
+            <feature>Shark Diving</feature>
+            <feature>Mountain Views</feature>
+        </features>
+    </island>
+
+    <location id="28" continent="North America" climate="Subtropical">
+        <name>Tulum</name>
+        <country>Mexico</country>
+        <activities>
+            <activity>Beach Relaxation</activity>
+            <activity>Ruins Tour</activity>
+        </activities>
+    </location>
+
+    <location id="29" continent="Europe" climate="Continental">
+        <name>Bruges</name>
+        <country>Belgium</country>
+        <activities>
+            <activity>Canal Boat Ride</activity>
+            <activity>Chocolate Tasting</activity>
+        </activities>
+    </location>
+
+    <location id="30" continent="Asia" climate="Temperate">
+        <name>Petra</name>
+        <country>Jordan</country>
+        <activities>
+            <activity>Historical Site Visit</activity>
+            <activity>Desert Hiking</activity>
+        </activities>
+    </location>
+</world>
