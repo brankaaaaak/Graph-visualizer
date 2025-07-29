@@ -34,10 +34,15 @@ From the root of the project, run:
 
 ```bash
 pip install django
+pip install setuptools
+pip install rdflib
 cd xml_loader
 python setup.py install
 cd ..
 cd json_loader
+python setup.py install
+cd ..
+cd rdf_loader
 python setup.py install
 cd ..
 cd simple_visualizer
