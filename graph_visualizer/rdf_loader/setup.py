@@ -9,7 +9,7 @@ setup(
     namespace_packages=["plugin", "plugin.loader"],
     entry_points={
         "loader":
-        ["rdf-loader=plugin.loader.rdf_loader:RDFLoader"]
+        ["rdf-loader=plugin.loader.pdf_loader:RDFLoader"]
     },
     install_requires=[],
     classifiers=[

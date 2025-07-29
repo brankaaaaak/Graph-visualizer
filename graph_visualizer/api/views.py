@@ -185,6 +185,8 @@ def check_extension(loader_name, file):
             return file.name.endswith('.xml')
         case "JsonLoader":
             return file.name.endswith('.json')
+        case "RDFLoader":
+            return file.name.endswith(".ttl")
     return False  
 
 def create_node(request):

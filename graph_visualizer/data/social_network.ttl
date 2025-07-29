@@ -1,0 +1,1404 @@
+@prefix ex: <http://example.org/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+ex:User1 a foaf:Person ;
+  foaf:name "User1" ;
+  ex:knows ex:User2, ex:User3 ;
+  ex:created ex:Post1 .
+
+ex:Post1 a ex:Post ;
+  dc:title "Post by User1" ;
+  ex:author ex:User1 .
+
+ex:Comment1 a ex:Comment ;
+  dc:content "Comment by User1" ;
+  ex:author ex:User1 ;
+  ex:onPost ex:Post3 .
+
+ex:User2 a foaf:Person ;
+  foaf:name "User2" ;
+  ex:knows ex:User3, ex:User4 ;
+  ex:created ex:Post2 .
+
+ex:Post2 a ex:Post ;
+  dc:title "Post by User2" ;
+  ex:author ex:User2 .
+
+ex:Comment2 a ex:Comment ;
+  dc:content "Comment by User2" ;
+  ex:author ex:User2 ;
+  ex:onPost ex:Post4 .
+
+ex:User3 a foaf:Person ;
+  foaf:name "User3" ;
+  ex:knows ex:User4, ex:User5 ;
+  ex:created ex:Post3 .
+
+ex:Post3 a ex:Post ;
+  dc:title "Post by User3" ;
+  ex:author ex:User3 .
+
+ex:Comment3 a ex:Comment ;
+  dc:content "Comment by User3" ;
+  ex:author ex:User3 ;
+  ex:onPost ex:Post5 .
+
+ex:User4 a foaf:Person ;
+  foaf:name "User4" ;
+  ex:knows ex:User5, ex:User6 ;
+  ex:created ex:Post4 .
+
+ex:Post4 a ex:Post ;
+  dc:title "Post by User4" ;
+  ex:author ex:User4 .
+
+ex:Comment4 a ex:Comment ;
+  dc:content "Comment by User4" ;
+  ex:author ex:User4 ;
+  ex:onPost ex:Post6 .
+
+ex:User5 a foaf:Person ;
+  foaf:name "User5" ;
+  ex:knows ex:User6, ex:User7 ;
+  ex:created ex:Post5 .
+
+ex:Post5 a ex:Post ;
+  dc:title "Post by User5" ;
+  ex:author ex:User5 .
+
+ex:Comment5 a ex:Comment ;
+  dc:content "Comment by User5" ;
+  ex:author ex:User5 ;
+  ex:onPost ex:Post7 .
+
+ex:User6 a foaf:Person ;
+  foaf:name "User6" ;
+  ex:knows ex:User7, ex:User8 ;
+  ex:created ex:Post6 .
+
+ex:Post6 a ex:Post ;
+  dc:title "Post by User6" ;
+  ex:author ex:User6 .
+
+ex:Comment6 a ex:Comment ;
+  dc:content "Comment by User6" ;
+  ex:author ex:User6 ;
+  ex:onPost ex:Post8 .
+
+ex:User7 a foaf:Person ;
+  foaf:name "User7" ;
+  ex:knows ex:User8, ex:User9 ;
+  ex:created ex:Post7 .
+
+ex:Post7 a ex:Post ;
+  dc:title "Post by User7" ;
+  ex:author ex:User7 .
+
+ex:Comment7 a ex:Comment ;
+  dc:content "Comment by User7" ;
+  ex:author ex:User7 ;
+  ex:onPost ex:Post9 .
+
+ex:User8 a foaf:Person ;
+  foaf:name "User8" ;
+  ex:knows ex:User9, ex:User10 ;
+  ex:created ex:Post8 .
+
+ex:Post8 a ex:Post ;
+  dc:title "Post by User8" ;
+  ex:author ex:User8 .
+
+ex:Comment8 a ex:Comment ;
+  dc:content "Comment by User8" ;
+  ex:author ex:User8 ;
+  ex:onPost ex:Post10 .
+
+ex:User9 a foaf:Person ;
+  foaf:name "User9" ;
+  ex:knows ex:User10, ex:User11 ;
+  ex:created ex:Post9 .
+
+ex:Post9 a ex:Post ;
+  dc:title "Post by User9" ;
+  ex:author ex:User9 .
+
+ex:Comment9 a ex:Comment ;
+  dc:content "Comment by User9" ;
+  ex:author ex:User9 ;
+  ex:onPost ex:Post11 .
+
+ex:User10 a foaf:Person ;
+  foaf:name "User10" ;
+  ex:knows ex:User11, ex:User12 ;
+  ex:created ex:Post10 .
+
+ex:Post10 a ex:Post ;
+  dc:title "Post by User10" ;
+  ex:author ex:User10 .
+
+ex:Comment10 a ex:Comment ;
+  dc:content "Comment by User10" ;
+  ex:author ex:User10 ;
+  ex:onPost ex:Post12 .
+
+ex:User11 a foaf:Person ;
+  foaf:name "User11" ;
+  ex:knows ex:User12, ex:User13 ;
+  ex:created ex:Post11 .
+
+ex:Post11 a ex:Post ;
+  dc:title "Post by User11" ;
+  ex:author ex:User11 .
+
+ex:Comment11 a ex:Comment ;
+  dc:content "Comment by User11" ;
+  ex:author ex:User11 ;
+  ex:onPost ex:Post13 .
+
+ex:User12 a foaf:Person ;
+  foaf:name "User12" ;
+  ex:knows ex:User13, ex:User14 ;
+  ex:created ex:Post12 .
+
+ex:Post12 a ex:Post ;
+  dc:title "Post by User12" ;
+  ex:author ex:User12 .
+
+ex:Comment12 a ex:Comment ;
+  dc:content "Comment by User12" ;
+  ex:author ex:User12 ;
+  ex:onPost ex:Post14 .
+
+ex:User13 a foaf:Person ;
+  foaf:name "User13" ;
+  ex:knows ex:User14, ex:User15 ;
+  ex:created ex:Post13 .
+
+ex:Post13 a ex:Post ;
+  dc:title "Post by User13" ;
+  ex:author ex:User13 .
+
+ex:Comment13 a ex:Comment ;
+  dc:content "Comment by User13" ;
+  ex:author ex:User13 ;
+  ex:onPost ex:Post15 .
+
+ex:User14 a foaf:Person ;
+  foaf:name "User14" ;
+  ex:knows ex:User15, ex:User16 ;
+  ex:created ex:Post14 .
+
+ex:Post14 a ex:Post ;
+  dc:title "Post by User14" ;
+  ex:author ex:User14 .
+
+ex:Comment14 a ex:Comment ;
+  dc:content "Comment by User14" ;
+  ex:author ex:User14 ;
+  ex:onPost ex:Post16 .
+
+ex:User15 a foaf:Person ;
+  foaf:name "User15" ;
+  ex:knows ex:User16, ex:User17 ;
+  ex:created ex:Post15 .
+
+ex:Post15 a ex:Post ;
+  dc:title "Post by User15" ;
+  ex:author ex:User15 .
+
+ex:Comment15 a ex:Comment ;
+  dc:content "Comment by User15" ;
+  ex:author ex:User15 ;
+  ex:onPost ex:Post17 .
+
+ex:User16 a foaf:Person ;
+  foaf:name "User16" ;
+  ex:knows ex:User17, ex:User18 ;
+  ex:created ex:Post16 .
+
+ex:Post16 a ex:Post ;
+  dc:title "Post by User16" ;
+  ex:author ex:User16 .
+
+ex:Comment16 a ex:Comment ;
+  dc:content "Comment by User16" ;
+  ex:author ex:User16 ;
+  ex:onPost ex:Post18 .
+
+ex:User17 a foaf:Person ;
+  foaf:name "User17" ;
+  ex:knows ex:User18, ex:User19 ;
+  ex:created ex:Post17 .
+
+ex:Post17 a ex:Post ;
+  dc:title "Post by User17" ;
+  ex:author ex:User17 .
+
+ex:Comment17 a ex:Comment ;
+  dc:content "Comment by User17" ;
+  ex:author ex:User17 ;
+  ex:onPost ex:Post19 .
+
+ex:User18 a foaf:Person ;
+  foaf:name "User18" ;
+  ex:knows ex:User19, ex:User20 ;
+  ex:created ex:Post18 .
+
+ex:Post18 a ex:Post ;
+  dc:title "Post by User18" ;
+  ex:author ex:User18 .
+
+ex:Comment18 a ex:Comment ;
+  dc:content "Comment by User18" ;
+  ex:author ex:User18 ;
+  ex:onPost ex:Post20 .
+
+ex:User19 a foaf:Person ;
+  foaf:name "User19" ;
+  ex:knows ex:User20, ex:User21 ;
+  ex:created ex:Post19 .
+
+ex:Post19 a ex:Post ;
+  dc:title "Post by User19" ;
+  ex:author ex:User19 .
+
+ex:Comment19 a ex:Comment ;
+  dc:content "Comment by User19" ;
+  ex:author ex:User19 ;
+  ex:onPost ex:Post21 .
+
+ex:User20 a foaf:Person ;
+  foaf:name "User20" ;
+  ex:knows ex:User21, ex:User22 ;
+  ex:created ex:Post20 .
+
+ex:Post20 a ex:Post ;
+  dc:title "Post by User20" ;
+  ex:author ex:User20 .
+
+ex:Comment20 a ex:Comment ;
+  dc:content "Comment by User20" ;
+  ex:author ex:User20 ;
+  ex:onPost ex:Post22 .
+
+ex:User21 a foaf:Person ;
+  foaf:name "User21" ;
+  ex:knows ex:User22, ex:User23 ;
+  ex:created ex:Post21 .
+
+ex:Post21 a ex:Post ;
+  dc:title "Post by User21" ;
+  ex:author ex:User21 .
+
+ex:Comment21 a ex:Comment ;
+  dc:content "Comment by User21" ;
+  ex:author ex:User21 ;
+  ex:onPost ex:Post23 .
+
+ex:User22 a foaf:Person ;
+  foaf:name "User22" ;
+  ex:knows ex:User23, ex:User24 ;
+  ex:created ex:Post22 .
+
+ex:Post22 a ex:Post ;
+  dc:title "Post by User22" ;
+  ex:author ex:User22 .
+
+ex:Comment22 a ex:Comment ;
+  dc:content "Comment by User22" ;
+  ex:author ex:User22 ;
+  ex:onPost ex:Post24 .
+
+ex:User23 a foaf:Person ;
+  foaf:name "User23" ;
+  ex:knows ex:User24, ex:User25 ;
+  ex:created ex:Post23 .
+
+ex:Post23 a ex:Post ;
+  dc:title "Post by User23" ;
+  ex:author ex:User23 .
+
+ex:Comment23 a ex:Comment ;
+  dc:content "Comment by User23" ;
+  ex:author ex:User23 ;
+  ex:onPost ex:Post25 .
+
+ex:User24 a foaf:Person ;
+  foaf:name "User24" ;
+  ex:knows ex:User25, ex:User26 ;
+  ex:created ex:Post24 .
+
+ex:Post24 a ex:Post ;
+  dc:title "Post by User24" ;
+  ex:author ex:User24 .
+
+ex:Comment24 a ex:Comment ;
+  dc:content "Comment by User24" ;
+  ex:author ex:User24 ;
+  ex:onPost ex:Post26 .
+
+ex:User25 a foaf:Person ;
+  foaf:name "User25" ;
+  ex:knows ex:User26, ex:User27 ;
+  ex:created ex:Post25 .
+
+ex:Post25 a ex:Post ;
+  dc:title "Post by User25" ;
+  ex:author ex:User25 .
+
+ex:Comment25 a ex:Comment ;
+  dc:content "Comment by User25" ;
+  ex:author ex:User25 ;
+  ex:onPost ex:Post27 .
+
+ex:User26 a foaf:Person ;
+  foaf:name "User26" ;
+  ex:knows ex:User27, ex:User28 ;
+  ex:created ex:Post26 .
+
+ex:Post26 a ex:Post ;
+  dc:title "Post by User26" ;
+  ex:author ex:User26 .
+
+ex:Comment26 a ex:Comment ;
+  dc:content "Comment by User26" ;
+  ex:author ex:User26 ;
+  ex:onPost ex:Post28 .
+
+ex:User27 a foaf:Person ;
+  foaf:name "User27" ;
+  ex:knows ex:User28, ex:User29 ;
+  ex:created ex:Post27 .
+
+ex:Post27 a ex:Post ;
+  dc:title "Post by User27" ;
+  ex:author ex:User27 .
+
+ex:Comment27 a ex:Comment ;
+  dc:content "Comment by User27" ;
+  ex:author ex:User27 ;
+  ex:onPost ex:Post29 .
+
+ex:User28 a foaf:Person ;
+  foaf:name "User28" ;
+  ex:knows ex:User29, ex:User30 ;
+  ex:created ex:Post28 .
+
+ex:Post28 a ex:Post ;
+  dc:title "Post by User28" ;
+  ex:author ex:User28 .
+
+ex:Comment28 a ex:Comment ;
+  dc:content "Comment by User28" ;
+  ex:author ex:User28 ;
+  ex:onPost ex:Post30 .
+
+ex:User29 a foaf:Person ;
+  foaf:name "User29" ;
+  ex:knows ex:User30, ex:User31 ;
+  ex:created ex:Post29 .
+
+ex:Post29 a ex:Post ;
+  dc:title "Post by User29" ;
+  ex:author ex:User29 .
+
+ex:Comment29 a ex:Comment ;
+  dc:content "Comment by User29" ;
+  ex:author ex:User29 ;
+  ex:onPost ex:Post31 .
+
+ex:User30 a foaf:Person ;
+  foaf:name "User30" ;
+  ex:knows ex:User31, ex:User32 ;
+  ex:created ex:Post30 .
+
+ex:Post30 a ex:Post ;
+  dc:title "Post by User30" ;
+  ex:author ex:User30 .
+
+ex:Comment30 a ex:Comment ;
+  dc:content "Comment by User30" ;
+  ex:author ex:User30 ;
+  ex:onPost ex:Post32 .
+
+ex:User31 a foaf:Person ;
+  foaf:name "User31" ;
+  ex:knows ex:User32, ex:User33 ;
+  ex:created ex:Post31 .
+
+ex:Post31 a ex:Post ;
+  dc:title "Post by User31" ;
+  ex:author ex:User31 .
+
+ex:Comment31 a ex:Comment ;
+  dc:content "Comment by User31" ;
+  ex:author ex:User31 ;
+  ex:onPost ex:Post33 .
+
+ex:User32 a foaf:Person ;
+  foaf:name "User32" ;
+  ex:knows ex:User33, ex:User34 ;
+  ex:created ex:Post32 .
+
+ex:Post32 a ex:Post ;
+  dc:title "Post by User32" ;
+  ex:author ex:User32 .
+
+ex:Comment32 a ex:Comment ;
+  dc:content "Comment by User32" ;
+  ex:author ex:User32 ;
+  ex:onPost ex:Post34 .
+
+ex:User33 a foaf:Person ;
+  foaf:name "User33" ;
+  ex:knows ex:User34, ex:User35 ;
+  ex:created ex:Post33 .
+
+ex:Post33 a ex:Post ;
+  dc:title "Post by User33" ;
+  ex:author ex:User33 .
+
+ex:Comment33 a ex:Comment ;
+  dc:content "Comment by User33" ;
+  ex:author ex:User33 ;
+  ex:onPost ex:Post35 .
+
+ex:User34 a foaf:Person ;
+  foaf:name "User34" ;
+  ex:knows ex:User35, ex:User36 ;
+  ex:created ex:Post34 .
+
+ex:Post34 a ex:Post ;
+  dc:title "Post by User34" ;
+  ex:author ex:User34 .
+
+ex:Comment34 a ex:Comment ;
+  dc:content "Comment by User34" ;
+  ex:author ex:User34 ;
+  ex:onPost ex:Post36 .
+
+ex:User35 a foaf:Person ;
+  foaf:name "User35" ;
+  ex:knows ex:User36, ex:User37 ;
+  ex:created ex:Post35 .
+
+ex:Post35 a ex:Post ;
+  dc:title "Post by User35" ;
+  ex:author ex:User35 .
+
+ex:Comment35 a ex:Comment ;
+  dc:content "Comment by User35" ;
+  ex:author ex:User35 ;
+  ex:onPost ex:Post37 .
+
+ex:User36 a foaf:Person ;
+  foaf:name "User36" ;
+  ex:knows ex:User37, ex:User38 ;
+  ex:created ex:Post36 .
+
+ex:Post36 a ex:Post ;
+  dc:title "Post by User36" ;
+  ex:author ex:User36 .
+
+ex:Comment36 a ex:Comment ;
+  dc:content "Comment by User36" ;
+  ex:author ex:User36 ;
+  ex:onPost ex:Post38 .
+
+ex:User37 a foaf:Person ;
+  foaf:name "User37" ;
+  ex:knows ex:User38, ex:User39 ;
+  ex:created ex:Post37 .
+
+ex:Post37 a ex:Post ;
+  dc:title "Post by User37" ;
+  ex:author ex:User37 .
+
+ex:Comment37 a ex:Comment ;
+  dc:content "Comment by User37" ;
+  ex:author ex:User37 ;
+  ex:onPost ex:Post39 .
+
+ex:User38 a foaf:Person ;
+  foaf:name "User38" ;
+  ex:knows ex:User39, ex:User40 ;
+  ex:created ex:Post38 .
+
+ex:Post38 a ex:Post ;
+  dc:title "Post by User38" ;
+  ex:author ex:User38 .
+
+ex:Comment38 a ex:Comment ;
+  dc:content "Comment by User38" ;
+  ex:author ex:User38 ;
+  ex:onPost ex:Post40 .
+
+ex:User39 a foaf:Person ;
+  foaf:name "User39" ;
+  ex:knows ex:User40, ex:User41 ;
+  ex:created ex:Post39 .
+
+ex:Post39 a ex:Post ;
+  dc:title "Post by User39" ;
+  ex:author ex:User39 .
+
+ex:Comment39 a ex:Comment ;
+  dc:content "Comment by User39" ;
+  ex:author ex:User39 ;
+  ex:onPost ex:Post41 .
+
+ex:User40 a foaf:Person ;
+  foaf:name "User40" ;
+  ex:knows ex:User41, ex:User42 ;
+  ex:created ex:Post40 .
+
+ex:Post40 a ex:Post ;
+  dc:title "Post by User40" ;
+  ex:author ex:User40 .
+
+ex:Comment40 a ex:Comment ;
+  dc:content "Comment by User40" ;
+  ex:author ex:User40 ;
+  ex:onPost ex:Post42 .
+
+ex:User41 a foaf:Person ;
+  foaf:name "User41" ;
+  ex:knows ex:User42, ex:User43 ;
+  ex:created ex:Post41 .
+
+ex:Post41 a ex:Post ;
+  dc:title "Post by User41" ;
+  ex:author ex:User41 .
+
+ex:Comment41 a ex:Comment ;
+  dc:content "Comment by User41" ;
+  ex:author ex:User41 ;
+  ex:onPost ex:Post43 .
+
+ex:User42 a foaf:Person ;
+  foaf:name "User42" ;
+  ex:knows ex:User43, ex:User44 ;
+  ex:created ex:Post42 .
+
+ex:Post42 a ex:Post ;
+  dc:title "Post by User42" ;
+  ex:author ex:User42 .
+
+ex:Comment42 a ex:Comment ;
+  dc:content "Comment by User42" ;
+  ex:author ex:User42 ;
+  ex:onPost ex:Post44 .
+
+ex:User43 a foaf:Person ;
+  foaf:name "User43" ;
+  ex:knows ex:User44, ex:User45 ;
+  ex:created ex:Post43 .
+
+ex:Post43 a ex:Post ;
+  dc:title "Post by User43" ;
+  ex:author ex:User43 .
+
+ex:Comment43 a ex:Comment ;
+  dc:content "Comment by User43" ;
+  ex:author ex:User43 ;
+  ex:onPost ex:Post45 .
+
+ex:User44 a foaf:Person ;
+  foaf:name "User44" ;
+  ex:knows ex:User45, ex:User46 ;
+  ex:created ex:Post44 .
+
+ex:Post44 a ex:Post ;
+  dc:title "Post by User44" ;
+  ex:author ex:User44 .
+
+ex:Comment44 a ex:Comment ;
+  dc:content "Comment by User44" ;
+  ex:author ex:User44 ;
+  ex:onPost ex:Post46 .
+
+ex:User45 a foaf:Person ;
+  foaf:name "User45" ;
+  ex:knows ex:User46, ex:User47 ;
+  ex:created ex:Post45 .
+
+ex:Post45 a ex:Post ;
+  dc:title "Post by User45" ;
+  ex:author ex:User45 .
+
+ex:Comment45 a ex:Comment ;
+  dc:content "Comment by User45" ;
+  ex:author ex:User45 ;
+  ex:onPost ex:Post47 .
+
+ex:User46 a foaf:Person ;
+  foaf:name "User46" ;
+  ex:knows ex:User47, ex:User48 ;
+  ex:created ex:Post46 .
+
+ex:Post46 a ex:Post ;
+  dc:title "Post by User46" ;
+  ex:author ex:User46 .
+
+ex:Comment46 a ex:Comment ;
+  dc:content "Comment by User46" ;
+  ex:author ex:User46 ;
+  ex:onPost ex:Post48 .
+
+ex:User47 a foaf:Person ;
+  foaf:name "User47" ;
+  ex:knows ex:User48, ex:User49 ;
+  ex:created ex:Post47 .
+
+ex:Post47 a ex:Post ;
+  dc:title "Post by User47" ;
+  ex:author ex:User47 .
+
+ex:Comment47 a ex:Comment ;
+  dc:content "Comment by User47" ;
+  ex:author ex:User47 ;
+  ex:onPost ex:Post49 .
+
+ex:User48 a foaf:Person ;
+  foaf:name "User48" ;
+  ex:knows ex:User49, ex:User50 ;
+  ex:created ex:Post48 .
+
+ex:Post48 a ex:Post ;
+  dc:title "Post by User48" ;
+  ex:author ex:User48 .
+
+ex:Comment48 a ex:Comment ;
+  dc:content "Comment by User48" ;
+  ex:author ex:User48 ;
+  ex:onPost ex:Post50 .
+
+ex:User49 a foaf:Person ;
+  foaf:name "User49" ;
+  ex:knows ex:User50, ex:User51 ;
+  ex:created ex:Post49 .
+
+ex:Post49 a ex:Post ;
+  dc:title "Post by User49" ;
+  ex:author ex:User49 .
+
+ex:Comment49 a ex:Comment ;
+  dc:content "Comment by User49" ;
+  ex:author ex:User49 ;
+  ex:onPost ex:Post51 .
+
+ex:User50 a foaf:Person ;
+  foaf:name "User50" ;
+  ex:knows ex:User51, ex:User52 ;
+  ex:created ex:Post50 .
+
+ex:Post50 a ex:Post ;
+  dc:title "Post by User50" ;
+  ex:author ex:User50 .
+
+ex:Comment50 a ex:Comment ;
+  dc:content "Comment by User50" ;
+  ex:author ex:User50 ;
+  ex:onPost ex:Post52 .
+
+ex:User51 a foaf:Person ;
+  foaf:name "User51" ;
+  ex:knows ex:User52, ex:User53 ;
+  ex:created ex:Post51 .
+
+ex:Post51 a ex:Post ;
+  dc:title "Post by User51" ;
+  ex:author ex:User51 .
+
+ex:Comment51 a ex:Comment ;
+  dc:content "Comment by User51" ;
+  ex:author ex:User51 ;
+  ex:onPost ex:Post53 .
+
+ex:User52 a foaf:Person ;
+  foaf:name "User52" ;
+  ex:knows ex:User53, ex:User54 ;
+  ex:created ex:Post52 .
+
+ex:Post52 a ex:Post ;
+  dc:title "Post by User52" ;
+  ex:author ex:User52 .
+
+ex:Comment52 a ex:Comment ;
+  dc:content "Comment by User52" ;
+  ex:author ex:User52 ;
+  ex:onPost ex:Post54 .
+
+ex:User53 a foaf:Person ;
+  foaf:name "User53" ;
+  ex:knows ex:User54, ex:User55 ;
+  ex:created ex:Post53 .
+
+ex:Post53 a ex:Post ;
+  dc:title "Post by User53" ;
+  ex:author ex:User53 .
+
+ex:Comment53 a ex:Comment ;
+  dc:content "Comment by User53" ;
+  ex:author ex:User53 ;
+  ex:onPost ex:Post55 .
+
+ex:User54 a foaf:Person ;
+  foaf:name "User54" ;
+  ex:knows ex:User55, ex:User56 ;
+  ex:created ex:Post54 .
+
+ex:Post54 a ex:Post ;
+  dc:title "Post by User54" ;
+  ex:author ex:User54 .
+
+ex:Comment54 a ex:Comment ;
+  dc:content "Comment by User54" ;
+  ex:author ex:User54 ;
+  ex:onPost ex:Post56 .
+
+ex:User55 a foaf:Person ;
+  foaf:name "User55" ;
+  ex:knows ex:User56, ex:User57 ;
+  ex:created ex:Post55 .
+
+ex:Post55 a ex:Post ;
+  dc:title "Post by User55" ;
+  ex:author ex:User55 .
+
+ex:Comment55 a ex:Comment ;
+  dc:content "Comment by User55" ;
+  ex:author ex:User55 ;
+  ex:onPost ex:Post57 .
+
+ex:User56 a foaf:Person ;
+  foaf:name "User56" ;
+  ex:knows ex:User57, ex:User58 ;
+  ex:created ex:Post56 .
+
+ex:Post56 a ex:Post ;
+  dc:title "Post by User56" ;
+  ex:author ex:User56 .
+
+ex:Comment56 a ex:Comment ;
+  dc:content "Comment by User56" ;
+  ex:author ex:User56 ;
+  ex:onPost ex:Post58 .
+
+ex:User57 a foaf:Person ;
+  foaf:name "User57" ;
+  ex:knows ex:User58, ex:User59 ;
+  ex:created ex:Post57 .
+
+ex:Post57 a ex:Post ;
+  dc:title "Post by User57" ;
+  ex:author ex:User57 .
+
+ex:Comment57 a ex:Comment ;
+  dc:content "Comment by User57" ;
+  ex:author ex:User57 ;
+  ex:onPost ex:Post59 .
+
+ex:User58 a foaf:Person ;
+  foaf:name "User58" ;
+  ex:knows ex:User59, ex:User60 ;
+  ex:created ex:Post58 .
+
+ex:Post58 a ex:Post ;
+  dc:title "Post by User58" ;
+  ex:author ex:User58 .
+
+ex:Comment58 a ex:Comment ;
+  dc:content "Comment by User58" ;
+  ex:author ex:User58 ;
+  ex:onPost ex:Post60 .
+
+ex:User59 a foaf:Person ;
+  foaf:name "User59" ;
+  ex:knows ex:User60, ex:User61 ;
+  ex:created ex:Post59 .
+
+ex:Post59 a ex:Post ;
+  dc:title "Post by User59" ;
+  ex:author ex:User59 .
+
+ex:Comment59 a ex:Comment ;
+  dc:content "Comment by User59" ;
+  ex:author ex:User59 ;
+  ex:onPost ex:Post61 .
+
+ex:User60 a foaf:Person ;
+  foaf:name "User60" ;
+  ex:knows ex:User61, ex:User62 ;
+  ex:created ex:Post60 .
+
+ex:Post60 a ex:Post ;
+  dc:title "Post by User60" ;
+  ex:author ex:User60 .
+
+ex:Comment60 a ex:Comment ;
+  dc:content "Comment by User60" ;
+  ex:author ex:User60 ;
+  ex:onPost ex:Post62 .
+
+ex:User61 a foaf:Person ;
+  foaf:name "User61" ;
+  ex:knows ex:User62, ex:User63 ;
+  ex:created ex:Post61 .
+
+ex:Post61 a ex:Post ;
+  dc:title "Post by User61" ;
+  ex:author ex:User61 .
+
+ex:Comment61 a ex:Comment ;
+  dc:content "Comment by User61" ;
+  ex:author ex:User61 ;
+  ex:onPost ex:Post63 .
+
+ex:User62 a foaf:Person ;
+  foaf:name "User62" ;
+  ex:knows ex:User63, ex:User64 ;
+  ex:created ex:Post62 .
+
+ex:Post62 a ex:Post ;
+  dc:title "Post by User62" ;
+  ex:author ex:User62 .
+
+ex:Comment62 a ex:Comment ;
+  dc:content "Comment by User62" ;
+  ex:author ex:User62 ;
+  ex:onPost ex:Post64 .
+
+ex:User63 a foaf:Person ;
+  foaf:name "User63" ;
+  ex:knows ex:User64, ex:User65 ;
+  ex:created ex:Post63 .
+
+ex:Post63 a ex:Post ;
+  dc:title "Post by User63" ;
+  ex:author ex:User63 .
+
+ex:Comment63 a ex:Comment ;
+  dc:content "Comment by User63" ;
+  ex:author ex:User63 ;
+  ex:onPost ex:Post65 .
+
+ex:User64 a foaf:Person ;
+  foaf:name "User64" ;
+  ex:knows ex:User65, ex:User66 ;
+  ex:created ex:Post64 .
+
+ex:Post64 a ex:Post ;
+  dc:title "Post by User64" ;
+  ex:author ex:User64 .
+
+ex:Comment64 a ex:Comment ;
+  dc:content "Comment by User64" ;
+  ex:author ex:User64 ;
+  ex:onPost ex:Post66 .
+
+ex:User65 a foaf:Person ;
+  foaf:name "User65" ;
+  ex:knows ex:User66, ex:User67 ;
+  ex:created ex:Post65 .
+
+ex:Post65 a ex:Post ;
+  dc:title "Post by User65" ;
+  ex:author ex:User65 .
+
+ex:Comment65 a ex:Comment ;
+  dc:content "Comment by User65" ;
+  ex:author ex:User65 ;
+  ex:onPost ex:Post67 .
+
+ex:User66 a foaf:Person ;
+  foaf:name "User66" ;
+  ex:knows ex:User67, ex:User68 ;
+  ex:created ex:Post66 .
+
+ex:Post66 a ex:Post ;
+  dc:title "Post by User66" ;
+  ex:author ex:User66 .
+
+ex:Comment66 a ex:Comment ;
+  dc:content "Comment by User66" ;
+  ex:author ex:User66 ;
+  ex:onPost ex:Post68 .
+
+ex:User67 a foaf:Person ;
+  foaf:name "User67" ;
+  ex:knows ex:User68, ex:User69 ;
+  ex:created ex:Post67 .
+
+ex:Post67 a ex:Post ;
+  dc:title "Post by User67" ;
+  ex:author ex:User67 .
+
+ex:Comment67 a ex:Comment ;
+  dc:content "Comment by User67" ;
+  ex:author ex:User67 ;
+  ex:onPost ex:Post69 .
+
+ex:User68 a foaf:Person ;
+  foaf:name "User68" ;
+  ex:knows ex:User69, ex:User70 ;
+  ex:created ex:Post68 .
+
+ex:Post68 a ex:Post ;
+  dc:title "Post by User68" ;
+  ex:author ex:User68 .
+
+ex:Comment68 a ex:Comment ;
+  dc:content "Comment by User68" ;
+  ex:author ex:User68 ;
+  ex:onPost ex:Post70 .
+
+ex:User69 a foaf:Person ;
+  foaf:name "User69" ;
+  ex:knows ex:User70, ex:User71 ;
+  ex:created ex:Post69 .
+
+ex:Post69 a ex:Post ;
+  dc:title "Post by User69" ;
+  ex:author ex:User69 .
+
+ex:Comment69 a ex:Comment ;
+  dc:content "Comment by User69" ;
+  ex:author ex:User69 ;
+  ex:onPost ex:Post71 .
+
+ex:User70 a foaf:Person ;
+  foaf:name "User70" ;
+  ex:knows ex:User71, ex:User72 ;
+  ex:created ex:Post70 .
+
+ex:Post70 a ex:Post ;
+  dc:title "Post by User70" ;
+  ex:author ex:User70 .
+
+ex:Comment70 a ex:Comment ;
+  dc:content "Comment by User70" ;
+  ex:author ex:User70 ;
+  ex:onPost ex:Post72 .
+
+ex:User71 a foaf:Person ;
+  foaf:name "User71" ;
+  ex:knows ex:User72, ex:User73 ;
+  ex:created ex:Post71 .
+
+ex:Post71 a ex:Post ;
+  dc:title "Post by User71" ;
+  ex:author ex:User71 .
+
+ex:Comment71 a ex:Comment ;
+  dc:content "Comment by User71" ;
+  ex:author ex:User71 ;
+  ex:onPost ex:Post73 .
+
+ex:User72 a foaf:Person ;
+  foaf:name "User72" ;
+  ex:knows ex:User73, ex:User74 ;
+  ex:created ex:Post72 .
+
+ex:Post72 a ex:Post ;
+  dc:title "Post by User72" ;
+  ex:author ex:User72 .
+
+ex:Comment72 a ex:Comment ;
+  dc:content "Comment by User72" ;
+  ex:author ex:User72 ;
+  ex:onPost ex:Post74 .
+
+ex:User73 a foaf:Person ;
+  foaf:name "User73" ;
+  ex:knows ex:User74, ex:User75 ;
+  ex:created ex:Post73 .
+
+ex:Post73 a ex:Post ;
+  dc:title "Post by User73" ;
+  ex:author ex:User73 .
+
+ex:Comment73 a ex:Comment ;
+  dc:content "Comment by User73" ;
+  ex:author ex:User73 ;
+  ex:onPost ex:Post75 .
+
+ex:User74 a foaf:Person ;
+  foaf:name "User74" ;
+  ex:knows ex:User75, ex:User76 ;
+  ex:created ex:Post74 .
+
+ex:Post74 a ex:Post ;
+  dc:title "Post by User74" ;
+  ex:author ex:User74 .
+
+ex:Comment74 a ex:Comment ;
+  dc:content "Comment by User74" ;
+  ex:author ex:User74 ;
+  ex:onPost ex:Post76 .
+
+ex:User75 a foaf:Person ;
+  foaf:name "User75" ;
+  ex:knows ex:User76, ex:User77 ;
+  ex:created ex:Post75 .
+
+ex:Post75 a ex:Post ;
+  dc:title "Post by User75" ;
+  ex:author ex:User75 .
+
+ex:Comment75 a ex:Comment ;
+  dc:content "Comment by User75" ;
+  ex:author ex:User75 ;
+  ex:onPost ex:Post77 .
+
+ex:User76 a foaf:Person ;
+  foaf:name "User76" ;
+  ex:knows ex:User77, ex:User78 ;
+  ex:created ex:Post76 .
+
+ex:Post76 a ex:Post ;
+  dc:title "Post by User76" ;
+  ex:author ex:User76 .
+
+ex:Comment76 a ex:Comment ;
+  dc:content "Comment by User76" ;
+  ex:author ex:User76 ;
+  ex:onPost ex:Post78 .
+
+ex:User77 a foaf:Person ;
+  foaf:name "User77" ;
+  ex:knows ex:User78, ex:User79 ;
+  ex:created ex:Post77 .
+
+ex:Post77 a ex:Post ;
+  dc:title "Post by User77" ;
+  ex:author ex:User77 .
+
+ex:Comment77 a ex:Comment ;
+  dc:content "Comment by User77" ;
+  ex:author ex:User77 ;
+  ex:onPost ex:Post79 .
+
+ex:User78 a foaf:Person ;
+  foaf:name "User78" ;
+  ex:knows ex:User79, ex:User80 ;
+  ex:created ex:Post78 .
+
+ex:Post78 a ex:Post ;
+  dc:title "Post by User78" ;
+  ex:author ex:User78 .
+
+ex:Comment78 a ex:Comment ;
+  dc:content "Comment by User78" ;
+  ex:author ex:User78 ;
+  ex:onPost ex:Post80 .
+
+ex:User79 a foaf:Person ;
+  foaf:name "User79" ;
+  ex:knows ex:User80, ex:User81 ;
+  ex:created ex:Post79 .
+
+ex:Post79 a ex:Post ;
+  dc:title "Post by User79" ;
+  ex:author ex:User79 .
+
+ex:Comment79 a ex:Comment ;
+  dc:content "Comment by User79" ;
+  ex:author ex:User79 ;
+  ex:onPost ex:Post81 .
+
+ex:User80 a foaf:Person ;
+  foaf:name "User80" ;
+  ex:knows ex:User81, ex:User82 ;
+  ex:created ex:Post80 .
+
+ex:Post80 a ex:Post ;
+  dc:title "Post by User80" ;
+  ex:author ex:User80 .
+
+ex:Comment80 a ex:Comment ;
+  dc:content "Comment by User80" ;
+  ex:author ex:User80 ;
+  ex:onPost ex:Post82 .
+
+ex:User81 a foaf:Person ;
+  foaf:name "User81" ;
+  ex:knows ex:User82, ex:User83 ;
+  ex:created ex:Post81 .
+
+ex:Post81 a ex:Post ;
+  dc:title "Post by User81" ;
+  ex:author ex:User81 .
+
+ex:Comment81 a ex:Comment ;
+  dc:content "Comment by User81" ;
+  ex:author ex:User81 ;
+  ex:onPost ex:Post83 .
+
+ex:User82 a foaf:Person ;
+  foaf:name "User82" ;
+  ex:knows ex:User83, ex:User84 ;
+  ex:created ex:Post82 .
+
+ex:Post82 a ex:Post ;
+  dc:title "Post by User82" ;
+  ex:author ex:User82 .
+
+ex:Comment82 a ex:Comment ;
+  dc:content "Comment by User82" ;
+  ex:author ex:User82 ;
+  ex:onPost ex:Post84 .
+
+ex:User83 a foaf:Person ;
+  foaf:name "User83" ;
+  ex:knows ex:User84, ex:User85 ;
+  ex:created ex:Post83 .
+
+ex:Post83 a ex:Post ;
+  dc:title "Post by User83" ;
+  ex:author ex:User83 .
+
+ex:Comment83 a ex:Comment ;
+  dc:content "Comment by User83" ;
+  ex:author ex:User83 ;
+  ex:onPost ex:Post85 .
+
+ex:User84 a foaf:Person ;
+  foaf:name "User84" ;
+  ex:knows ex:User85, ex:User86 ;
+  ex:created ex:Post84 .
+
+ex:Post84 a ex:Post ;
+  dc:title "Post by User84" ;
+  ex:author ex:User84 .
+
+ex:Comment84 a ex:Comment ;
+  dc:content "Comment by User84" ;
+  ex:author ex:User84 ;
+  ex:onPost ex:Post86 .
+
+ex:User85 a foaf:Person ;
+  foaf:name "User85" ;
+  ex:knows ex:User86, ex:User87 ;
+  ex:created ex:Post85 .
+
+ex:Post85 a ex:Post ;
+  dc:title "Post by User85" ;
+  ex:author ex:User85 .
+
+ex:Comment85 a ex:Comment ;
+  dc:content "Comment by User85" ;
+  ex:author ex:User85 ;
+  ex:onPost ex:Post87 .
+
+ex:User86 a foaf:Person ;
+  foaf:name "User86" ;
+  ex:knows ex:User87, ex:User88 ;
+  ex:created ex:Post86 .
+
+ex:Post86 a ex:Post ;
+  dc:title "Post by User86" ;
+  ex:author ex:User86 .
+
+ex:Comment86 a ex:Comment ;
+  dc:content "Comment by User86" ;
+  ex:author ex:User86 ;
+  ex:onPost ex:Post88 .
+
+ex:User87 a foaf:Person ;
+  foaf:name "User87" ;
+  ex:knows ex:User88, ex:User89 ;
+  ex:created ex:Post87 .
+
+ex:Post87 a ex:Post ;
+  dc:title "Post by User87" ;
+  ex:author ex:User87 .
+
+ex:Comment87 a ex:Comment ;
+  dc:content "Comment by User87" ;
+  ex:author ex:User87 ;
+  ex:onPost ex:Post89 .
+
+ex:User88 a foaf:Person ;
+  foaf:name "User88" ;
+  ex:knows ex:User89, ex:User90 ;
+  ex:created ex:Post88 .
+
+ex:Post88 a ex:Post ;
+  dc:title "Post by User88" ;
+  ex:author ex:User88 .
+
+ex:Comment88 a ex:Comment ;
+  dc:content "Comment by User88" ;
+  ex:author ex:User88 ;
+  ex:onPost ex:Post90 .
+
+ex:User89 a foaf:Person ;
+  foaf:name "User89" ;
+  ex:knows ex:User90, ex:User91 ;
+  ex:created ex:Post89 .
+
+ex:Post89 a ex:Post ;
+  dc:title "Post by User89" ;
+  ex:author ex:User89 .
+
+ex:Comment89 a ex:Comment ;
+  dc:content "Comment by User89" ;
+  ex:author ex:User89 ;
+  ex:onPost ex:Post91 .
+
+ex:User90 a foaf:Person ;
+  foaf:name "User90" ;
+  ex:knows ex:User91, ex:User92 ;
+  ex:created ex:Post90 .
+
+ex:Post90 a ex:Post ;
+  dc:title "Post by User90" ;
+  ex:author ex:User90 .
+
+ex:Comment90 a ex:Comment ;
+  dc:content "Comment by User90" ;
+  ex:author ex:User90 ;
+  ex:onPost ex:Post92 .
+
+ex:User91 a foaf:Person ;
+  foaf:name "User91" ;
+  ex:knows ex:User92, ex:User93 ;
+  ex:created ex:Post91 .
+
+ex:Post91 a ex:Post ;
+  dc:title "Post by User91" ;
+  ex:author ex:User91 .
+
+ex:Comment91 a ex:Comment ;
+  dc:content "Comment by User91" ;
+  ex:author ex:User91 ;
+  ex:onPost ex:Post93 .
+
+ex:User92 a foaf:Person ;
+  foaf:name "User92" ;
+  ex:knows ex:User93, ex:User94 ;
+  ex:created ex:Post92 .
+
+ex:Post92 a ex:Post ;
+  dc:title "Post by User92" ;
+  ex:author ex:User92 .
+
+ex:Comment92 a ex:Comment ;
+  dc:content "Comment by User92" ;
+  ex:author ex:User92 ;
+  ex:onPost ex:Post94 .
+
+ex:User93 a foaf:Person ;
+  foaf:name "User93" ;
+  ex:knows ex:User94, ex:User95 ;
+  ex:created ex:Post93 .
+
+ex:Post93 a ex:Post ;
+  dc:title "Post by User93" ;
+  ex:author ex:User93 .
+
+ex:Comment93 a ex:Comment ;
+  dc:content "Comment by User93" ;
+  ex:author ex:User93 ;
+  ex:onPost ex:Post95 .
+
+ex:User94 a foaf:Person ;
+  foaf:name "User94" ;
+  ex:knows ex:User95, ex:User96 ;
+  ex:created ex:Post94 .
+
+ex:Post94 a ex:Post ;
+  dc:title "Post by User94" ;
+  ex:author ex:User94 .
+
+ex:Comment94 a ex:Comment ;
+  dc:content "Comment by User94" ;
+  ex:author ex:User94 ;
+  ex:onPost ex:Post96 .
+
+ex:User95 a foaf:Person ;
+  foaf:name "User95" ;
+  ex:knows ex:User96, ex:User97 ;
+  ex:created ex:Post95 .
+
+ex:Post95 a ex:Post ;
+  dc:title "Post by User95" ;
+  ex:author ex:User95 .
+
+ex:Comment95 a ex:Comment ;
+  dc:content "Comment by User95" ;
+  ex:author ex:User95 ;
+  ex:onPost ex:Post97 .
+
+ex:User96 a foaf:Person ;
+  foaf:name "User96" ;
+  ex:knows ex:User97, ex:User98 ;
+  ex:created ex:Post96 .
+
+ex:Post96 a ex:Post ;
+  dc:title "Post by User96" ;
+  ex:author ex:User96 .
+
+ex:Comment96 a ex:Comment ;
+  dc:content "Comment by User96" ;
+  ex:author ex:User96 ;
+  ex:onPost ex:Post98 .
+
+ex:User97 a foaf:Person ;
+  foaf:name "User97" ;
+  ex:knows ex:User98, ex:User99 ;
+  ex:created ex:Post97 .
+
+ex:Post97 a ex:Post ;
+  dc:title "Post by User97" ;
+  ex:author ex:User97 .
+
+ex:Comment97 a ex:Comment ;
+  dc:content "Comment by User97" ;
+  ex:author ex:User97 ;
+  ex:onPost ex:Post99 .
+
+ex:User98 a foaf:Person ;
+  foaf:name "User98" ;
+  ex:knows ex:User99, ex:User100 ;
+  ex:created ex:Post98 .
+
+ex:Post98 a ex:Post ;
+  dc:title "Post by User98" ;
+  ex:author ex:User98 .
+
+ex:Comment98 a ex:Comment ;
+  dc:content "Comment by User98" ;
+  ex:author ex:User98 ;
+  ex:onPost ex:Post100 .
+
+ex:User99 a foaf:Person ;
+  foaf:name "User99" ;
+  ex:knows ex:User100, ex:User1 ;
+  ex:created ex:Post99 .
+
+ex:Post99 a ex:Post ;
+  dc:title "Post by User99" ;
+  ex:author ex:User99 .
+
+ex:Comment99 a ex:Comment ;
+  dc:content "Comment by User99" ;
+  ex:author ex:User99 ;
+  ex:onPost ex:Post1 .
+
+ex:User100 a foaf:Person ;
+  foaf:name "User100" ;
+  ex:knows ex:User1, ex:User2 ;
+  ex:created ex:Post100 .
+
+ex:Post100 a ex:Post ;
+  dc:title "Post by User100" ;
+  ex:author ex:User100 .
+
+ex:Comment100 a ex:Comment ;
+  dc:content "Comment by User100" ;
+  ex:author ex:User100 ;
+  ex:onPost ex:Post2 .
+
