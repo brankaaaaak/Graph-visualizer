@@ -24,10 +24,10 @@ class FileSystemLoader(BaseLoader):
         self._id_sequence = 0
         self._visited = set()
         graph = Graph()
-        self._create_node(graph, base_path, None)
+        self._create_node(graph, base_path, None, depth=0)
         return graph
 
-    def _create_node(self, graph, path, parent_node):
+    def _create_node(self, graph, path, parent_node, depth=0):
         abs_path = os.path.abspath(path)
         if abs_path in self._visited:
             return None
@@ -35,6 +35,7 @@ class FileSystemLoader(BaseLoader):
 
         self._id_sequence += 1
         node = Node(self._id_sequence)
+        node.add_attribute("depth", depth)
         node.add_attribute("name", os.path.basename(abs_path) or abs_path)
         node.add_attribute("path", abs_path)
         node.add_attribute("type", "directory" if os.path.isdir(abs_path) else "file")
@@ -42,7 +43,7 @@ class FileSystemLoader(BaseLoader):
         try:
             stat = os.stat(abs_path)
             node.add_attribute("size", stat.st_size)
-            node.add_attribute("modified", datetime.datetime.fromtimestamp(stat.st_mtime).isoformat())
+            node.add_attribute("modified", datetime.datetime.fromtimestamp(stat.st_mtime).date())
         except Exception:
             pass
 
@@ -52,12 +53,22 @@ class FileSystemLoader(BaseLoader):
             edge = Edge(origin=parent_node, target=node, relation="contains", weight=0, directed=True)
             parent_node.add_edge(edge)
 
-        if os.path.isdir(abs_path):
+        '''if os.path.isdir(abs_path):
             try:
                 for child in os.listdir(abs_path):
                     child_path = os.path.join(abs_path, child)
                     self._create_node(graph, child_path, node)
             except Exception:
-                pass
+                pass'''
+
+        if os.path.isdir(abs_path):
+            try:
+                children = os.listdir(abs_path)
+                node.add_attribute("num_children", len(children))
+                for child in children:
+                    child_path = os.path.join(abs_path, child)
+                    self._create_node(graph, child_path, node, depth=depth+1)
+            except Exception:
+                node.add_attribute("num_children", 0)
 
         return node
