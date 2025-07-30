@@ -10,6 +10,7 @@ from api.models import Edge, Graph, Node, TreeNode
 from django.apps.registry import apps
 from graph_platform.core import state
 
+
 def index_view(request):
     visualizers = state.visualizers
     visualizers_data = [(v.identifier(), v.name()) for v in visualizers]
@@ -19,6 +20,7 @@ def index_view(request):
         'current_workspace': state.current_workspace,
         'workspaces': list(state.workspaces.keys()),
     })
+
 
 def upload_file(request):
     loaders = state.loaders
@@ -48,6 +50,7 @@ def upload_file(request):
         "current_workspace": state.current_workspace,
         "workspaces": list(state.workspaces.keys()),
     })
+
 
 def generate_tree_html(nodes):
     html = '<ul class="tree-list">'
@@ -108,6 +111,7 @@ def dict_to_graph(graph_dict):
     add_node_recursive(graph_dict)
     return graph
 
+
 def expand_node_view(request):
     try:
         print(request)
@@ -148,6 +152,7 @@ def expand_node_from_view(request, node_id):
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
 
+
 def visualize(request):
     visualizer_id = request.GET.get('visualizer')
     if not visualizer_id:
@@ -176,6 +181,7 @@ def visualize(request):
 
     return HttpResponse("Invalid visualizer identifier.", status=404)
 
+
 def check_extension(loader_name, file):
     match loader_name:
         case "XmlLoader":
@@ -184,7 +190,10 @@ def check_extension(loader_name, file):
             return file.name.endswith('.json')
         case "RDFLoader":
             return file.name.endswith(".ttl")
+        case "FileSystemLoader":
+            return file.name.endswith('.fstxt') or file.name.endswith('.folder')
     return False  
+
 
 def create_node(request):
     if request.method != "POST":
@@ -226,6 +235,7 @@ def create_node(request):
         import traceback
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
+
 
 def create_edge(request):
     if request.method != "POST":
@@ -269,6 +279,7 @@ def create_edge(request):
         import traceback
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
+
 
 def delete_node(request):
     if request.method != "POST":
@@ -315,7 +326,8 @@ def delete_node(request):
         import traceback
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
-    
+
+
 def delete_edge(request):
 
     graph = state.graph
@@ -385,6 +397,7 @@ def edit_edge(request):
     else:
         return JsonResponse({'success': False, 'error': 'Only POST allowed'})
 
+
 def edit_node(request):
     if request.method == 'POST':
         try:
@@ -423,6 +436,7 @@ def edit_node(request):
     else:
         return JsonResponse({'success': False, 'error': 'Only POST allowed'})
 
+
 def search(request):
     query = request.GET.get("query", "")
     if not query:
@@ -442,6 +456,7 @@ def search(request):
     state.load_tree()
 
     return JsonResponse({"success": True})
+
 
 def search_node(new_graph, old_graph, node, query):
     query = query.strip().lower()
@@ -494,6 +509,7 @@ def search_node(new_graph, old_graph, node, query):
                 new_edge = Edge(origin=new_origin, target=new_node, relation=edge.relation, weight=edge.weight, directed=edge.is_directed)
                 new_origin.add_edge(new_edge)
 
+
 def copy_node(original_node):
     new_node = Node(original_node.id)
     for key, value in original_node.attributes.items():
@@ -525,6 +541,7 @@ def create_graph(original_graph, filtered_graph):
 
     return new_graph
 
+
 def clear_graph(request):
     if request.method != "POST":
         return JsonResponse({"error": "Only POST allowed"}, status=405)
@@ -540,7 +557,8 @@ def clear_graph(request):
         import traceback
         traceback.print_exc()
         return JsonResponse({"success": False, "error": str(e)}, status=500)
-    
+
+
 def filter_view(request):
     import re
     condition = request.GET.get("condition", "")
@@ -640,6 +658,7 @@ def filter_view(request):
 
     return JsonResponse({"success": True})
 
+
 def reset_graph(request):
     if request.method != "POST":
         return JsonResponse({"error": "Only POST allowed"}, status=405)
@@ -649,6 +668,7 @@ def reset_graph(request):
     state.load_tree()
 
     return JsonResponse({"success": True})
+
 
 def add_workspace(request):
     if not state.graph:

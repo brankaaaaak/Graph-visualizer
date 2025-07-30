@@ -2,72 +2,72 @@
   "people": [
     {
       "id": 1,
-      "name": "Sergey Prokopyev",
+      "name": "Michael Johnson",
       "hobbies": ["football", "tennis"],
       "friends": [{"id": 2}, {"id": 6}, {"id": 10}]
     },
     {
       "id": 2,
-      "name": "Dmitry Petelin",
+      "name": "David Smith",
       "hobbies": ["football", "bowling"],
       "friends": [{"id": 1}, {"id": 6}]
     },
     {
       "id": 3,
-      "name": "Frank Rubio",
+      "name": "Frank Miller",
       "hobbies": ["painting", "singing"],
       "friends": [{"id": 4}]
     },
     {
       "id": 4,
-      "name": "Nicole Mann",
+      "name": "Nicole Brown",
       "hobbies": ["cooking", "singing"],
       "friends": [{"id": 3}]
     },
     {
       "id": 5,
-      "name": "Josh Cassada",
+      "name": "Josh Wilson",
       "hobbies": ["fishing", "hunting"],
       "friends": [{"id": 6}]
     },
     {
       "id": 6,
-      "name": "Koichi Wakata",
+      "name": "Kevin Davis",
       "hobbies": ["fishing"],
       "friends": [{"id": 2}, {"id": 3}, {"id": 4}]
     },
     {
       "id": 7,
-      "name": "Anna Kikina",
+      "name": "Anna Taylor",
       "hobbies": ["dancing"],
       "friends": [{"id": 8}]
     },
     {
       "id": 8,
-      "name": "Fei Junlong",
+      "name": "Jason White",
       "hobbies": ["teaching", "golfing"],
       "friends": [{"id": 7}]
     },
     {
       "id": 9,
-      "name": "Deng Qingming",
+      "name": "Derek Lee",
       "hobbies": ["dancing"]
     },
     {
       "id": 10,
-      "name": "Zhang Lu",
+      "name": "Zachary Harris",
       "hobbies": ["dancing", "teaching"],
       "friends": [{"id": 2}]
     },
     {
       "id": 11,
-      "name": "Yuri Gagarin",
+      "name": "Ryan Clark",
       "hobbies": ["dancing", "reading"],
       "friends": [{"id": 1}, {"id": 5}]
     },
     {
       "id": 12,
-      "name": "Valentina Tereshkova",
+      "name": "Victoria Allen",
       "hobbies": ["sewing", "reading"],
       "friends": [{"id": 11}, {"id": 4}]
     },
@@ -115,9 +115,129 @@
     },
     {
       "id": 20,
-      "name": "Jean-Franc Clervoy",
+      "name": "John Carter",
       "hobbies": ["kayaking", "robotics"],
       "friends": [{"id": 19}, {"id": 6}]
+    },
+    {
+      "id": 21,
+      "name": "Emily Roberts",
+      "hobbies": ["yoga", "painting"],
+      "friends": [{"id": 22}, {"id": 23}]
+    },
+    {
+      "id": 22,
+      "name": "Jacob Lewis",
+      "hobbies": ["baseball", "hiking"],
+      "friends": [{"id": 21}, {"id": 24}]
+    },
+    {
+      "id": 23,
+      "name": "Madison Clark",
+      "hobbies": ["photos", "traveling"],
+      "friends": [{"id": 21}, {"id": 25}]
+    },
+    {
+      "id": 24,
+      "name": "Ethan Walker",
+      "hobbies": ["basketball", "gaming"],
+      "friends": [{"id": 22}, {"id": 26}]
+    },
+    {
+      "id": 25,
+      "name": "Olivia Hall",
+      "hobbies": ["reading", "dancing"],
+      "friends": [{"id": 23}, {"id": 27}]
+    },
+    {
+      "id": 26,
+      "name": "Mason Young",
+      "hobbies": ["music", "running"],
+      "friends": [{"id": 24}, {"id": 28}]
+    },
+    {
+      "id": 27,
+      "name": "Isabella King",
+      "hobbies": ["cooking", "swimming"],
+      "friends": [{"id": 25}, {"id": 29}]
+    },
+    {
+      "id": 28,
+      "name": "Logan Wright",
+      "hobbies": ["skateboarding", "guitar"],
+      "friends": [{"id": 26}, {"id": 30}]
+    },
+    {
+      "id": 29,
+      "name": "Sophia Scott",
+      "hobbies": ["writing", "yoga"],
+      "friends": [{"id": 27}, {"id": 31}]
+    },
+    {
+      "id": 30,
+      "name": "Benjamin Green",
+      "hobbies": ["chess", "coding"],
+      "friends": [{"id": 28}, {"id": 32}]
+    },
+    {
+      "id": 31,
+      "name": "Ava Baker",
+      "hobbies": ["drawing", "cycling"],
+      "friends": [{"id": 29}, {"id": 33}]
+    },
+    {
+      "id": 32,
+      "name": "William Nelson",
+      "hobbies": ["hiking", "camping"],
+      "friends": [{"id": 30}, {"id": 34}]
+    },
+    {
+      "id": 33,
+      "name": "Mia Carter",
+      "hobbies": ["dancing", "photos"],
+      "friends": [{"id": 31}, {"id": 35}]
+    },
+    {
+      "id": 34,
+      "name": "James Mitchell",
+      "hobbies": ["running", "football"],
+      "friends": [{"id": 32}, {"id": 36}]
+    },
+    {
+      "id": 35,
+      "name": "Charlotte Perez",
+      "hobbies": ["painting", "reading"],
+      "friends": [{"id": 33}, {"id": 37}]
+    },
+    {
+      "id": 36,
+      "name": "Alexander Turner",
+      "hobbies": ["guitar", "fishing"],
+      "friends": [{"id": 34}, {"id": 38}]
+    },
+    {
+      "id": 37,
+      "name": "Amelia Phillips",
+      "hobbies": ["singing", "dancing"],
+      "friends": [{"id": 35}, {"id": 39}]
+    },
+    {
+      "id": 38,
+      "name": "Daniel Campbell",
+      "hobbies": ["coding", "robotics"],
+      "friends": [{"id": 36}, {"id": 40}]
+    },
+    {
+      "id": 39,
+      "name": "Ella Parker",
+      "hobbies": ["reading", "writing"],
+      "friends": [{"id": 37}]
+    },
+    {
+      "id": 40,
+      "name": "Matthew Evans",
+      "hobbies": ["basketball", "tennis"],
+      "friends": [{"id": 38}]
     }
   ]
 }

@@ -10,7 +10,7 @@ It supports pluggable data source parsers (loaders) and graph visualizers, offer
 ## 📌 Features
 
 - 🔌 Plugin-based architecture for data sources and visualizations
-- 📁 Support for multiple graph formats (JSON, XML)
+- 📁 Support for multiple graph formats (JSON, XML, File System)
 - 📊 Interactive graph visualization using D3.js
 - 🌲 Tree View for exploring hierarchy
 - 🧠 Workspace management (multiple graphs with filters and search)
@@ -43,6 +43,9 @@ cd json_loader
 python setup.py install
 cd ..
 cd rdf_loader
+python setup.py install
+cd ..
+cd fs_loader
 python setup.py install
 cd ..
 cd simple_visualizer

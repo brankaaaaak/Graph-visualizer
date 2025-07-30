@@ -26,19 +26,19 @@ class Node:
     @property
     def edges(self):
         return self._edges
-    
+
     @property
     def id(self):
         return self._id
-    
+
     @id.setter
     def id(self, value):
         self._id = value
-    
+
     @property
     def attributes(self):
         return self._attributes
-    
+
     @edges.setter
     def edges(self, value):
         self._edges = value
@@ -52,18 +52,18 @@ class Node:
 
     def degree(self):
         return len(self._edges)
-    
+
     def __eq__(self, value):
         if not isinstance(value, Node):
             return False
-        return self._id == value._id 
-    
+        return self._id == value._id
+
     def has_edge(self, edge):
         for e in self._edges:
             if e == edge:
                 return e
         return None
-    
+
     def add_edge(self, edge):
         is_present = self.has_edge(edge)
         if is_present:
@@ -75,7 +75,7 @@ class Node:
         for edge in self._edges:
             if edge.target == target_node and edge.relation == relation:
                 self._edges.remove(edge)
-                return edge  
+                return edge
         return None
 
     def get_attributes(self):
@@ -83,7 +83,7 @@ class Node:
 
     def add_attribute(self, key, value):
         self._attributes[key] = value
-    
+
     def is_related(self, node):
         return any(
             (edge.origin == self and edge.target == node) or
@@ -137,11 +137,11 @@ class Edge:
     @property
     def origin(self):
         return self._origin
-    
+
     @origin.setter
     def origin(self, value):
         self._origin = value
-    
+
     @property
     def is_directed(self):
         return self._directed
@@ -150,10 +150,10 @@ class Edge:
         return self._weight
     def __hash__(self):
         return hash((self._origin,self._target))
-    
+
     def __str__(self):
         return f'({self._origin}, {self._target}, {self._relation}, {self._weight}, {self._directed})'
-    
+
     def __eq__(self, other) -> bool:
         if self._relation != other.relation:
             return False
@@ -164,7 +164,7 @@ class Edge:
         elif self._target != other.target:
             return False
         return True
-    
+
     def get_nodes(self):
         return self._origin, self._target
 
@@ -192,7 +192,7 @@ class Graph:
     @property
     def path(self):
         return self._path
-    
+
     @path.setter
     def path(self, value):
         self._path = value
@@ -210,46 +210,45 @@ class Graph:
     def get_edges(self):
         edges = set()
         for node in self._nodes:
-            edges.update(node.edges)  
+            edges.update(node.edges)
         return edges
     def get_nodes(self):
         return self._nodes
     def get_number_of_nodes(self):
         return len(self._nodes)
-    
+
     def get_number_of_edges(self):
         directed = sum(1 for edge in self.get_edges() if edge._directed())
         undirected = len(self.get_edges()) - directed
         return directed + undirected // 2
-    
+
     def is_directed(self):
         edges = self.get_edges()
         if edges:
             first_edge = list(edges)[0]
             return first_edge._directed
         return False
-    
+
     def has_node(self, n):
         for node in self.nodes:
             if n == node:
                 return node
         return None
-    
+
     def get_node(self, id):
         return next((node for node in self.nodes if str(node.id) == str(id)), None)
-    
+
     def get_edge(self, source_id, target_id):
         for node in self._nodes:
             if str(node.id) == str(source_id):
                 for edge in self.get_edges():
-                    if (str(edge.origin.id) == str(source_id) and str(edge.target.id) == str(target_id)):
+                    if str(edge.origin.id) == str(source_id) and str(edge.target.id) == str(target_id):
                         return edge
                     if not self.is_directed():
-                        if (str(edge.origin.id) == str(target_id) and str(edge.target.id) == str(source_id)):
+                        if str(edge.origin.id) == str(target_id) and str(edge.target.id) == str(source_id):
                             return edge
         return None
 
-    
     def insert_node(self, node):
         existing_node = self.has_node(node)
         if existing_node:
@@ -264,7 +263,7 @@ class Graph:
             edge.target.add_edge(edge)
 
     def remove_edge(self, origin_id, target_id, relation):
-        
+
         origin_node = self.get_node(origin_id)
         target_node = self.get_node(target_id)
 
@@ -288,7 +287,8 @@ class Graph:
                     target_node.edges.remove(edge)
                     break
         return True
-    def find_subgraphs(self, nodes=None, graphs=None):   
+
+    def find_subgraphs(self, nodes=None, graphs=None):
         """
         Splits the graph into subgraphs (connected components).
         """
@@ -335,7 +335,7 @@ class Graph:
         subgraph.nodes = removed
         graphs.append(subgraph)
         return self.find_subgraphs(nodes, graphs)
-    
+
     def check_if_true(self, node, connected):
         for edge in node.edges:
             try:
@@ -346,7 +346,7 @@ class Graph:
             except KeyError:
                 pass
         return False
-    
+
     def remove_node(self, node_to_remove):
         if node_to_remove in self.nodes:
             self._nodes.remove(node_to_remove)
@@ -358,8 +358,8 @@ class Graph:
             node.add_attribute(key, value)
             return True
         return False
-    
-    def check_as_true(self, edges, connected):   
+
+    def check_as_true(self, edges, connected):
         changes = False
         for edge in edges:
             if edge.origin not in connected or edge.target not in connected:
@@ -372,8 +372,8 @@ class Graph:
             connected[edge.target] = True
 
         return changes
-    
-    def remove_connected_nodes(self, nodes, connected):   
+
+    def remove_connected_nodes(self, nodes, connected):
         removed = []
         for n in connected.keys():
             if connected[n]:
@@ -381,12 +381,12 @@ class Graph:
                 removed.append(n)
 
         return removed
-    
+
     def is_graph_directed(self):
         if len(self.get_edges()) > 0:
             return list(self.get_edges())[0].is_directed
-        
-    def find_conture_nodes(self):   
+
+    def find_conture_nodes(self):
         """
         Returns nodes with no incoming edges.
         """
@@ -398,8 +398,8 @@ class Graph:
                 self.has_cycle_directed(node)
 
         return self._nodes_to_contour
-    
-    def has_cycle_directed(self, node):   
+
+    def has_cycle_directed(self, node):
         if node in self.path:
             if self.path[0] not in self._nodes_to_contour:
                 self._nodes_to_contour.append(self.path[0])
@@ -412,7 +412,7 @@ class Graph:
         if node not in self._nodes_to_contour:
             self._visited_nodes.append(node)
 
-    def has_cycle_undirected(self):  
+    def has_cycle_undirected(self):
         """
         Checks for cycles in an undirected graph using DFS.
         """
@@ -424,7 +424,7 @@ class Graph:
             if self.depth_first_search(node, None):
                 return True
         return False
-    
+
     def depth_first_search(self, current, parent):
         self._visited_nodes.append(current)
         for node in self.nodes:
@@ -437,8 +437,8 @@ class Graph:
                 elif self.depth_first_search(node, current):
                     return True
         return False
-    
-    def find_not_destination_nodes(self):   
+
+    def find_not_destination_nodes(self):
         """
         Returns nodes with no outgoing edges.
         """
@@ -469,7 +469,9 @@ class NodeIdGenerator:
     def reset(self):
         self.__current_id = 0
 
+
 nodeId = NodeIdGenerator()
+
 
 class TreeNode(object):
     """
@@ -501,7 +503,7 @@ class TreeNode(object):
     @opened.setter
     def opened(self, value):
         self._opened = value
-    
+
     @property
     def object(self):
         return self._object
@@ -513,7 +515,7 @@ class TreeNode(object):
     @property
     def children(self):
         return self._children
-    
+
     @children.setter
     def children(self, value):
         self._children = value
@@ -521,7 +523,7 @@ class TreeNode(object):
     @property
     def parent(self):
         return self._parent
-    
+
     def open(self):
         self._opened = True
         if len(self._children) <= 0:
@@ -529,7 +531,7 @@ class TreeNode(object):
                 self.add_children(self._object.get_relations())
             else:
                 self.add_children(self._parent.object.get_related_nodes(self._object))
-            
+
     def load_children(self):
         if len(self._children) <= 0:
             if self._object_type == "node":
@@ -595,12 +597,12 @@ class Tree(object):
                 return found_node
         return None
 
-    def find_node_by_node_id(self, id, nodes=None): #by graph node
+    def find_node_by_node_id(self, id, nodes=None): # by graph node
         if nodes is None:
             nodes = self._roots
         new_nodes = []
         for node in nodes:
-            #if node.object_type != "edge" and node.object.id == id:
+            # if node.object_type != "edge" and node.object.id == id:
             if node.object_type != "edge" and str(node.object.id) == str(id):
                 return node
             node.load_children()
