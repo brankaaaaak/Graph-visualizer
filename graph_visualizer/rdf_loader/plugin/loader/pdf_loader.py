@@ -38,13 +38,13 @@ class RDFLoader(BaseLoader):
             subj_node = self._get_or_create_node(subj_id)
 
             if isinstance(obj, rdflib.Literal):
-                subj_node.add_attribute(pred_label, str(obj))
+                subj_node.add_attribute(pred_label, obj.value)
             else:
                 obj_node = self._get_or_create_node(obj_id)
                 edge = Edge(origin=subj_node, target=obj_node, relation=pred_label, weight=1.0, directed=True)
                 subj_node.add_edge(edge)
 
-        # Ubacujemo sve čvorove u graf
+        # Ubacujemo sve cvorove u graf
         for node in self._node_map.values():
             graph.insert_node(node)
 
@@ -55,7 +55,7 @@ class RDFLoader(BaseLoader):
             self._id_sequence += 1
             numeric_id = self._id_sequence
             node = Node(numeric_id)
-            node.add_attribute(self._key_field, original_id)  # čuvamo originalni RDF URI kao atribut
+            node.add_attribute(self._key_field, original_id)  # cuvamo originalni RDF URI kao atribut
             self._node_map[original_id] = node
             self._id_map[original_id] = numeric_id
         return self._node_map[original_id]

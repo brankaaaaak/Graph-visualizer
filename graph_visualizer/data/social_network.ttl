@@ -1702,4 +1702,3 @@ ex:Comment100 a ex:Comment ;
   dc:content "Comment by User100" ;
   ex:author ex:User100 ;
   ex:onPost ex:Post2 .
-
