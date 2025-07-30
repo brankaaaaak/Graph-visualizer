@@ -62,6 +62,7 @@ class BlockVisualizer(BaseVisualizer):
                 .charge(-5000)
                 .gravity(0.5);
 
+            d3.select("#main-view svg").remove();
             var svgRoot = d3.select("#main-view")
                 .append("svg")
                 .attr("width", width)
