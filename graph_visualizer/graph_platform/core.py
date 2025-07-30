@@ -38,7 +38,7 @@ class PlatformState:
             if visualizer.identifier() == id:
                 return visualizer
         return None
-    
+
     def load_tree(self):
         self.tree = Tree()
         added_ids = set()
@@ -68,6 +68,7 @@ def load_plugins(entry_point):
         plugins.append(plugin)
     return plugins
 
+
 def find_root_nodes(subgraphs):
     roots = []
     for graph in subgraphs:
@@ -86,12 +87,7 @@ def find_root_nodes(subgraphs):
                         roots.append(n)
     return roots
 
-"""def merge_lists_distinct(first_list, second_list):
-    for i in first_list:
-        if i not in second_list:
-            second_list.append(i)
 
-    return second_list"""
 def merge_lists_distinct(first_list, second_list):
     seen_ids = set(n.id for n in second_list)
     for i in first_list:
@@ -110,5 +106,6 @@ def print_tree(tree):
 
     for root in tree.roots:
         print_node(root)
+
 
 state = PlatformState()
