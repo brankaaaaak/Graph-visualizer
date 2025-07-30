@@ -80,6 +80,7 @@ class Node:
 
     def get_attributes(self):
         return self._attributes
+
     def add_attribute(self, key, value):
         self._attributes[key] = value
 

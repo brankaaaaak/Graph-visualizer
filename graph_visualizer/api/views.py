@@ -1,5 +1,6 @@
 import json
 import uuid
+# import graphviz
 from django.http import HttpResponse, JsonResponse
 import time
 from django.http import HttpResponse
@@ -88,7 +89,6 @@ def generate_tree_html(nodes):
     #print(html)
     return html
 
-
 def dict_to_graph(graph_dict):
     graph = Graph()
     nodes_map = {}
@@ -129,7 +129,6 @@ def expand_node_view(request):
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
 
-
 def expand_node_from_view(request, node_id):
     try:
         tree = state.tree
@@ -153,7 +152,7 @@ def expand_node_from_view(request, node_id):
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
 
-    
+
 def visualize(request):
     visualizer_id = request.GET.get('visualizer')
     if not visualizer_id:
@@ -164,15 +163,16 @@ def visualize(request):
 
     state.load_tree()
     tree_html = generate_tree_html(state.tree.roots)
+    # bird_svg = generate_bird_view_svg(graph)
 
     for v in visualizers:
         if v.identifier() == visualizer_id:
             state.visualizer = v
             html_snippet = v.visualize(graph, request)
-            time.sleep(2)
             return render(request, "index.html", {
                 "view_html": html_snippet,
                 "tree_html": tree_html,
+                # "bird_svg": bird_svg,
                 "graph_visualized": graph,
                 "current_visualizer": v.identifier(),
                 "current_workspace": state.current_workspace,
@@ -188,6 +188,8 @@ def check_extension(loader_name, file):
             return file.name.endswith('.xml')
         case "JsonLoader":
             return file.name.endswith('.json')
+        case "RDFLoader":
+            return file.name.endswith(".ttl")
         case "FileSystemLoader":
             return file.name.endswith('.fstxt') or file.name.endswith('.folder')
     return False  
@@ -218,7 +220,6 @@ def create_node(request):
 
         for key, value in props.items():
             new_node.add_attribute(key, value)
-        
 
         state.graph.insert_node(new_node)
 
@@ -234,7 +235,6 @@ def create_node(request):
         import traceback
         traceback.print_exc()
         return JsonResponse({"error": str(e)}, status=500)
-
 
 def create_edge(request):
     if request.method != "POST":
@@ -335,7 +335,6 @@ def delete_edge(request):
         origin = data.get("origin")
         target = data.get("target")
         relation = data.get("relation")
-        
 
         try:
             
@@ -369,7 +368,6 @@ def edit_edge(request):
 
             if not all([origin_id, old_relation, target_id, new_relation]):
                 return JsonResponse({"success": False, "error": "Missing data."})
-            
 
             print(origin_id)
             print(old_relation)
@@ -397,7 +395,6 @@ def edit_edge(request):
             return JsonResponse({"success": False, "error": str(e)})
     else:
         return JsonResponse({'success': False, 'error': 'Only POST allowed'})
-
 
 def edit_node(request):
     if request.method == 'POST':
@@ -510,14 +507,12 @@ def search_node(new_graph, old_graph, node, query):
                 new_edge = Edge(origin=new_origin, target=new_node, relation=edge.relation, weight=edge.weight, directed=edge.is_directed)
                 new_origin.add_edge(new_edge)
 
-
 def copy_node(original_node):
     new_node = Node(original_node.id)
     for key, value in original_node.attributes.items():
         new_node.add_attribute(key, value)
     return new_node
 
-        
 def create_graph(original_graph, filtered_graph):
     new_graph = Graph()
 
@@ -542,7 +537,6 @@ def create_graph(original_graph, filtered_graph):
                     new_graph.insert_edge(new_edge)
 
     return new_graph
-
 
 def clear_graph(request):
     if request.method != "POST":
@@ -571,7 +565,9 @@ def filter_view(request):
     if old_graph is None:
         return JsonResponse({"success": False, "error": "No graph loaded"}, status=400)
 
-    match = re.match(r"(\w+)\s*(==|=|!=|<=|>=|<|>)\s*['\"]?([\w\s\.\-]+)['\"]?", condition)
+    # match = re.match(r"(\w+)\s*(==|=|!=|<=|>=|<|>)\s*['\"]?([\w\s\.\-]+)['\"]?", condition)
+    match = re.match(r"([^\s]+)\s*(==|=|!=|<=|>=|<|>)\s*['\"]?(.+?)['\"]?$", condition)
+
     if not match:
         return JsonResponse({"success": False, "error": "Invalid filter format"}, status=400)
 
@@ -663,7 +659,6 @@ def reset_graph(request):
     if request.method != "POST":
         return JsonResponse({"error": "Only POST allowed"}, status=405)
 
-    
     state.graph = state.base_graph
     
     state.load_tree()
@@ -690,7 +685,6 @@ def add_workspace(request):
     }
     state.current_workspace = ws_id
     return JsonResponse({"success": True, "workspace_id": ws_id})
-
 
 def switch_workspace(request, ws_id):
     success = state.switch_workspace(ws_id)
