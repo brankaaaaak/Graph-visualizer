@@ -185,7 +185,10 @@ def check_extension(loader_name, file):
             return file.name.endswith('.xml')
         case "JsonLoader":
             return file.name.endswith('.json')
+        case "FileSystemLoader":
+            return file.name.endswith('.fstxt') or file.name.endswith('.folder')
     return False  
+
 
 def create_node(request):
     if request.method != "POST":
