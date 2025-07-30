@@ -1,4 +1,6 @@
 import os
+import random
+from datetime import datetime, timedelta
 
 num_users = 100
 
@@ -6,7 +8,8 @@ def generate_rdf_data(base_path):
     with open(os.path.join(base_path, "social_network.ttl"), "w", encoding="utf-8") as f:
         f.write("""@prefix ex: <http://example.org/> .\n""")
         f.write("""@prefix foaf: <http://xmlns.com/foaf/0.1/> .\n""")
-        f.write("""@prefix dc: <http://purl.org/dc/elements/1.1/> .\n\n""")
+        f.write("""@prefix dc: <http://purl.org/dc/elements/1.1/> .\n""")
+        f.write("""@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n""")
 
         for i in range(1, num_users + 1):
             u = f"User{i}"
@@ -16,9 +19,16 @@ def generate_rdf_data(base_path):
             comment = f"Comment{i}"
             comment_target_post = f"Post{((i + 1) % num_users) + 1}"
 
+            age = random.randint(18, 65)
+            rating = round(random.uniform(1.0, 5.0), 2)
+            date = (datetime(2020, 1, 1) + timedelta(days=i)).date()
+
             # Korisnik
             f.write(f"ex:{u} a foaf:Person ;\n")
             f.write(f"  foaf:name \"{u}\" ;\n")
+            f.write(f"  ex:age \"{age}\"^^xsd:int ;\n")
+            f.write(f"  ex:rating \"{rating}\"^^xsd:float ;\n")
+            f.write(f"  ex:registeredOn \"{date}\"^^xsd:date ;\n")
             f.write(f"  ex:knows ex:{next1}, ex:{next2} ;\n")
             f.write(f"  ex:created ex:{post} .\n\n")
 

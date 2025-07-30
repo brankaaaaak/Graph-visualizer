@@ -1,9 +1,13 @@
 @prefix ex: <http://example.org/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 ex:User1 a foaf:Person ;
   foaf:name "User1" ;
+  ex:age "62"^^xsd:int ;
+  ex:rating "2.29"^^xsd:float ;
+  ex:registeredOn "2020-01-02"^^xsd:date ;
   ex:knows ex:User2, ex:User3 ;
   ex:created ex:Post1 .
 
@@ -18,6 +22,9 @@ ex:Comment1 a ex:Comment ;
 
 ex:User2 a foaf:Person ;
   foaf:name "User2" ;
+  ex:age "60"^^xsd:int ;
+  ex:rating "1.48"^^xsd:float ;
+  ex:registeredOn "2020-01-03"^^xsd:date ;
   ex:knows ex:User3, ex:User4 ;
   ex:created ex:Post2 .
 
@@ -32,6 +39,9 @@ ex:Comment2 a ex:Comment ;
 
 ex:User3 a foaf:Person ;
   foaf:name "User3" ;
+  ex:age "59"^^xsd:int ;
+  ex:rating "2.95"^^xsd:float ;
+  ex:registeredOn "2020-01-04"^^xsd:date ;
   ex:knows ex:User4, ex:User5 ;
   ex:created ex:Post3 .
 
@@ -46,6 +56,9 @@ ex:Comment3 a ex:Comment ;
 
 ex:User4 a foaf:Person ;
   foaf:name "User4" ;
+  ex:age "34"^^xsd:int ;
+  ex:rating "2.25"^^xsd:float ;
+  ex:registeredOn "2020-01-05"^^xsd:date ;
   ex:knows ex:User5, ex:User6 ;
   ex:created ex:Post4 .
 
@@ -60,6 +73,9 @@ ex:Comment4 a ex:Comment ;
 
 ex:User5 a foaf:Person ;
   foaf:name "User5" ;
+  ex:age "59"^^xsd:int ;
+  ex:rating "4.32"^^xsd:float ;
+  ex:registeredOn "2020-01-06"^^xsd:date ;
   ex:knows ex:User6, ex:User7 ;
   ex:created ex:Post5 .
 
@@ -74,6 +90,9 @@ ex:Comment5 a ex:Comment ;
 
 ex:User6 a foaf:Person ;
   foaf:name "User6" ;
+  ex:age "39"^^xsd:int ;
+  ex:rating "3.91"^^xsd:float ;
+  ex:registeredOn "2020-01-07"^^xsd:date ;
   ex:knows ex:User7, ex:User8 ;
   ex:created ex:Post6 .
 
@@ -88,6 +107,9 @@ ex:Comment6 a ex:Comment ;
 
 ex:User7 a foaf:Person ;
   foaf:name "User7" ;
+  ex:age "51"^^xsd:int ;
+  ex:rating "3.35"^^xsd:float ;
+  ex:registeredOn "2020-01-08"^^xsd:date ;
   ex:knows ex:User8, ex:User9 ;
   ex:created ex:Post7 .
 
@@ -102,6 +124,9 @@ ex:Comment7 a ex:Comment ;
 
 ex:User8 a foaf:Person ;
   foaf:name "User8" ;
+  ex:age "22"^^xsd:int ;
+  ex:rating "2.61"^^xsd:float ;
+  ex:registeredOn "2020-01-09"^^xsd:date ;
   ex:knows ex:User9, ex:User10 ;
   ex:created ex:Post8 .
 
@@ -116,6 +141,9 @@ ex:Comment8 a ex:Comment ;
 
 ex:User9 a foaf:Person ;
   foaf:name "User9" ;
+  ex:age "60"^^xsd:int ;
+  ex:rating "3.41"^^xsd:float ;
+  ex:registeredOn "2020-01-10"^^xsd:date ;
   ex:knows ex:User10, ex:User11 ;
   ex:created ex:Post9 .
 
@@ -130,6 +158,9 @@ ex:Comment9 a ex:Comment ;
 
 ex:User10 a foaf:Person ;
   foaf:name "User10" ;
+  ex:age "49"^^xsd:int ;
+  ex:rating "1.06"^^xsd:float ;
+  ex:registeredOn "2020-01-11"^^xsd:date ;
   ex:knows ex:User11, ex:User12 ;
   ex:created ex:Post10 .
 
@@ -144,6 +175,9 @@ ex:Comment10 a ex:Comment ;
 
 ex:User11 a foaf:Person ;
   foaf:name "User11" ;
+  ex:age "48"^^xsd:int ;
+  ex:rating "1.36"^^xsd:float ;
+  ex:registeredOn "2020-01-12"^^xsd:date ;
   ex:knows ex:User12, ex:User13 ;
   ex:created ex:Post11 .
 
@@ -158,6 +192,9 @@ ex:Comment11 a ex:Comment ;
 
 ex:User12 a foaf:Person ;
   foaf:name "User12" ;
+  ex:age "35"^^xsd:int ;
+  ex:rating "3.07"^^xsd:float ;
+  ex:registeredOn "2020-01-13"^^xsd:date ;
   ex:knows ex:User13, ex:User14 ;
   ex:created ex:Post12 .
 
@@ -172,6 +209,9 @@ ex:Comment12 a ex:Comment ;
 
 ex:User13 a foaf:Person ;
   foaf:name "User13" ;
+  ex:age "27"^^xsd:int ;
+  ex:rating "2.56"^^xsd:float ;
+  ex:registeredOn "2020-01-14"^^xsd:date ;
   ex:knows ex:User14, ex:User15 ;
   ex:created ex:Post13 .
 
@@ -186,6 +226,9 @@ ex:Comment13 a ex:Comment ;
 
 ex:User14 a foaf:Person ;
   foaf:name "User14" ;
+  ex:age "63"^^xsd:int ;
+  ex:rating "4.22"^^xsd:float ;
+  ex:registeredOn "2020-01-15"^^xsd:date ;
   ex:knows ex:User15, ex:User16 ;
   ex:created ex:Post14 .
 
@@ -200,6 +243,9 @@ ex:Comment14 a ex:Comment ;
 
 ex:User15 a foaf:Person ;
   foaf:name "User15" ;
+  ex:age "36"^^xsd:int ;
+  ex:rating "2.85"^^xsd:float ;
+  ex:registeredOn "2020-01-16"^^xsd:date ;
   ex:knows ex:User16, ex:User17 ;
   ex:created ex:Post15 .
 
@@ -214,6 +260,9 @@ ex:Comment15 a ex:Comment ;
 
 ex:User16 a foaf:Person ;
   foaf:name "User16" ;
+  ex:age "28"^^xsd:int ;
+  ex:rating "4.59"^^xsd:float ;
+  ex:registeredOn "2020-01-17"^^xsd:date ;
   ex:knows ex:User17, ex:User18 ;
   ex:created ex:Post16 .
 
@@ -228,6 +277,9 @@ ex:Comment16 a ex:Comment ;
 
 ex:User17 a foaf:Person ;
   foaf:name "User17" ;
+  ex:age "22"^^xsd:int ;
+  ex:rating "3.91"^^xsd:float ;
+  ex:registeredOn "2020-01-18"^^xsd:date ;
   ex:knows ex:User18, ex:User19 ;
   ex:created ex:Post17 .
 
@@ -242,6 +294,9 @@ ex:Comment17 a ex:Comment ;
 
 ex:User18 a foaf:Person ;
   foaf:name "User18" ;
+  ex:age "50"^^xsd:int ;
+  ex:rating "1.4"^^xsd:float ;
+  ex:registeredOn "2020-01-19"^^xsd:date ;
   ex:knows ex:User19, ex:User20 ;
   ex:created ex:Post18 .
 
@@ -256,6 +311,9 @@ ex:Comment18 a ex:Comment ;
 
 ex:User19 a foaf:Person ;
   foaf:name "User19" ;
+  ex:age "53"^^xsd:int ;
+  ex:rating "1.55"^^xsd:float ;
+  ex:registeredOn "2020-01-20"^^xsd:date ;
   ex:knows ex:User20, ex:User21 ;
   ex:created ex:Post19 .
 
@@ -270,6 +328,9 @@ ex:Comment19 a ex:Comment ;
 
 ex:User20 a foaf:Person ;
   foaf:name "User20" ;
+  ex:age "51"^^xsd:int ;
+  ex:rating "2.72"^^xsd:float ;
+  ex:registeredOn "2020-01-21"^^xsd:date ;
   ex:knows ex:User21, ex:User22 ;
   ex:created ex:Post20 .
 
@@ -284,6 +345,9 @@ ex:Comment20 a ex:Comment ;
 
 ex:User21 a foaf:Person ;
   foaf:name "User21" ;
+  ex:age "28"^^xsd:int ;
+  ex:rating "4.72"^^xsd:float ;
+  ex:registeredOn "2020-01-22"^^xsd:date ;
   ex:knows ex:User22, ex:User23 ;
   ex:created ex:Post21 .
 
@@ -298,6 +362,9 @@ ex:Comment21 a ex:Comment ;
 
 ex:User22 a foaf:Person ;
   foaf:name "User22" ;
+  ex:age "57"^^xsd:int ;
+  ex:rating "1.56"^^xsd:float ;
+  ex:registeredOn "2020-01-23"^^xsd:date ;
   ex:knows ex:User23, ex:User24 ;
   ex:created ex:Post22 .
 
@@ -312,6 +379,9 @@ ex:Comment22 a ex:Comment ;
 
 ex:User23 a foaf:Person ;
   foaf:name "User23" ;
+  ex:age "35"^^xsd:int ;
+  ex:rating "2.16"^^xsd:float ;
+  ex:registeredOn "2020-01-24"^^xsd:date ;
   ex:knows ex:User24, ex:User25 ;
   ex:created ex:Post23 .
 
@@ -326,6 +396,9 @@ ex:Comment23 a ex:Comment ;
 
 ex:User24 a foaf:Person ;
   foaf:name "User24" ;
+  ex:age "46"^^xsd:int ;
+  ex:rating "1.26"^^xsd:float ;
+  ex:registeredOn "2020-01-25"^^xsd:date ;
   ex:knows ex:User25, ex:User26 ;
   ex:created ex:Post24 .
 
@@ -340,6 +413,9 @@ ex:Comment24 a ex:Comment ;
 
 ex:User25 a foaf:Person ;
   foaf:name "User25" ;
+  ex:age "26"^^xsd:int ;
+  ex:rating "3.32"^^xsd:float ;
+  ex:registeredOn "2020-01-26"^^xsd:date ;
   ex:knows ex:User26, ex:User27 ;
   ex:created ex:Post25 .
 
@@ -354,6 +430,9 @@ ex:Comment25 a ex:Comment ;
 
 ex:User26 a foaf:Person ;
   foaf:name "User26" ;
+  ex:age "57"^^xsd:int ;
+  ex:rating "2.01"^^xsd:float ;
+  ex:registeredOn "2020-01-27"^^xsd:date ;
   ex:knows ex:User27, ex:User28 ;
   ex:created ex:Post26 .
 
@@ -368,6 +447,9 @@ ex:Comment26 a ex:Comment ;
 
 ex:User27 a foaf:Person ;
   foaf:name "User27" ;
+  ex:age "54"^^xsd:int ;
+  ex:rating "3.46"^^xsd:float ;
+  ex:registeredOn "2020-01-28"^^xsd:date ;
   ex:knows ex:User28, ex:User29 ;
   ex:created ex:Post27 .
 
@@ -382,6 +464,9 @@ ex:Comment27 a ex:Comment ;
 
 ex:User28 a foaf:Person ;
   foaf:name "User28" ;
+  ex:age "24"^^xsd:int ;
+  ex:rating "1.73"^^xsd:float ;
+  ex:registeredOn "2020-01-29"^^xsd:date ;
   ex:knows ex:User29, ex:User30 ;
   ex:created ex:Post28 .
 
@@ -396,6 +481,9 @@ ex:Comment28 a ex:Comment ;
 
 ex:User29 a foaf:Person ;
   foaf:name "User29" ;
+  ex:age "47"^^xsd:int ;
+  ex:rating "3.93"^^xsd:float ;
+  ex:registeredOn "2020-01-30"^^xsd:date ;
   ex:knows ex:User30, ex:User31 ;
   ex:created ex:Post29 .
 
@@ -410,6 +498,9 @@ ex:Comment29 a ex:Comment ;
 
 ex:User30 a foaf:Person ;
   foaf:name "User30" ;
+  ex:age "30"^^xsd:int ;
+  ex:rating "2.08"^^xsd:float ;
+  ex:registeredOn "2020-01-31"^^xsd:date ;
   ex:knows ex:User31, ex:User32 ;
   ex:created ex:Post30 .
 
@@ -424,6 +515,9 @@ ex:Comment30 a ex:Comment ;
 
 ex:User31 a foaf:Person ;
   foaf:name "User31" ;
+  ex:age "31"^^xsd:int ;
+  ex:rating "2.79"^^xsd:float ;
+  ex:registeredOn "2020-02-01"^^xsd:date ;
   ex:knows ex:User32, ex:User33 ;
   ex:created ex:Post31 .
 
@@ -438,6 +532,9 @@ ex:Comment31 a ex:Comment ;
 
 ex:User32 a foaf:Person ;
   foaf:name "User32" ;
+  ex:age "38"^^xsd:int ;
+  ex:rating "1.22"^^xsd:float ;
+  ex:registeredOn "2020-02-02"^^xsd:date ;
   ex:knows ex:User33, ex:User34 ;
   ex:created ex:Post32 .
 
@@ -452,6 +549,9 @@ ex:Comment32 a ex:Comment ;
 
 ex:User33 a foaf:Person ;
   foaf:name "User33" ;
+  ex:age "43"^^xsd:int ;
+  ex:rating "1.16"^^xsd:float ;
+  ex:registeredOn "2020-02-03"^^xsd:date ;
   ex:knows ex:User34, ex:User35 ;
   ex:created ex:Post33 .
 
@@ -466,6 +566,9 @@ ex:Comment33 a ex:Comment ;
 
 ex:User34 a foaf:Person ;
   foaf:name "User34" ;
+  ex:age "65"^^xsd:int ;
+  ex:rating "2.97"^^xsd:float ;
+  ex:registeredOn "2020-02-04"^^xsd:date ;
   ex:knows ex:User35, ex:User36 ;
   ex:created ex:Post34 .
 
@@ -480,6 +583,9 @@ ex:Comment34 a ex:Comment ;
 
 ex:User35 a foaf:Person ;
   foaf:name "User35" ;
+  ex:age "57"^^xsd:int ;
+  ex:rating "1.31"^^xsd:float ;
+  ex:registeredOn "2020-02-05"^^xsd:date ;
   ex:knows ex:User36, ex:User37 ;
   ex:created ex:Post35 .
 
@@ -494,6 +600,9 @@ ex:Comment35 a ex:Comment ;
 
 ex:User36 a foaf:Person ;
   foaf:name "User36" ;
+  ex:age "59"^^xsd:int ;
+  ex:rating "2.43"^^xsd:float ;
+  ex:registeredOn "2020-02-06"^^xsd:date ;
   ex:knows ex:User37, ex:User38 ;
   ex:created ex:Post36 .
 
@@ -508,6 +617,9 @@ ex:Comment36 a ex:Comment ;
 
 ex:User37 a foaf:Person ;
   foaf:name "User37" ;
+  ex:age "27"^^xsd:int ;
+  ex:rating "4.47"^^xsd:float ;
+  ex:registeredOn "2020-02-07"^^xsd:date ;
   ex:knows ex:User38, ex:User39 ;
   ex:created ex:Post37 .
 
@@ -522,6 +634,9 @@ ex:Comment37 a ex:Comment ;
 
 ex:User38 a foaf:Person ;
   foaf:name "User38" ;
+  ex:age "30"^^xsd:int ;
+  ex:rating "3.91"^^xsd:float ;
+  ex:registeredOn "2020-02-08"^^xsd:date ;
   ex:knows ex:User39, ex:User40 ;
   ex:created ex:Post38 .
 
@@ -536,6 +651,9 @@ ex:Comment38 a ex:Comment ;
 
 ex:User39 a foaf:Person ;
   foaf:name "User39" ;
+  ex:age "22"^^xsd:int ;
+  ex:rating "3.97"^^xsd:float ;
+  ex:registeredOn "2020-02-09"^^xsd:date ;
   ex:knows ex:User40, ex:User41 ;
   ex:created ex:Post39 .
 
@@ -550,6 +668,9 @@ ex:Comment39 a ex:Comment ;
 
 ex:User40 a foaf:Person ;
   foaf:name "User40" ;
+  ex:age "58"^^xsd:int ;
+  ex:rating "4.91"^^xsd:float ;
+  ex:registeredOn "2020-02-10"^^xsd:date ;
   ex:knows ex:User41, ex:User42 ;
   ex:created ex:Post40 .
 
@@ -564,6 +685,9 @@ ex:Comment40 a ex:Comment ;
 
 ex:User41 a foaf:Person ;
   foaf:name "User41" ;
+  ex:age "27"^^xsd:int ;
+  ex:rating "1.41"^^xsd:float ;
+  ex:registeredOn "2020-02-11"^^xsd:date ;
   ex:knows ex:User42, ex:User43 ;
   ex:created ex:Post41 .
 
@@ -578,6 +702,9 @@ ex:Comment41 a ex:Comment ;
 
 ex:User42 a foaf:Person ;
   foaf:name "User42" ;
+  ex:age "31"^^xsd:int ;
+  ex:rating "1.93"^^xsd:float ;
+  ex:registeredOn "2020-02-12"^^xsd:date ;
   ex:knows ex:User43, ex:User44 ;
   ex:created ex:Post42 .
 
@@ -592,6 +719,9 @@ ex:Comment42 a ex:Comment ;
 
 ex:User43 a foaf:Person ;
   foaf:name "User43" ;
+  ex:age "26"^^xsd:int ;
+  ex:rating "3.07"^^xsd:float ;
+  ex:registeredOn "2020-02-13"^^xsd:date ;
   ex:knows ex:User44, ex:User45 ;
   ex:created ex:Post43 .
 
@@ -606,6 +736,9 @@ ex:Comment43 a ex:Comment ;
 
 ex:User44 a foaf:Person ;
   foaf:name "User44" ;
+  ex:age "38"^^xsd:int ;
+  ex:rating "4.72"^^xsd:float ;
+  ex:registeredOn "2020-02-14"^^xsd:date ;
   ex:knows ex:User45, ex:User46 ;
   ex:created ex:Post44 .
 
@@ -620,6 +753,9 @@ ex:Comment44 a ex:Comment ;
 
 ex:User45 a foaf:Person ;
   foaf:name "User45" ;
+  ex:age "56"^^xsd:int ;
+  ex:rating "1.46"^^xsd:float ;
+  ex:registeredOn "2020-02-15"^^xsd:date ;
   ex:knows ex:User46, ex:User47 ;
   ex:created ex:Post45 .
 
@@ -634,6 +770,9 @@ ex:Comment45 a ex:Comment ;
 
 ex:User46 a foaf:Person ;
   foaf:name "User46" ;
+  ex:age "24"^^xsd:int ;
+  ex:rating "3.31"^^xsd:float ;
+  ex:registeredOn "2020-02-16"^^xsd:date ;
   ex:knows ex:User47, ex:User48 ;
   ex:created ex:Post46 .
 
@@ -648,6 +787,9 @@ ex:Comment46 a ex:Comment ;
 
 ex:User47 a foaf:Person ;
   foaf:name "User47" ;
+  ex:age "47"^^xsd:int ;
+  ex:rating "2.39"^^xsd:float ;
+  ex:registeredOn "2020-02-17"^^xsd:date ;
   ex:knows ex:User48, ex:User49 ;
   ex:created ex:Post47 .
 
@@ -662,6 +804,9 @@ ex:Comment47 a ex:Comment ;
 
 ex:User48 a foaf:Person ;
   foaf:name "User48" ;
+  ex:age "31"^^xsd:int ;
+  ex:rating "3.49"^^xsd:float ;
+  ex:registeredOn "2020-02-18"^^xsd:date ;
   ex:knows ex:User49, ex:User50 ;
   ex:created ex:Post48 .
 
@@ -676,6 +821,9 @@ ex:Comment48 a ex:Comment ;
 
 ex:User49 a foaf:Person ;
   foaf:name "User49" ;
+  ex:age "38"^^xsd:int ;
+  ex:rating "2.45"^^xsd:float ;
+  ex:registeredOn "2020-02-19"^^xsd:date ;
   ex:knows ex:User50, ex:User51 ;
   ex:created ex:Post49 .
 
@@ -690,6 +838,9 @@ ex:Comment49 a ex:Comment ;
 
 ex:User50 a foaf:Person ;
   foaf:name "User50" ;
+  ex:age "42"^^xsd:int ;
+  ex:rating "3.59"^^xsd:float ;
+  ex:registeredOn "2020-02-20"^^xsd:date ;
   ex:knows ex:User51, ex:User52 ;
   ex:created ex:Post50 .
 
@@ -704,6 +855,9 @@ ex:Comment50 a ex:Comment ;
 
 ex:User51 a foaf:Person ;
   foaf:name "User51" ;
+  ex:age "23"^^xsd:int ;
+  ex:rating "2.29"^^xsd:float ;
+  ex:registeredOn "2020-02-21"^^xsd:date ;
   ex:knows ex:User52, ex:User53 ;
   ex:created ex:Post51 .
 
@@ -718,6 +872,9 @@ ex:Comment51 a ex:Comment ;
 
 ex:User52 a foaf:Person ;
   foaf:name "User52" ;
+  ex:age "55"^^xsd:int ;
+  ex:rating "1.58"^^xsd:float ;
+  ex:registeredOn "2020-02-22"^^xsd:date ;
   ex:knows ex:User53, ex:User54 ;
   ex:created ex:Post52 .
 
@@ -732,6 +889,9 @@ ex:Comment52 a ex:Comment ;
 
 ex:User53 a foaf:Person ;
   foaf:name "User53" ;
+  ex:age "46"^^xsd:int ;
+  ex:rating "3.05"^^xsd:float ;
+  ex:registeredOn "2020-02-23"^^xsd:date ;
   ex:knows ex:User54, ex:User55 ;
   ex:created ex:Post53 .
 
@@ -746,6 +906,9 @@ ex:Comment53 a ex:Comment ;
 
 ex:User54 a foaf:Person ;
   foaf:name "User54" ;
+  ex:age "25"^^xsd:int ;
+  ex:rating "2.18"^^xsd:float ;
+  ex:registeredOn "2020-02-24"^^xsd:date ;
   ex:knows ex:User55, ex:User56 ;
   ex:created ex:Post54 .
 
@@ -760,6 +923,9 @@ ex:Comment54 a ex:Comment ;
 
 ex:User55 a foaf:Person ;
   foaf:name "User55" ;
+  ex:age "36"^^xsd:int ;
+  ex:rating "3.26"^^xsd:float ;
+  ex:registeredOn "2020-02-25"^^xsd:date ;
   ex:knows ex:User56, ex:User57 ;
   ex:created ex:Post55 .
 
@@ -774,6 +940,9 @@ ex:Comment55 a ex:Comment ;
 
 ex:User56 a foaf:Person ;
   foaf:name "User56" ;
+  ex:age "58"^^xsd:int ;
+  ex:rating "3.76"^^xsd:float ;
+  ex:registeredOn "2020-02-26"^^xsd:date ;
   ex:knows ex:User57, ex:User58 ;
   ex:created ex:Post56 .
 
@@ -788,6 +957,9 @@ ex:Comment56 a ex:Comment ;
 
 ex:User57 a foaf:Person ;
   foaf:name "User57" ;
+  ex:age "42"^^xsd:int ;
+  ex:rating "3.0"^^xsd:float ;
+  ex:registeredOn "2020-02-27"^^xsd:date ;
   ex:knows ex:User58, ex:User59 ;
   ex:created ex:Post57 .
 
@@ -802,6 +974,9 @@ ex:Comment57 a ex:Comment ;
 
 ex:User58 a foaf:Person ;
   foaf:name "User58" ;
+  ex:age "54"^^xsd:int ;
+  ex:rating "2.71"^^xsd:float ;
+  ex:registeredOn "2020-02-28"^^xsd:date ;
   ex:knows ex:User59, ex:User60 ;
   ex:created ex:Post58 .
 
@@ -816,6 +991,9 @@ ex:Comment58 a ex:Comment ;
 
 ex:User59 a foaf:Person ;
   foaf:name "User59" ;
+  ex:age "28"^^xsd:int ;
+  ex:rating "1.01"^^xsd:float ;
+  ex:registeredOn "2020-02-29"^^xsd:date ;
   ex:knows ex:User60, ex:User61 ;
   ex:created ex:Post59 .
 
@@ -830,6 +1008,9 @@ ex:Comment59 a ex:Comment ;
 
 ex:User60 a foaf:Person ;
   foaf:name "User60" ;
+  ex:age "47"^^xsd:int ;
+  ex:rating "4.29"^^xsd:float ;
+  ex:registeredOn "2020-03-01"^^xsd:date ;
   ex:knows ex:User61, ex:User62 ;
   ex:created ex:Post60 .
 
@@ -844,6 +1025,9 @@ ex:Comment60 a ex:Comment ;
 
 ex:User61 a foaf:Person ;
   foaf:name "User61" ;
+  ex:age "49"^^xsd:int ;
+  ex:rating "4.82"^^xsd:float ;
+  ex:registeredOn "2020-03-02"^^xsd:date ;
   ex:knows ex:User62, ex:User63 ;
   ex:created ex:Post61 .
 
@@ -858,6 +1042,9 @@ ex:Comment61 a ex:Comment ;
 
 ex:User62 a foaf:Person ;
   foaf:name "User62" ;
+  ex:age "47"^^xsd:int ;
+  ex:rating "4.28"^^xsd:float ;
+  ex:registeredOn "2020-03-03"^^xsd:date ;
   ex:knows ex:User63, ex:User64 ;
   ex:created ex:Post62 .
 
@@ -872,6 +1059,9 @@ ex:Comment62 a ex:Comment ;
 
 ex:User63 a foaf:Person ;
   foaf:name "User63" ;
+  ex:age "56"^^xsd:int ;
+  ex:rating "3.74"^^xsd:float ;
+  ex:registeredOn "2020-03-04"^^xsd:date ;
   ex:knows ex:User64, ex:User65 ;
   ex:created ex:Post63 .
 
@@ -886,6 +1076,9 @@ ex:Comment63 a ex:Comment ;
 
 ex:User64 a foaf:Person ;
   foaf:name "User64" ;
+  ex:age "65"^^xsd:int ;
+  ex:rating "2.03"^^xsd:float ;
+  ex:registeredOn "2020-03-05"^^xsd:date ;
   ex:knows ex:User65, ex:User66 ;
   ex:created ex:Post64 .
 
@@ -900,6 +1093,9 @@ ex:Comment64 a ex:Comment ;
 
 ex:User65 a foaf:Person ;
   foaf:name "User65" ;
+  ex:age "26"^^xsd:int ;
+  ex:rating "3.64"^^xsd:float ;
+  ex:registeredOn "2020-03-06"^^xsd:date ;
   ex:knows ex:User66, ex:User67 ;
   ex:created ex:Post65 .
 
@@ -914,6 +1110,9 @@ ex:Comment65 a ex:Comment ;
 
 ex:User66 a foaf:Person ;
   foaf:name "User66" ;
+  ex:age "53"^^xsd:int ;
+  ex:rating "3.12"^^xsd:float ;
+  ex:registeredOn "2020-03-07"^^xsd:date ;
   ex:knows ex:User67, ex:User68 ;
   ex:created ex:Post66 .
 
@@ -928,6 +1127,9 @@ ex:Comment66 a ex:Comment ;
 
 ex:User67 a foaf:Person ;
   foaf:name "User67" ;
+  ex:age "37"^^xsd:int ;
+  ex:rating "4.25"^^xsd:float ;
+  ex:registeredOn "2020-03-08"^^xsd:date ;
   ex:knows ex:User68, ex:User69 ;
   ex:created ex:Post67 .
 
@@ -942,6 +1144,9 @@ ex:Comment67 a ex:Comment ;
 
 ex:User68 a foaf:Person ;
   foaf:name "User68" ;
+  ex:age "48"^^xsd:int ;
+  ex:rating "2.85"^^xsd:float ;
+  ex:registeredOn "2020-03-09"^^xsd:date ;
   ex:knows ex:User69, ex:User70 ;
   ex:created ex:Post68 .
 
@@ -956,6 +1161,9 @@ ex:Comment68 a ex:Comment ;
 
 ex:User69 a foaf:Person ;
   foaf:name "User69" ;
+  ex:age "34"^^xsd:int ;
+  ex:rating "3.64"^^xsd:float ;
+  ex:registeredOn "2020-03-10"^^xsd:date ;
   ex:knows ex:User70, ex:User71 ;
   ex:created ex:Post69 .
 
@@ -970,6 +1178,9 @@ ex:Comment69 a ex:Comment ;
 
 ex:User70 a foaf:Person ;
   foaf:name "User70" ;
+  ex:age "37"^^xsd:int ;
+  ex:rating "4.85"^^xsd:float ;
+  ex:registeredOn "2020-03-11"^^xsd:date ;
   ex:knows ex:User71, ex:User72 ;
   ex:created ex:Post70 .
 
@@ -984,6 +1195,9 @@ ex:Comment70 a ex:Comment ;
 
 ex:User71 a foaf:Person ;
   foaf:name "User71" ;
+  ex:age "18"^^xsd:int ;
+  ex:rating "2.42"^^xsd:float ;
+  ex:registeredOn "2020-03-12"^^xsd:date ;
   ex:knows ex:User72, ex:User73 ;
   ex:created ex:Post71 .
 
@@ -998,6 +1212,9 @@ ex:Comment71 a ex:Comment ;
 
 ex:User72 a foaf:Person ;
   foaf:name "User72" ;
+  ex:age "40"^^xsd:int ;
+  ex:rating "4.1"^^xsd:float ;
+  ex:registeredOn "2020-03-13"^^xsd:date ;
   ex:knows ex:User73, ex:User74 ;
   ex:created ex:Post72 .
 
@@ -1012,6 +1229,9 @@ ex:Comment72 a ex:Comment ;
 
 ex:User73 a foaf:Person ;
   foaf:name "User73" ;
+  ex:age "41"^^xsd:int ;
+  ex:rating "4.78"^^xsd:float ;
+  ex:registeredOn "2020-03-14"^^xsd:date ;
   ex:knows ex:User74, ex:User75 ;
   ex:created ex:Post73 .
 
@@ -1026,6 +1246,9 @@ ex:Comment73 a ex:Comment ;
 
 ex:User74 a foaf:Person ;
   foaf:name "User74" ;
+  ex:age "40"^^xsd:int ;
+  ex:rating "1.22"^^xsd:float ;
+  ex:registeredOn "2020-03-15"^^xsd:date ;
   ex:knows ex:User75, ex:User76 ;
   ex:created ex:Post74 .
 
@@ -1040,6 +1263,9 @@ ex:Comment74 a ex:Comment ;
 
 ex:User75 a foaf:Person ;
   foaf:name "User75" ;
+  ex:age "31"^^xsd:int ;
+  ex:rating "3.62"^^xsd:float ;
+  ex:registeredOn "2020-03-16"^^xsd:date ;
   ex:knows ex:User76, ex:User77 ;
   ex:created ex:Post75 .
 
@@ -1054,6 +1280,9 @@ ex:Comment75 a ex:Comment ;
 
 ex:User76 a foaf:Person ;
   foaf:name "User76" ;
+  ex:age "45"^^xsd:int ;
+  ex:rating "2.7"^^xsd:float ;
+  ex:registeredOn "2020-03-17"^^xsd:date ;
   ex:knows ex:User77, ex:User78 ;
   ex:created ex:Post76 .
 
@@ -1068,6 +1297,9 @@ ex:Comment76 a ex:Comment ;
 
 ex:User77 a foaf:Person ;
   foaf:name "User77" ;
+  ex:age "64"^^xsd:int ;
+  ex:rating "2.73"^^xsd:float ;
+  ex:registeredOn "2020-03-18"^^xsd:date ;
   ex:knows ex:User78, ex:User79 ;
   ex:created ex:Post77 .
 
@@ -1082,6 +1314,9 @@ ex:Comment77 a ex:Comment ;
 
 ex:User78 a foaf:Person ;
   foaf:name "User78" ;
+  ex:age "27"^^xsd:int ;
+  ex:rating "2.04"^^xsd:float ;
+  ex:registeredOn "2020-03-19"^^xsd:date ;
   ex:knows ex:User79, ex:User80 ;
   ex:created ex:Post78 .
 
@@ -1096,6 +1331,9 @@ ex:Comment78 a ex:Comment ;
 
 ex:User79 a foaf:Person ;
   foaf:name "User79" ;
+  ex:age "54"^^xsd:int ;
+  ex:rating "1.97"^^xsd:float ;
+  ex:registeredOn "2020-03-20"^^xsd:date ;
   ex:knows ex:User80, ex:User81 ;
   ex:created ex:Post79 .
 
@@ -1110,6 +1348,9 @@ ex:Comment79 a ex:Comment ;
 
 ex:User80 a foaf:Person ;
   foaf:name "User80" ;
+  ex:age "58"^^xsd:int ;
+  ex:rating "2.95"^^xsd:float ;
+  ex:registeredOn "2020-03-21"^^xsd:date ;
   ex:knows ex:User81, ex:User82 ;
   ex:created ex:Post80 .
 
@@ -1124,6 +1365,9 @@ ex:Comment80 a ex:Comment ;
 
 ex:User81 a foaf:Person ;
   foaf:name "User81" ;
+  ex:age "30"^^xsd:int ;
+  ex:rating "2.1"^^xsd:float ;
+  ex:registeredOn "2020-03-22"^^xsd:date ;
   ex:knows ex:User82, ex:User83 ;
   ex:created ex:Post81 .
 
@@ -1138,6 +1382,9 @@ ex:Comment81 a ex:Comment ;
 
 ex:User82 a foaf:Person ;
   foaf:name "User82" ;
+  ex:age "61"^^xsd:int ;
+  ex:rating "4.72"^^xsd:float ;
+  ex:registeredOn "2020-03-23"^^xsd:date ;
   ex:knows ex:User83, ex:User84 ;
   ex:created ex:Post82 .
 
@@ -1152,6 +1399,9 @@ ex:Comment82 a ex:Comment ;
 
 ex:User83 a foaf:Person ;
   foaf:name "User83" ;
+  ex:age "54"^^xsd:int ;
+  ex:rating "2.8"^^xsd:float ;
+  ex:registeredOn "2020-03-24"^^xsd:date ;
   ex:knows ex:User84, ex:User85 ;
   ex:created ex:Post83 .
 
@@ -1166,6 +1416,9 @@ ex:Comment83 a ex:Comment ;
 
 ex:User84 a foaf:Person ;
   foaf:name "User84" ;
+  ex:age "56"^^xsd:int ;
+  ex:rating "1.57"^^xsd:float ;
+  ex:registeredOn "2020-03-25"^^xsd:date ;
   ex:knows ex:User85, ex:User86 ;
   ex:created ex:Post84 .
 
@@ -1180,6 +1433,9 @@ ex:Comment84 a ex:Comment ;
 
 ex:User85 a foaf:Person ;
   foaf:name "User85" ;
+  ex:age "19"^^xsd:int ;
+  ex:rating "2.65"^^xsd:float ;
+  ex:registeredOn "2020-03-26"^^xsd:date ;
   ex:knows ex:User86, ex:User87 ;
   ex:created ex:Post85 .
 
@@ -1194,6 +1450,9 @@ ex:Comment85 a ex:Comment ;
 
 ex:User86 a foaf:Person ;
   foaf:name "User86" ;
+  ex:age "19"^^xsd:int ;
+  ex:rating "2.03"^^xsd:float ;
+  ex:registeredOn "2020-03-27"^^xsd:date ;
   ex:knows ex:User87, ex:User88 ;
   ex:created ex:Post86 .
 
@@ -1208,6 +1467,9 @@ ex:Comment86 a ex:Comment ;
 
 ex:User87 a foaf:Person ;
   foaf:name "User87" ;
+  ex:age "33"^^xsd:int ;
+  ex:rating "3.34"^^xsd:float ;
+  ex:registeredOn "2020-03-28"^^xsd:date ;
   ex:knows ex:User88, ex:User89 ;
   ex:created ex:Post87 .
 
@@ -1222,6 +1484,9 @@ ex:Comment87 a ex:Comment ;
 
 ex:User88 a foaf:Person ;
   foaf:name "User88" ;
+  ex:age "52"^^xsd:int ;
+  ex:rating "2.23"^^xsd:float ;
+  ex:registeredOn "2020-03-29"^^xsd:date ;
   ex:knows ex:User89, ex:User90 ;
   ex:created ex:Post88 .
 
@@ -1236,6 +1501,9 @@ ex:Comment88 a ex:Comment ;
 
 ex:User89 a foaf:Person ;
   foaf:name "User89" ;
+  ex:age "35"^^xsd:int ;
+  ex:rating "2.83"^^xsd:float ;
+  ex:registeredOn "2020-03-30"^^xsd:date ;
   ex:knows ex:User90, ex:User91 ;
   ex:created ex:Post89 .
 
@@ -1250,6 +1518,9 @@ ex:Comment89 a ex:Comment ;
 
 ex:User90 a foaf:Person ;
   foaf:name "User90" ;
+  ex:age "43"^^xsd:int ;
+  ex:rating "4.26"^^xsd:float ;
+  ex:registeredOn "2020-03-31"^^xsd:date ;
   ex:knows ex:User91, ex:User92 ;
   ex:created ex:Post90 .
 
@@ -1264,6 +1535,9 @@ ex:Comment90 a ex:Comment ;
 
 ex:User91 a foaf:Person ;
   foaf:name "User91" ;
+  ex:age "35"^^xsd:int ;
+  ex:rating "3.71"^^xsd:float ;
+  ex:registeredOn "2020-04-01"^^xsd:date ;
   ex:knows ex:User92, ex:User93 ;
   ex:created ex:Post91 .
 
@@ -1278,6 +1552,9 @@ ex:Comment91 a ex:Comment ;
 
 ex:User92 a foaf:Person ;
   foaf:name "User92" ;
+  ex:age "57"^^xsd:int ;
+  ex:rating "2.94"^^xsd:float ;
+  ex:registeredOn "2020-04-02"^^xsd:date ;
   ex:knows ex:User93, ex:User94 ;
   ex:created ex:Post92 .
 
@@ -1292,6 +1569,9 @@ ex:Comment92 a ex:Comment ;
 
 ex:User93 a foaf:Person ;
   foaf:name "User93" ;
+  ex:age "35"^^xsd:int ;
+  ex:rating "2.59"^^xsd:float ;
+  ex:registeredOn "2020-04-03"^^xsd:date ;
   ex:knows ex:User94, ex:User95 ;
   ex:created ex:Post93 .
 
@@ -1306,6 +1586,9 @@ ex:Comment93 a ex:Comment ;
 
 ex:User94 a foaf:Person ;
   foaf:name "User94" ;
+  ex:age "47"^^xsd:int ;
+  ex:rating "3.5"^^xsd:float ;
+  ex:registeredOn "2020-04-04"^^xsd:date ;
   ex:knows ex:User95, ex:User96 ;
   ex:created ex:Post94 .
 
@@ -1320,6 +1603,9 @@ ex:Comment94 a ex:Comment ;
 
 ex:User95 a foaf:Person ;
   foaf:name "User95" ;
+  ex:age "27"^^xsd:int ;
+  ex:rating "3.0"^^xsd:float ;
+  ex:registeredOn "2020-04-05"^^xsd:date ;
   ex:knows ex:User96, ex:User97 ;
   ex:created ex:Post95 .
 
@@ -1334,6 +1620,9 @@ ex:Comment95 a ex:Comment ;
 
 ex:User96 a foaf:Person ;
   foaf:name "User96" ;
+  ex:age "65"^^xsd:int ;
+  ex:rating "4.15"^^xsd:float ;
+  ex:registeredOn "2020-04-06"^^xsd:date ;
   ex:knows ex:User97, ex:User98 ;
   ex:created ex:Post96 .
 
@@ -1348,6 +1637,9 @@ ex:Comment96 a ex:Comment ;
 
 ex:User97 a foaf:Person ;
   foaf:name "User97" ;
+  ex:age "36"^^xsd:int ;
+  ex:rating "3.11"^^xsd:float ;
+  ex:registeredOn "2020-04-07"^^xsd:date ;
   ex:knows ex:User98, ex:User99 ;
   ex:created ex:Post97 .
 
@@ -1362,6 +1654,9 @@ ex:Comment97 a ex:Comment ;
 
 ex:User98 a foaf:Person ;
   foaf:name "User98" ;
+  ex:age "55"^^xsd:int ;
+  ex:rating "3.21"^^xsd:float ;
+  ex:registeredOn "2020-04-08"^^xsd:date ;
   ex:knows ex:User99, ex:User100 ;
   ex:created ex:Post98 .
 
@@ -1376,6 +1671,9 @@ ex:Comment98 a ex:Comment ;
 
 ex:User99 a foaf:Person ;
   foaf:name "User99" ;
+  ex:age "33"^^xsd:int ;
+  ex:rating "3.22"^^xsd:float ;
+  ex:registeredOn "2020-04-09"^^xsd:date ;
   ex:knows ex:User100, ex:User1 ;
   ex:created ex:Post99 .
 
@@ -1390,6 +1688,9 @@ ex:Comment99 a ex:Comment ;
 
 ex:User100 a foaf:Person ;
   foaf:name "User100" ;
+  ex:age "52"^^xsd:int ;
+  ex:rating "4.5"^^xsd:float ;
+  ex:registeredOn "2020-04-10"^^xsd:date ;
   ex:knows ex:User1, ex:User2 ;
   ex:created ex:Post100 .
 
