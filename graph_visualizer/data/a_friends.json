@@ -15,7 +15,7 @@
     {
       "id": 3,
       "name": "Catherine Liu",
-      "hobbies": ["yoga", "photography"],
+      "hobbies": ["yoga", "photos"],
       "friends": [{"id": 5}]
     },
     {
@@ -45,6 +45,117 @@
       "id": 8,
       "name": "Hana Al-Salem",
       "hobbies": ["languages", "cooking"]
+    },
+
+    {
+      "id": 9,
+      "name": "Ian Wright",
+      "hobbies": ["basketball", "gaming"],
+      "friends": [{"id": 10}, {"id": 11}]
+    },
+    {
+      "id": 10,
+      "name": "Jessica Park",
+      "hobbies": ["painting", "yoga"],
+      "friends": [{"id": 12}]
+    },
+    {
+      "id": 11,
+      "name": "Kyle Morgan",
+      "hobbies": ["cycling", "reading"],
+      "friends": [{"id": 13}]
+    },
+    {
+      "id": 12,
+      "name": "Laura Chen",
+      "hobbies": ["cooking", "traveling"],
+      "friends": [{"id": 14}]
+    },
+    {
+      "id": 13,
+      "name": "Mark Evans",
+      "hobbies": ["hiking", "photos"],
+      "friends": [{"id": 15}]
+    },
+    {
+      "id": 14,
+      "name": "Nina Simmons",
+      "hobbies": ["dancing", "gardening"],
+      "friends": [{"id": 15}, {"id": 16}]
+    },
+    {
+      "id": 15,
+      "name": "Oliver Young",
+      "hobbies": ["coding", "music"]
+    },
+    {
+      "id": 16,
+      "name": "Paula Rivera",
+      "hobbies": ["writing", "swimming"],
+      "friends": [{"id": 17}]
+    },
+    {
+      "id": 17,
+      "name": "Quentin Blake",
+      "hobbies": ["gaming", "basketball"],
+      "friends": [{"id": 18}]
+    },
+    {
+      "id": 18,
+      "name": "Rachel Adams",
+      "hobbies": ["photos", "yoga"]
+    },
+    {
+      "id": 19,
+      "name": "Samuel Brooks",
+      "hobbies": ["football", "reading"],
+      "friends": [{"id": 20}]
+    },
+    {
+      "id": 20,
+      "name": "Tina Collins",
+      "hobbies": ["painting", "cycling"],
+      "friends": [{"id": 21}]
+    },
+    {
+      "id": 21,
+      "name": "Ulysses Grant",
+      "hobbies": ["hiking", "skiing"],
+      "friends": [{"id": 22}]
+    },
+    {
+      "id": 22,
+      "name": "Vanessa Lee",
+      "hobbies": ["dancing", "cooking"],
+      "friends": [{"id": 23}]
+    },
+    {
+      "id": 23,
+      "name": "Walter White",
+      "hobbies": ["chess", "reading"]
+    },
+    {
+      "id": 24,
+      "name": "Xavier Scott",
+      "hobbies": ["gaming", "biking"],
+      "friends": [{"id": 25}]
+    },
+    {
+      "id": 25,
+      "name": "Yvonne Turner",
+      "hobbies": ["yoga", "swimming"],
+      "friends": [{"id": 26}]
+    },
+    {
+      "id": 26,
+      "name": "Zachary Hill",
+      "hobbies": ["music", "writing"],
+      "friends": [{"id": 27}]
+    },
+    {
+      "id": 27,
+      "name": "Abigail Moore",
+      "hobbies": ["running", "painting"]
     }
   ]
 }
