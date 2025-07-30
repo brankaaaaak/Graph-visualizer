@@ -34,7 +34,6 @@ From the root of the project, run:
 
 ```bash
 pip install django
-pip install setuptools
 pip install rdflib
 cd xml_loader
 python setup.py install
@@ -65,5 +64,5 @@ Then open your browser and navigate to:
 
 ---
 
-🧩 Plugin System
+🧩 Plugin System: 
 Each plugin must implement a class that inherits from BaseLoader or BaseVisualizer (from the api package) and be installed into the environment!
