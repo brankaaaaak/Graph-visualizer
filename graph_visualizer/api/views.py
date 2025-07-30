@@ -551,7 +551,9 @@ def filter_view(request):
     if old_graph is None:
         return JsonResponse({"success": False, "error": "No graph loaded"}, status=400)
 
-    match = re.match(r"(\w+)\s*(==|=|!=|<=|>=|<|>)\s*['\"]?([\w\s\.\-]+)['\"]?", condition)
+    # match = re.match(r"(\w+)\s*(==|=|!=|<=|>=|<|>)\s*['\"]?([\w\s\.\-]+)['\"]?", condition)
+    match = re.match(r"([^\s]+)\s*(==|=|!=|<=|>=|<|>)\s*['\"]?(.+?)['\"]?$", condition)
+
     if not match:
         return JsonResponse({"success": False, "error": "Invalid filter format"}, status=400)
 
