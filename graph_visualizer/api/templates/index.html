@@ -18,13 +18,14 @@
         .container {
             display: grid;
             grid-template-columns: 300px auto 300px;
-            grid-template-rows: 70px 30px auto 150px;
+            {#grid-template-rows: 70px 30px auto 150px;#}
             grid-template-areas: 
                 "header header header"
                 "topbar topbar topbar"
                 "tree main bird"
                 "tree main bird";
-            height: 100vh;
+            {#height: 100vh;#}
+            height: auto;
             overflow: hidden;
         }
 
@@ -97,9 +98,6 @@
             color: #3c2956;
         }
 
-        
-
-
         #main-view {
             grid-area: main;
             background-color: #eee1d5;
@@ -115,6 +113,7 @@
             border: 1px solid #ddd;
             padding: 10px;
         }
+
         .tree-list {
             list-style: none;
             padding-left: 20px;
@@ -269,11 +268,6 @@
     <script type="text/javascript" src="https://d3js.org/d3.v3.js"></script>
 </head>
 <body>
-    <div class="container" style="position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;">
         <header>
             <div>Graph Visualizer</div>
             <!-- Workspace dropdown -->
@@ -328,6 +322,8 @@
             </div>
             {% endif %}
         </div>
+    </div>
+    <div class="container">
         <div id="tree-view">
             <h3>Tree View</h3>
             {{ tree_html|safe }}
@@ -338,6 +334,7 @@
         </div>
         <div id="bird-view">
             <h3>Bird View</h3>
+{#                {{ bird_svg|safe }}#}
         </div>
     </div>
     {% if graph_visualized %}
@@ -361,7 +358,6 @@
                 const anchor = e.target;
                 const li = anchor.closest("li");
                 const nodeId = anchor.dataset.nodeId || anchor.dataset.edgeId;
-
 
                 if (anchor.classList.contains("node-expanded")) {
                     const childUl = li.querySelector("ul");
