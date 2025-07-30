@@ -199,7 +199,11 @@ class BlockVisualizer(BaseVisualizer):
                             if (target) {
                                 target.classList.add("selected-node");
                                 const container = document.getElementById("tree-view");
-                                container.scrollTop = target.offsetTop - 40; 
+                                const offsetTop = target.offsetTop - container.offsetTop;
+                                container.scrollTo({
+                                    top: offsetTop - container.clientHeight / 2 + target.clientHeight / 2,
+                                    behavior: 'smooth'
+                                });
                             }
                         }, 100);
                     })
