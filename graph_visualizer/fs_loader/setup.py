@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='fs_loader',
-    version='0.1',
+    version='0.2',
     description='Plugin for loading graphs from file system structure',
     author='Ana Krunić',
     packages=find_packages(),

@@ -1,5 +1,7 @@
 import os
 import datetime
+import random
+
 from api.models import Edge, Graph, Node
 from api.services.loader import BaseLoader
 
@@ -9,6 +11,7 @@ class FileSystemLoader(BaseLoader):
     def __init__(self):
         self._id_sequence = 0
         self._visited = set()
+        self._root_node = None
 
     def identifier(self):
         return "FileSystemLoader"
@@ -47,19 +50,18 @@ class FileSystemLoader(BaseLoader):
         except Exception:
             pass
 
+        if self._id_sequence == 1:
+            self._root_node = node
+
         graph.insert_node(node)
 
         if parent_node:
             edge = Edge(origin=parent_node, target=node, relation="contains", weight=0, directed=True)
             parent_node.add_edge(edge)
 
-        '''if os.path.isdir(abs_path):
-            try:
-                for child in os.listdir(abs_path):
-                    child_path = os.path.join(abs_path, child)
-                    self._create_node(graph, child_path, node)
-            except Exception:
-                pass'''
+        if node != self._root_node and self._root_node and parent_node != self._root_node and random.random() < 0.3:
+            edge = Edge(origin=node, target=self._root_node, relation="shortcut", weight=0, directed=True)
+            node.add_edge(edge)
 
         if os.path.isdir(abs_path):
             try:
