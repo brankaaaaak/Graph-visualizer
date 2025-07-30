@@ -38,6 +38,10 @@ class FileSystemLoader(BaseLoader):
 
         self._id_sequence += 1
         node = Node(self._id_sequence)
+
+        if parent_node is None:
+            self._root_node = node
+
         node.add_attribute("depth", depth)
         node.add_attribute("name", os.path.basename(abs_path) or abs_path)
         node.add_attribute("path", abs_path)
@@ -49,9 +53,6 @@ class FileSystemLoader(BaseLoader):
             node.add_attribute("modified", datetime.datetime.fromtimestamp(stat.st_mtime).date())
         except Exception:
             pass
-
-        if self._id_sequence == 1:
-            self._root_node = node
 
         graph.insert_node(node)
 
