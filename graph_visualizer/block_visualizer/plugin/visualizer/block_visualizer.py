@@ -173,6 +173,7 @@ class BlockVisualizer(BaseVisualizer):
                 var new_node = nodesGraph[nodeId];
                 selected_node = new_node;
                 nodeView(selected_node, "pink");
+                updateBirdView();
 
                 var description = "ID: " + element.id + "\\n";
                 for (var i = 0; i < new_node.attributes.length; i++) {
@@ -196,7 +197,8 @@ class BlockVisualizer(BaseVisualizer):
                             const target = treeView.querySelector(`[data-graph-node-id="${nodeId}"]`);
                             if (target) {
                                 target.classList.add("selected-node");
-                                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                const container = document.getElementById("tree-view");
+                                container.scrollTop = target.offsetTop - 40; 
                             }
                         }, 100);
                     })

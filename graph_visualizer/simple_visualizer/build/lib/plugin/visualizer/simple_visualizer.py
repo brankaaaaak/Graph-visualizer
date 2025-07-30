@@ -225,6 +225,7 @@ class SimpleVisualizer(BaseVisualizer):
             var new_node = nodes[nodeId];
             selected_node = new_node;
             nodeView(selected_node, "pink");
+            updateBirdView();
 
             // Prikaži atribute u alert prozoru
             var description = "ID: " + element.id + "\\n";
@@ -250,7 +251,8 @@ class SimpleVisualizer(BaseVisualizer):
                         const target = treeView.querySelector(`[data-graph-node-id="${nodeId}"]`);
                         if (target) {
                             target.classList.add("selected-node");
-                            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            const container = document.getElementById("tree-view");
+                            container.scrollTop = target.offsetTop - 40; 
                         }
                     }, 100);
                 })

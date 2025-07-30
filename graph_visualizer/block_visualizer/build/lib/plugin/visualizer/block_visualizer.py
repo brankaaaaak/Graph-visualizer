@@ -173,6 +173,7 @@ class BlockVisualizer(BaseVisualizer):
                 var new_node = nodesGraph[nodeId];
                 selected_node = new_node;
                 nodeView(selected_node, "pink");
+                updateBirdView();
 
                 var description = "ID: " + element.id + "\\n";
                 for (var i = 0; i < new_node.attributes.length; i++) {
