@@ -43,8 +43,13 @@ class FileSystemLoader(BaseLoader):
             self._root_node = node
 
         node.add_attribute("depth", depth)
-        node.add_attribute("name", os.path.basename(abs_path) or abs_path)
-        node.add_attribute("path", abs_path)
+
+        name = os.path.basename(abs_path) or abs_path
+        if isinstance(name, bytes):
+            name = name.decode("utf-8", errors="ignore")
+        node.add_attribute("name", name)
+
+        node.add_attribute("path", abs_path.decode("utf-8", errors="ignore"))
         node.add_attribute("type", "directory" if os.path.isdir(abs_path) else "file")
 
         try:
