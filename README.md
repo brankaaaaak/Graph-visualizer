@@ -42,18 +42,10 @@ cd ..
 cd json_loader
 python setup.py install
 cd ..
-<<<<<<< HEAD
-<<<<<<< HEAD
-cd rdf_loader
-=======
-cd fs_loader
->>>>>>> d98c78006967f7f5e89ea247a0bc7725cf3b950a
-=======
 cd rdf_loader
 python setup.py install
 cd ..
 cd fs_loader
->>>>>>> 1308c0d92cc065c4db3ec1492c284422208e97f3
 python setup.py install
 cd ..
 cd simple_visualizer

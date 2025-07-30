@@ -285,7 +285,7 @@
       "hobbies": [
         "tennis",
         "dancing",
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -336,7 +336,7 @@
       "id": 20,
       "name": "Person 20",
       "hobbies": [
-        "photography",
+        "photos",
         "coding",
         "dancing"
       ],
@@ -353,7 +353,7 @@
       "id": 21,
       "name": "Person 21",
       "hobbies": [
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -411,7 +411,7 @@
       "name": "Person 24",
       "hobbies": [
         "dancing",
-        "photography",
+        "photos",
         "hiking"
       ],
       "friends": [
@@ -566,7 +566,7 @@
       "hobbies": [
         "swimming",
         "coding",
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -810,7 +810,7 @@
       "id": 47,
       "name": "Person 47",
       "hobbies": [
-        "photography",
+        "photos",
         "dancing"
       ],
       "friends": [
@@ -921,7 +921,7 @@
       "name": "Person 53",
       "hobbies": [
         "hiking",
-        "photography",
+        "photos",
         "painting"
       ],
       "friends": [
@@ -1183,7 +1183,7 @@
       "hobbies": [
         "coding",
         "hiking",
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -1336,7 +1336,7 @@
       "name": "Person 75",
       "hobbies": [
         "swimming",
-        "photography",
+        "photos",
         "hiking"
       ],
       "friends": [
@@ -1420,7 +1420,7 @@
       "id": 80,
       "name": "Person 80",
       "hobbies": [
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -1434,7 +1434,7 @@
       "hobbies": [
         "gaming",
         "tennis",
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -1707,7 +1707,7 @@
       "id": 98,
       "name": "Person 98",
       "hobbies": [
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -1943,7 +1943,7 @@
       "id": 113,
       "name": "Person 113",
       "hobbies": [
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -1955,7 +1955,7 @@
       "id": 114,
       "name": "Person 114",
       "hobbies": [
-        "photography",
+        "photos",
         "hiking"
       ],
       "friends": [
@@ -1986,7 +1986,7 @@
       "name": "Person 116",
       "hobbies": [
         "cooking",
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -2020,7 +2020,7 @@
       "id": 118,
       "name": "Person 118",
       "hobbies": [
-        "photography",
+        "photos",
         "swimming",
         "tennis"
       ],
@@ -2205,7 +2205,7 @@
       "id": 129,
       "name": "Person 129",
       "hobbies": [
-        "photography",
+        "photos",
         "coding"
       ],
       "friends": [
@@ -2256,7 +2256,7 @@
       "name": "Person 132",
       "hobbies": [
         "swimming",
-        "photography",
+        "photos",
         "gaming"
       ],
       "friends": [
@@ -2292,7 +2292,7 @@
       "id": 134,
       "name": "Person 134",
       "hobbies": [
-        "photography",
+        "photos",
         "coding"
       ],
       "friends": [
@@ -2327,7 +2327,7 @@
       "id": 136,
       "name": "Person 136",
       "hobbies": [
-        "photography",
+        "photos",
         "tennis",
         "reading"
       ],
@@ -2500,7 +2500,7 @@
       "id": 147,
       "name": "Person 147",
       "hobbies": [
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -2531,7 +2531,7 @@
       "id": 149,
       "name": "Person 149",
       "hobbies": [
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -2562,7 +2562,7 @@
       "id": 151,
       "name": "Person 151",
       "hobbies": [
-        "photography",
+        "photos",
         "gaming",
         "dancing"
       ],
@@ -2600,7 +2600,7 @@
       "id": 153,
       "name": "Person 153",
       "hobbies": [
-        "photography",
+        "photos",
         "reading"
       ],
       "friends": [
@@ -2672,7 +2672,7 @@
       "id": 157,
       "name": "Person 157",
       "hobbies": [
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -2783,7 +2783,7 @@
       "id": 164,
       "name": "Person 164",
       "hobbies": [
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -2818,7 +2818,7 @@
       "id": 166,
       "name": "Person 166",
       "hobbies": [
-        "photography",
+        "photos",
         "tennis"
       ],
       "friends": [
@@ -2919,7 +2919,7 @@
       "id": 172,
       "name": "Person 172",
       "hobbies": [
-        "photography",
+        "photos",
         "swimming",
         "gaming"
       ],
@@ -2939,7 +2939,7 @@
       "id": 173,
       "name": "Person 173",
       "hobbies": [
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -2967,7 +2967,7 @@
       "id": 175,
       "name": "Person 175",
       "hobbies": [
-        "photography",
+        "photos",
         "reading",
         "cooking"
       ],
@@ -3004,7 +3004,7 @@
       "id": 177,
       "name": "Person 177",
       "hobbies": [
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -3026,7 +3026,7 @@
       "name": "Person 178",
       "hobbies": [
         "cooking",
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -3078,7 +3078,7 @@
       "id": 181,
       "name": "Person 181",
       "hobbies": [
-        "photography",
+        "photos",
         "coding"
       ],
       "friends": [
@@ -3243,7 +3243,7 @@
       "name": "Person 191",
       "hobbies": [
         "dancing",
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -3283,7 +3283,7 @@
       "name": "Person 193",
       "hobbies": [
         "hiking",
-        "photography"
+        "photos"
       ],
       "friends": [
         {
@@ -3295,7 +3295,7 @@
       "id": 194,
       "name": "Person 194",
       "hobbies": [
-        "photography",
+        "photos",
         "tennis",
         "coding"
       ],
@@ -3315,7 +3315,7 @@
       "id": 195,
       "name": "Person 195",
       "hobbies": [
-        "photography",
+        "photos",
         "tennis",
         "gaming"
       ],
